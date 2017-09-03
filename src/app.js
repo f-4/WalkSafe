@@ -28,9 +28,7 @@ class MyNotificationsScreen extends Component {
   };
   render () {
     return (
-      <View>
         <BaseMap />
-      </View>
     );
   }
 }
