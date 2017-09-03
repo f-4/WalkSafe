@@ -3,13 +3,14 @@ import { AppRegistry, Text, View, Button, Image } from 'react-native';
 import { DrawerNavigator } from 'react-navigation';
 import BaseMap from './components/base-map.js'
 import Hello from './hello'
+import { WebView } from 'react-native'
 
 class MyHomeScreen extends Component {
   static navigationOptions = {
     drawerLabel: 'Home'
     };
     render () {
-      console.log('HERE LIES HELLO', Hello);
+      //console.log('HERE LIES HELLO', Hello);
       return (
         <View>
         <Text>HERE IS THE HOME SCREEN</Text>
@@ -27,9 +28,9 @@ class MyNotificationsScreen extends Component {
   };
   render () {
     return (
-
+      <View>
         <BaseMap />
-
+      </View>
     );
   }
 }
