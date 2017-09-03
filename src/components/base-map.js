@@ -1,61 +1,3 @@
-// /**
-//  * Sample React Native App
-//  * https://github.com/facebook/react-native
-//  * @flow
-//  */
-//
-// import React, { Component } from 'react';
-// import {
-//   AppRegistry,
-//   StyleSheet,
-//   Text,
-//   View
-// } from 'react-native';
-//
-// export default class keepSafe extends Component {
-//   render() {
-//     return (
-//       <View style={styles.container}>
-//         <Text style={styles.welcome}>
-//           Welcome to React Native!
-//         </Text>
-//         <Text style={styles.instructions}>
-//           To get started, edit index.android.js
-//         </Text>
-//         <Text style={styles.instructions}>
-//           Double tap R on your keyboard to reload,{'\n'}
-//           Shake or press menu button for dev menu
-//         </Text>
-//       </View>
-//     );
-//   }
-// }
-//
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: '#F5FCFF',
-//   },
-//   welcome: {
-//     fontSize: 20,
-//     textAlign: 'center',
-//     margin: 10,
-//   },
-//   instructions: {
-//     textAlign: 'center',
-//     color: '#333333',
-//     marginBottom: 5,
-//   },
-// });
-//
-// AppRegistry.registerComponent('keepSafe', () => keepSafe);
-
-
-
-
-//MAP STUFF UNDERNEATH HERE
 'use strict';
 /* eslint no-console: 0 */
 
@@ -73,7 +15,7 @@ import {
 const accessToken = 'pk.eyJ1Ijoic2FuZ2h1bmtpbTE0IiwiYSI6ImNqNzNzNXdpNTBqNzUyd3A1cHI5cDg1dnUifQ.BrEcLygohyM7p1zfSsQBJA';
 Mapbox.setAccessToken(accessToken);
 
-export default class keepSafe extends Component {
+export default class BaseMap extends Component {
   state = {
     center: {
       latitude: 40.72052634,
@@ -399,4 +341,4 @@ const styles = StyleSheet.create({
   }
 });
 
-AppRegistry.registerComponent('keepSafe', () => keepSafe);
+AppRegistry.registerComponent('keepSafe', () => BaseMap);

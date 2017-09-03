@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import { AppRegistry, Text, View, Button, Image } from 'react-native';
 import { DrawerNavigator } from 'react-navigation';
-import BaseMap from './components/base-map.js'
-import Hello from './hello'
 
 class MyHomeScreen extends Component {
   static navigationOptions = {
     drawerLabel: 'Home'
     };
     render () {
-      console.log('HERE LIES HELLO', Hello);
       return (
         <View>
         <Text>HERE IS THE HOME SCREEN</Text>
@@ -27,9 +24,12 @@ class MyNotificationsScreen extends Component {
   };
   render () {
     return (
-
-        <BaseMap />
-
+      <View>
+      <Text>HERE IS THE NOTIFICATIONS SCREEN</Text>
+        <Button
+          onPress={ () => this.props.navigation.navigate('DrawerOpen') }
+          title="Go back home"/>
+      </View>
     );
   }
 }
@@ -41,6 +41,3 @@ const keepSafe = DrawerNavigator({
 });
 
 AppRegistry.registerComponent('keepSafe', () => keepSafe);
-
-
-//<Button onPress={ () => this.props.navigation.navigate('DrawerOpen') } title="Go back home"/>
