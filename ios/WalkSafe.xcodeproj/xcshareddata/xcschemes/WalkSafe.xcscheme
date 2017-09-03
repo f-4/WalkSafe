@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "keepSafe.app"
-               BlueprintName = "keepSafe"
-               ReferencedContainer = "container:keepSafe.xcodeproj">
+               BuildableName = "WalkSafe.app"
+               BlueprintName = "WalkSafe"
+               ReferencedContainer = "container:WalkSafe.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "keepSafeTests.xctest"
-               BlueprintName = "keepSafeTests"
-               ReferencedContainer = "container:keepSafe.xcodeproj">
+               BuildableName = "WalkSafeTests.xctest"
+               BlueprintName = "WalkSafeTests"
+               ReferencedContainer = "container:WalkSafe.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -61,9 +61,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "keepSafeTests.xctest"
-               BlueprintName = "keepSafeTests"
-               ReferencedContainer = "container:keepSafe.xcodeproj">
+               BuildableName = "WalkSafeTests.xctest"
+               BlueprintName = "WalkSafeTests"
+               ReferencedContainer = "container:WalkSafe.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "keepSafe.app"
-            BlueprintName = "keepSafe"
-            ReferencedContainer = "container:keepSafe.xcodeproj">
+            BuildableName = "WalkSafe.app"
+            BlueprintName = "WalkSafe"
+            ReferencedContainer = "container:WalkSafe.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -94,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "keepSafe.app"
-            BlueprintName = "keepSafe"
-            ReferencedContainer = "container:keepSafe.xcodeproj">
+            BuildableName = "WalkSafe.app"
+            BlueprintName = "WalkSafe"
+            ReferencedContainer = "container:WalkSafe.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -113,9 +113,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "keepSafe.app"
-            BlueprintName = "keepSafe"
-            ReferencedContainer = "container:keepSafe.xcodeproj">
+            BuildableName = "WalkSafe.app"
+            BlueprintName = "WalkSafe"
+            ReferencedContainer = "container:WalkSafe.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
