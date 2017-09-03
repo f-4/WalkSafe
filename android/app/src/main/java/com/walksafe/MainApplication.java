@@ -1,4 +1,4 @@
-package com.keepsafe;
+package com.walksafe;
 
 import android.app.Application;
 

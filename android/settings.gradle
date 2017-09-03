@@ -1,4 +1,4 @@
-rootProject.name = 'keepSafe'
+rootProject.name = 'WalkSafe'
 
 include ':app'
 include ':reactnativemapboxgl'
