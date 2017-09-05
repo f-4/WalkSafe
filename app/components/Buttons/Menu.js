@@ -11,7 +11,7 @@ class Menu extends Component {
       <View>
         <Button
           onPress={ () => this.props.data.navigation.navigate('DrawerOpen') }
-          title="Go to notifications"/>
+          title="Menu"/>
       </View>
     )
   }
