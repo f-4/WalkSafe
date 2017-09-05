@@ -3,7 +3,6 @@ import { Text, View } from 'react-native';
 
 import Login from '../components/Buttons/Login';
 import Signup from '../components/Buttons/Signup';
-//import MyHomeScreen from '../screens/Home';
 
 class Landing extends Component {
   render () {

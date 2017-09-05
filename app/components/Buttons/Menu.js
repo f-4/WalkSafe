@@ -3,7 +3,7 @@ import { View, Button } from 'react-native';
 
 class Menu extends Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   render() {

@@ -9,28 +9,26 @@ export const HomeScreen = DrawerNavigator({
   Home: {
     screen: MyHomeScreen,
     navigationOptions: {
-      drawerLabel: 'Home',
-      header: null
+      drawerLabel: 'Home'
     },
   },
   Notifications: {
     screen: MyNotificationsScreen,
     navigationOptions: {
-      drawerLabel: 'Notifications',
-      header: null
+      drawerLabel: 'Notifications'
     },
   }
+}, {
+  headerMode: 'none'
 });
 
 export const Root = StackNavigator({
   Landing: {
-    screen: Landing,
-    navigationOptions: {
-      drawerLabel: 'Home',
-      header: null
-    },
+    screen: Landing
   },
   Home: {
     screen: HomeScreen
   }
+}, {
+  headerMode: 'none'
 });

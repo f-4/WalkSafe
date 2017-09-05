@@ -7,7 +7,7 @@ import BaseMap from '../components/base-map.js';
 class MyHomeScreen extends Component {
   render () {
     return (
-      <BaseMap />
+      <BaseMap data={ this.props }/>
     );
   }
 }
