@@ -4,7 +4,6 @@
 import React, { Component } from 'react';
 import Mapbox, { MapView } from 'react-native-mapbox-gl';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   StatusBar,
@@ -341,4 +340,4 @@ const styles = StyleSheet.create({
   }
 });
 
-AppRegistry.registerComponent('keepSafe', () => BaseMap);
+//AppRegistry.registerComponent('keepSafe', () => BaseMap);

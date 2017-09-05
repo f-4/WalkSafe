@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import { AppRegistry, Text, View, Button, Image } from 'react-native';
 import { DrawerNavigator } from 'react-navigation';
@@ -34,12 +35,12 @@ class MyNotificationsScreen extends Component {
 }
 
 
-const keepSafe = DrawerNavigator({
+const WalkSafe = DrawerNavigator({
   Home: { screen: MyHomeScreen },
   Notifications: { screen: MyNotificationsScreen },
 });
 
-AppRegistry.registerComponent('keepSafe', () => keepSafe);
+AppRegistry.registerComponent('WalkSafe', () => WalkSafe);
 
 
 //<Button onPress={ () => this.props.navigation.navigate('DrawerOpen') } title="Go back home"/>
