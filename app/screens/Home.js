@@ -1,45 +1,19 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text, View, Button, Image } from 'react-native';
+import { Text, View, Button } from 'react-native';
 import { DrawerNavigator } from 'react-navigation';
-import BaseMap from './components/base-map.js'
-import Hello from './hello'
-import { WebView } from 'react-native'
+import Menu from '../components/Buttons/Menu';
+//import BaseMap from '../components/base-map.js';
 
 class MyHomeScreen extends Component {
-  static navigationOptions = {
-    drawerLabel: 'Home'
-    };
-    render () {
-      //console.log('HERE LIES HELLO', Hello);
-      return (
-        <View>
-        <Text>HERE IS THE HOME SCREEN</Text>
-          <Button
-          onPress={ () => this.props.navigation.navigate('DrawerOpen') }
-          title="Go to notifications"/>
-        </View>
-      );
-    }
-  }
-
-class MyNotificationsScreen extends Component {
-  static navigationOptions = {
-    drawerLabel: 'Notifications'
-  };
   render () {
+    //console.log('HERE LIES HELLO', Hello);
     return (
-        <BaseMap />
+      <View>
+        <Text>HERE IS THE HOME SCREEN</Text>
+        <Menu data={ this.props }/>
+      </View>
     );
   }
 }
 
-
-const WalkSafe = DrawerNavigator({
-  Home: { screen: MyHomeScreen },
-  Notifications: { screen: MyNotificationsScreen },
-});
-
-AppRegistry.registerComponent('WalkSafe', () => WalkSafe);
-
-
-//<Button onPress={ () => this.props.navigation.navigate('DrawerOpen') } title="Go back home"/>
+export default MyHomeScreen;
