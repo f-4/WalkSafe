@@ -8,13 +8,19 @@ import {
   Text,
   StatusBar,
   View,
-  ScrollView
+  Button
 } from 'react-native';
+
+//import Menu from './Buttons/Menu';
 
 const accessToken = 'pk.eyJ1Ijoic2FuZ2h1bmtpbTE0IiwiYSI6ImNqNzNzNXdpNTBqNzUyd3A1cHI5cDg1dnUifQ.BrEcLygohyM7p1zfSsQBJA';
 Mapbox.setAccessToken(accessToken);
 
 export default class BaseMap extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   state = {
     center: {
       latitude: 40.72052634,
@@ -158,7 +164,8 @@ export default class BaseMap extends Component {
   };
 
   render() {
-    StatusBar.setHidden(true);
+    StatusBar.setHidden(false);
+    console.log('line 24', this.props)
     return (
       <View style={styles.container}>
         <MapView
@@ -170,8 +177,8 @@ export default class BaseMap extends Component {
           rotateEnabled={true}
           scrollEnabled={true}
           zoomEnabled={true}
-          showsUserLocation={false}
-          styleURL={Mapbox.mapStyles.dark}
+          showsUserLocation={true}
+          styleURL={Mapbox.mapStyles.light}
           userTrackingMode={this.state.userTrackingMode}
           annotations={this.state.annotations}
           annotationsAreImmutable
@@ -184,9 +191,10 @@ export default class BaseMap extends Component {
           onLongPress={this.onLongPress}
           onTap={this.onTap}
         />
-      <ScrollView style={styles.scrollView}>
-        {this._renderButtons()}
-      </ScrollView>
+      <Button
+        onPress={ () => this.props.data.navigation.navigate('DrawerOpen')}
+        title="Menu"
+      />
       </View>
     );
   }
@@ -340,4 +348,6 @@ const styles = StyleSheet.create({
   }
 });
 
-//AppRegistry.registerComponent('keepSafe', () => BaseMap);
+// <ScrollView style={styles.scrollView}>
+//   {this._renderButtons()}
+// </ScrollView>

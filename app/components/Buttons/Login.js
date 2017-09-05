@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import { View, Button } from 'react-native';
 
-class Menu extends Component {
+class Login extends Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
     return (
       <View>
         <Button
-          onPress={ () => this.props.data.navigation.navigate('DrawerOpen') }
-          title="Menu"/>
+          onPress={ () => this.props.data.navigation.navigate('Home') }
+          title="Login"/>
       </View>
     )
   }
 }
 
-export default Menu;
+export default Login;
