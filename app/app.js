@@ -34,12 +34,12 @@ class MyNotificationsScreen extends Component {
 }
 
 
-const keepSafe = DrawerNavigator({
+const WalkSafe = DrawerNavigator({
   Home: { screen: MyHomeScreen },
   Notifications: { screen: MyNotificationsScreen },
 });
 
-AppRegistry.registerComponent('keepSafe', () => keepSafe);
+AppRegistry.registerComponent('WalkSafe', () => WalkSafe);
 
 
 //<Button onPress={ () => this.props.navigation.navigate('DrawerOpen') } title="Go back home"/>

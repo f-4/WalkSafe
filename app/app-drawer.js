@@ -9,7 +9,7 @@ class MyHomeScreen extends Component {
     render () {
       return (
         <View>
-        <Text>HERE IS THE HOME SCREEN</Text>
+          <Text>HERE IS THE HOME SCREEN</Text>
           <Button
           onPress={ () => this.props.navigation.navigate('DrawerOpen') }
           title="Go to notifications"/>
@@ -25,7 +25,7 @@ class MyNotificationsScreen extends Component {
   render () {
     return (
       <View>
-      <Text>HERE IS THE NOTIFICATIONS SCREEN</Text>
+        <Text>HERE IS THE NOTIFICATIONS SCREEN</Text>
         <Button
           onPress={ () => this.props.navigation.navigate('DrawerOpen') }
           title="Go back home"/>
@@ -35,9 +35,9 @@ class MyNotificationsScreen extends Component {
 }
 
 
-const keepSafe = DrawerNavigator({
+const WalkSafe = DrawerNavigator({
   Home: { screen: MyHomeScreen },
   Notifications: { screen: MyNotificationsScreen },
 });
 
-AppRegistry.registerComponent('keepSafe', () => keepSafe);
+AppRegistry.registerComponent('WalkSafe', () => WalkSafe);

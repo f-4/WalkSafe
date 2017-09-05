@@ -10,4 +10,4 @@ export default class Hello extends Component {
   }
 }
 
-AppRegistry.registerComponent('keepSafe', () => Hello);
+AppRegistry.registerComponent('WalkSafe', () => Hello);
