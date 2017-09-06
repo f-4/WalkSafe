@@ -10,19 +10,22 @@ export const HomeScreen = DrawerNavigator({
   Home: {
     screen: MyHomeScreen,
     navigationOptions: {
-      drawerLabel: 'Home'
+      drawerLabel: 'Home',
+      gesturesEnabled: false
     },
   },
   Notifications: {
     screen: MyNotificationsScreen,
     navigationOptions: {
-      drawerLabel: 'Notifications'
+      drawerLabel: 'Notifications',
+      gesturesEnabled: false
     },
   },
   NineOneOne: {
     screen: MyNineOneOne,
     navigationOptions: {
-      drawerLabel: '911'
+      drawerLabel: '911',
+      gesturesEnabled: false
     },
   }
 }, {
@@ -34,7 +37,10 @@ export const Root = StackNavigator({
     screen: Landing
   },
   Home: {
-    screen: HomeScreen
+    screen: HomeScreen,
+    navigationOptions: {
+      gesturesEnabled: false
+    },
   }
 }, {
   headerMode: 'none'
