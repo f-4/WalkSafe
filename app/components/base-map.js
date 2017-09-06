@@ -168,6 +168,10 @@ export default class BaseMap extends Component {
     console.log('line 24', this.props)
     return (
       <View style={styles.container}>
+        <Button
+          onPress={ () => this.props.data.navigation.navigate('DrawerOpen')}
+          title="Menu"
+        />
         <MapView
           ref={map => { this._map = map; }}
           style={styles.map}
@@ -347,6 +351,29 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
+
+/*
+
+      ∩＿＿＿∩
+     |ノ      ヽ
+    /   ●    ● | クマ──！！
+   |     (_●_) ミ
+  彡､     |∪|  ､｀＼
+ / ＿＿   ヽノ /´>   )
+(＿＿＿）     /  (_／
+  |        /
+  |   ／＼  ＼
+  | /     )   )
+   ∪     （   ＼
+           ＼＿)
+
+*/
+
+
+
+
+
+
 
 // <ScrollView style={styles.scrollView}>
 //   {this._renderButtons()}

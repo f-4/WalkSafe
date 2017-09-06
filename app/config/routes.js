@@ -4,6 +4,7 @@ import { DrawerNavigator, StackNavigator } from 'react-navigation';
 import Landing from '../screens/Landing';
 import MyHomeScreen from '../screens/Home';
 import MyNotificationsScreen from '../screens/Notifications';
+import MyNineOneOne from '../screens/NineOneOne';
 
 export const HomeScreen = DrawerNavigator({
   Home: {
@@ -16,6 +17,12 @@ export const HomeScreen = DrawerNavigator({
     screen: MyNotificationsScreen,
     navigationOptions: {
       drawerLabel: 'Notifications'
+    },
+  },
+  NineOneOne: {
+    screen: MyNineOneOne,
+    navigationOptions: {
+      drawerLabel: '911'
     },
   }
 }, {
