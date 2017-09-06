@@ -7,6 +7,7 @@ class NineOneOne extends Component {
         <View>
           <Button
             title="Test"
+            onPress={ () => console.log("Like a virgin, touched for the very first time")}
           />
         </View>
     );
