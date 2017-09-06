@@ -348,6 +348,29 @@ const styles = StyleSheet.create({
   }
 });
 
+/*
+
+      ∩＿＿＿∩
+     |ノ      ヽ
+    /   ●    ● | クマ──！！
+   |     (_●_) ミ
+  彡､     |∪|  ､｀＼
+ / ＿＿   ヽノ /´>   )
+(＿＿＿）     /  (_／
+  |        /
+  |   ／＼  ＼
+  | /     )   )
+   ∪     （   ＼
+           ＼＿)
+
+*/
+
+
+
+
+
+
+
 // <ScrollView style={styles.scrollView}>
 //   {this._renderButtons()}
 // </ScrollView>
