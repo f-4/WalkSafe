@@ -1,6 +1,5 @@
 'use strict';
 /* eslint no-console: 0 */
-
 import React, { Component } from 'react';
 import Mapbox, { MapView } from 'react-native-mapbox-gl';
 import {
@@ -8,8 +7,10 @@ import {
   Text,
   StatusBar,
   View,
-  Button
+  Button,
+  ScrollView
 } from 'react-native';
+import axios from 'axios';
 
 //import Menu from './Buttons/Menu';
 
@@ -98,6 +99,10 @@ export default class BaseMap extends Component {
     this.setState({ userTrackingMode });
     console.log('onChangeUserTrackingMode', userTrackingMode);
   };
+
+  componentDidMount() {
+
+  }
 
   componentWillMount() {
     this._offlineProgressSubscription = Mapbox.addOfflinePackProgressListener(progress => {
@@ -190,7 +195,12 @@ export default class BaseMap extends Component {
           onUpdateUserLocation={this.onUpdateUserLocation}
           onLongPress={this.onLongPress}
           onTap={this.onTap}
+          logoIsHidden={true}
+          contentInset={[15,0,0,0]}
         />
+      <ScrollView style={styles.scrollView}>
+        {this._renderButtons()}
+      </ScrollView>
       <Button
         onPress={ () => this.props.data.navigation.navigate('DrawerOpen')}
         title="Menu"
@@ -347,30 +357,3 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
-
-/*
-
-      ∩＿＿＿∩
-     |ノ      ヽ
-    /   ●    ● | クマ──！！
-   |     (_●_) ミ
-  彡､     |∪|  ､｀＼
- / ＿＿   ヽノ /´>   )
-(＿＿＿）     /  (_／
-  |        /
-  |   ／＼  ＼
-  | /     )   )
-   ∪     （   ＼
-           ＼＿)
-
-*/
-
-
-
-
-
-
-
-// <ScrollView style={styles.scrollView}>
-//   {this._renderButtons()}
-// </ScrollView>
