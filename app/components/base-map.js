@@ -49,6 +49,10 @@ export default class BaseMap extends Component {
         radius: 0.01
     }})
       .then(function(response) {
+        var oldCrimes = self.state.annotations.map(function(crime) {
+          return crime.id;
+        });
+
         var newCrimes = response.data.crimes.map(function(crime) {
           return {
             coordinates: [crime.lat, crime.lon],
@@ -62,6 +66,8 @@ export default class BaseMap extends Component {
             },
             id: crime.cdid.toString()
           };
+        }).filter(function(crime) {
+          return !oldCrimes.includes(crime.id);
         });
 
         self.setState({
