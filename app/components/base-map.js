@@ -1,6 +1,5 @@
 'use strict';
 /* eslint no-console: 0 */
-
 import React, { Component } from 'react';
 import Mapbox, { MapView } from 'react-native-mapbox-gl';
 import {
@@ -8,8 +7,10 @@ import {
   Text,
   StatusBar,
   View,
-  Button
+  Button,
+  ScrollView
 } from 'react-native';
+import axios from 'axios';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -104,6 +105,10 @@ export default class BaseMap extends Component {
     console.log('onChangeUserTrackingMode', userTrackingMode);
   };
 
+  componentDidMount() {
+
+  }
+
   componentWillMount() {
     this._offlineProgressSubscription = Mapbox.addOfflinePackProgressListener(progress => {
       console.log('offline pack progress', progress);
@@ -195,13 +200,25 @@ export default class BaseMap extends Component {
           onUpdateUserLocation={this.onUpdateUserLocation}
           onLongPress={this.onLongPress}
           onTap={this.onTap}
+          logoIsHidden={true}
+          contentInset={[15,0,0,0]}
         />
+<<<<<<< HEAD
       <View style={styles.mapButtons}>
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ menuIcon }</Text>
           <Text onPress={ () => this.setState({ userTrackingMode: Mapbox.userTrackingMode.followWithHeading })} >{ locationIcon }</Text>
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ alertIcon }</Text>
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ noViewIcon }</Text>
         </View>
+=======
+      <ScrollView style={styles.scrollView}>
+        {this._renderButtons()}
+      </ScrollView>
+      <Button
+        onPress={ () => this.props.data.navigation.navigate('DrawerOpen')}
+        title="Menu"
+      />
+>>>>>>> Add top padding to viewport of the map and remove logo
       </View>
     );
   }
@@ -358,30 +375,3 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   }
 });
-
-/*
-
-      ∩＿＿＿∩
-     |ノ      ヽ
-    /   ●    ● | クマ──！！
-   |     (_●_) ミ
-  彡､     |∪|  ､｀＼
- / ＿＿   ヽノ /´>   )
-(＿＿＿）     /  (_／
-  |        /
-  |   ／＼  ＼
-  | /     )   )
-   ∪     （   ＼
-           ＼＿)
-
-*/
-
-
-
-
-
-
-
-// <ScrollView style={styles.scrollView}>
-//   {this._renderButtons()}
-// </ScrollView>
