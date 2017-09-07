@@ -46,7 +46,7 @@ export default class BaseMap extends Component {
         lat: location.latitude,
         lon: location.longitude,
         key: SPOTCRIME_API_KEY,
-        radius: 0.02
+        radius: 0.01
     }})
       .then(response => {
         const oldCrimes = this.state.annotations.map(crime => {
@@ -85,19 +85,6 @@ export default class BaseMap extends Component {
             default:
               image = 'https://maxcdn.icons8.com/Share/icon/City//police_badge1600.png';
           }
-    var self = this;
-    axios.get('http://api.spotcrime.com/crimes.json', {params: {
-        lat: location.latitude,
-        lon: location.longitude,
-        key: "privatekeyforspotcrimepublicusers-commercialuse-877.410.1607",
-        radius: 0.01
-    }})
-      .then(function(response) {
-        var oldCrimes = self.state.annotations.map(function(crime) {
-          return crime.id;
-        });
-
-        var newCrimes = response.data.crimes.map(function(crime) {
           return {
             coordinates: [crime.lat, crime.lon],
             type: 'point',
@@ -114,8 +101,8 @@ export default class BaseMap extends Component {
           return !oldCrimes.includes(crime.id);
         });
 
-        self.setState({
-          annotations: [...self.state.annotations, ...newCrimes]
+        this.setState({
+          annotations: [...this.state.annotations, ...newCrimes]
         });
       });
   };
@@ -246,9 +233,6 @@ export default class BaseMap extends Component {
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ alertIcon }</Text>
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ noViewIcon }</Text>
         </View>
-      <ScrollView style={styles.scrollView}>
-        {this._renderButtons()}
-      </ScrollView>
       <Button
         onPress={ () => this.props.data.navigation.navigate('DrawerOpen')}
         title="Menu"
@@ -409,3 +393,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   }
 });
+
+// <ScrollView style={styles.scrollView}>
+//   {this._renderButtons()}
+// </ScrollView>
