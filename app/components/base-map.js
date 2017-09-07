@@ -14,7 +14,7 @@ import axios from 'axios';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const accessToken = 'pk.eyJ1Ijoic2FuZ2h1bmtpbTE0IiwiYSI6ImNqNzNzNXdpNTBqNzUyd3A1cHI5cDg1dnUifQ.BrEcLygohyM7p1zfSsQBJA';
+const accessToken = '';
 Mapbox.setAccessToken(accessToken);
 
 const menuIcon = (<Icon name="bars" size={30} color="#000" />);
@@ -32,7 +32,7 @@ export default class BaseMap extends Component {
       latitude: 40.72052634,
       longitude: -73.97686958312988
     },
-    zoom: 13,
+    zoom: 14,
     userTrackingMode: Mapbox.userTrackingMode.none,
     annotations: []
   };
@@ -41,37 +41,67 @@ export default class BaseMap extends Component {
     this.setState({ currentZoom: location.zoomLevel });
     console.log('onRegionDidChange', location);
 
-    var self = this;
     axios.get('http://api.spotcrime.com/crimes.json', {params: {
         lat: location.latitude,
         lon: location.longitude,
-        key: "privatekeyforspotcrimepublicusers-commercialuse-877.410.1607",
-        radius: 0.01
+        key: '',
+        radius: 0.02
     }})
-      .then(function(response) {
-        var oldCrimes = self.state.annotations.map(function(crime) {
+      .then(response => {
+        const oldCrimes = this.state.annotations.map(crime => {
           return crime.id;
         });
 
-        var newCrimes = response.data.crimes.map(function(crime) {
+        const newCrimes = response.data.crimes.map(crime => {
+          let image;
+          switch(crime.type) {
+            case 'Theft':
+              image = 'http://www.hershberglaw.ca/wp-content/uploads/2014/03/icon-9.png';
+              break;
+            case 'Assault':
+              image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/36066-200.png';
+              break;
+            case 'Arrest':
+              image = 'https://www.votesilo.com/images/bill-subject-icons/crime-law-enforcement-icon.svg';
+              break;
+            case 'Burglary':
+              image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/80199-200.png';
+              break;
+            case 'Shooting':
+              image = 'https://www.shareicon.net/download/2015/12/25/693155_hand.svg';
+              break;
+            case 'Arson':
+              image = 'http://cdn.onlinewebfonts.com/svg/download_504940.png';
+              break;
+            case 'Vandalism':
+              image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/60818-200.png';
+              break;
+            case 'Burglary':
+              image = 'https://maxcdn.icons8.com/windows8/PNG/512/City/burglary-512.png';
+            case 'Robbery':
+              image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/21302-200.png';
+              break;
+            default:
+              image = 'https://maxcdn.icons8.com/Share/icon/City//police_badge1600.png';
+          }
           return {
             coordinates: [crime.lat, crime.lon],
             type: 'point',
             title: crime.type,
             subtitle: `${crime.address} ${crime.date}`,
             annotationImage: {
-              source: { uri: 'http://www.rw-designer.com/icon-image/6648-256x256x32.png' },
-              height: 25,
-              width: 25
+              source: { uri: image },
+              height: 30,
+              width: 30
             },
             id: crime.cdid.toString()
           };
-        }).filter(function(crime) {
+        }).filter(crime => {
           return !oldCrimes.includes(crime.id);
         });
 
-        self.setState({
-          annotations: [...self.state.annotations, ...newCrimes]
+        this.setState({
+          annotations: [...this.state.annotations, ...newCrimes]
         });
       });
   };
@@ -358,7 +388,7 @@ const styles = StyleSheet.create({
     alignItems: 'stretch'
   },
   map: {
-    flex: 1
+    flex: 4
   },
   scrollView: {
     flex: 1
