@@ -10,11 +10,12 @@ import {
   Button,
   ScrollView
 } from 'react-native';
+import { MAPBOX_ACCESS_TOKEN, SPOTCRIME_API_KEY } from 'react-native-dotenv';
 import axios from 'axios';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const accessToken = '';
+const accessToken = MAPBOX_ACCESS_TOKEN;
 Mapbox.setAccessToken(accessToken);
 
 const menuIcon = (<Icon name="bars" size={30} color="#000" />);
@@ -44,7 +45,7 @@ export default class BaseMap extends Component {
     axios.get('http://api.spotcrime.com/crimes.json', {params: {
         lat: location.latitude,
         lon: location.longitude,
-        key: '',
+        key: SPOTCRIME_API_KEY,
         radius: 0.02
     }})
       .then(response => {
