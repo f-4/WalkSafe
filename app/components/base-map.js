@@ -11,10 +11,15 @@ import {
   Button
 } from 'react-native';
 
-//import Menu from './Buttons/Menu';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const accessToken = 'pk.eyJ1Ijoic2FuZ2h1bmtpbTE0IiwiYSI6ImNqNzNzNXdpNTBqNzUyd3A1cHI5cDg1dnUifQ.BrEcLygohyM7p1zfSsQBJA';
 Mapbox.setAccessToken(accessToken);
+
+const menuIcon = (<Icon name="bars" size={30} color="#000" />);
+const locationIcon = (<Icon name="location-arrow" size={30} color="#000" />);
+const alertIcon = (<Icon name="exclamation-circle" size={30} color="#ef1f1f" />);
+const noViewIcon = (<Icon name="eye-slash" size={30} color="#000" />);
 
 export default class BaseMap extends Component {
   constructor(props) {
@@ -178,7 +183,7 @@ export default class BaseMap extends Component {
           scrollEnabled={true}
           zoomEnabled={true}
           showsUserLocation={true}
-          styleURL={Mapbox.mapStyles.light}
+          styleURL={Mapbox.mapStyles.streets}
           userTrackingMode={this.state.userTrackingMode}
           annotations={this.state.annotations}
           annotationsAreImmutable
@@ -191,10 +196,12 @@ export default class BaseMap extends Component {
           onLongPress={this.onLongPress}
           onTap={this.onTap}
         />
-      <Button
-        onPress={ () => this.props.data.navigation.navigate('DrawerOpen')}
-        title="Menu"
-      />
+      <View style={styles.mapButtons}>
+          <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ menuIcon }</Text>
+          <Text onPress={ () => this.setState({ userTrackingMode: Mapbox.userTrackingMode.followWithHeading })} >{ locationIcon }</Text>
+          <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ alertIcon }</Text>
+          <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ noViewIcon }</Text>
+        </View>
       </View>
     );
   }
@@ -345,6 +352,10 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1
+  },
+  mapButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 });
 
