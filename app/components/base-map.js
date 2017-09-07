@@ -1,6 +1,5 @@
 'use strict';
 /* eslint no-console: 0 */
-
 import React, { Component } from 'react';
 import Mapbox, { MapView } from 'react-native-mapbox-gl';
 import {
@@ -8,12 +7,15 @@ import {
   Text,
   StatusBar,
   View,
-  Button
+  Button,
+  ScrollView
 } from 'react-native';
+import { MAPBOX_ACCESS_TOKEN, SPOTCRIME_API_KEY } from 'react-native-dotenv';
+import axios from 'axios';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const accessToken = 'pk.eyJ1Ijoic2FuZ2h1bmtpbTE0IiwiYSI6ImNqNzNzNXdpNTBqNzUyd3A1cHI5cDg1dnUifQ.BrEcLygohyM7p1zfSsQBJA';
+const accessToken = MAPBOX_ACCESS_TOKEN;
 Mapbox.setAccessToken(accessToken);
 
 const menuIcon = (<Icon name="bars" size={30} color="#000" />);
@@ -31,55 +33,78 @@ export default class BaseMap extends Component {
       latitude: 40.72052634,
       longitude: -73.97686958312988
     },
-    zoom: 11,
+    zoom: 14,
     userTrackingMode: Mapbox.userTrackingMode.none,
-    annotations: [{
-      coordinates: [40.72052634, -73.97686958312988],
-      type: 'point',
-      title: 'This is marker 1',
-      subtitle: 'It has a rightCalloutAccessory too',
-      rightCalloutAccessory: {
-        source: { uri: 'https://cldup.com/9Lp0EaBw5s.png' },
-        height: 25,
-        width: 25
-      },
-      annotationImage: {
-        source: { uri: 'https://cldup.com/CnRLZem9k9.png' },
-        height: 25,
-        width: 25
-      },
-      id: 'marker1'
-    }, {
-      coordinates: [40.714541341726175,-74.00579452514648],
-      type: 'point',
-      title: 'Important!',
-      subtitle: 'Neat, this is a custom annotation image',
-      annotationImage: {
-        source: { uri: 'https://cldup.com/7NLZklp8zS.png' },
-        height: 25,
-        width: 25
-      },
-      id: 'marker2'
-    }, {
-      coordinates: [[40.76572150042782,-73.99429321289062],[40.743485405490695, -74.00218963623047],[40.728266950429735,-74.00218963623047],[40.728266950429735,-73.99154663085938],[40.73633186448861,-73.98983001708984],[40.74465591168391,-73.98914337158203],[40.749337730454826,-73.9870834350586]],
-      type: 'polyline',
-      strokeColor: '#00FB00',
-      strokeWidth: 4,
-      strokeAlpha: .5,
-      id: 'foobar'
-    }, {
-      coordinates: [[40.749857912194386, -73.96820068359375], [40.741924698522055,-73.9735221862793], [40.735681504432264,-73.97523880004883], [40.7315190495212,-73.97438049316406], [40.729177554196376,-73.97180557250975], [40.72345355209305,-73.97438049316406], [40.719290332250544,-73.97455215454102], [40.71369559554873,-73.97729873657227], [40.71200407096382,-73.97850036621094], [40.71031250340588,-73.98691177368163], [40.71031250340588,-73.99154663085938]],
-      type: 'polygon',
-      fillAlpha: 1,
-      strokeColor: '#ffffff',
-      fillColor: '#0000ff',
-      id: 'zap'
-    }]
+    annotations: []
   };
 
   onRegionDidChange = (location) => {
     this.setState({ currentZoom: location.zoomLevel });
     console.log('onRegionDidChange', location);
+
+    axios.get('http://api.spotcrime.com/crimes.json', {params: {
+        lat: location.latitude,
+        lon: location.longitude,
+        key: SPOTCRIME_API_KEY,
+        radius: 0.01
+    }})
+      .then(response => {
+        const oldCrimes = this.state.annotations.map(crime => {
+          return crime.id;
+        });
+
+        const newCrimes = response.data.crimes.map(crime => {
+          let image;
+          switch(crime.type) {
+            case 'Theft':
+              image = 'http://www.hershberglaw.ca/wp-content/uploads/2014/03/icon-9.png';
+              break;
+            case 'Assault':
+              image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/36066-200.png';
+              break;
+            case 'Arrest':
+              image = 'https://www.votesilo.com/images/bill-subject-icons/crime-law-enforcement-icon.svg';
+              break;
+            case 'Burglary':
+              image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/80199-200.png';
+              break;
+            case 'Shooting':
+              image = 'https://www.shareicon.net/download/2015/12/25/693155_hand.svg';
+              break;
+            case 'Arson':
+              image = 'http://cdn.onlinewebfonts.com/svg/download_504940.png';
+              break;
+            case 'Vandalism':
+              image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/60818-200.png';
+              break;
+            case 'Burglary':
+              image = 'https://maxcdn.icons8.com/windows8/PNG/512/City/burglary-512.png';
+            case 'Robbery':
+              image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/21302-200.png';
+              break;
+            default:
+              image = 'https://maxcdn.icons8.com/Share/icon/City//police_badge1600.png';
+          }
+          return {
+            coordinates: [crime.lat, crime.lon],
+            type: 'point',
+            title: crime.type,
+            subtitle: `${crime.address} ${crime.date}`,
+            annotationImage: {
+              source: { uri: image },
+              height: 30,
+              width: 30
+            },
+            id: crime.cdid.toString()
+          };
+        }).filter(crime => {
+          return !oldCrimes.includes(crime.id);
+        });
+
+        this.setState({
+          annotations: [...this.state.annotations, ...newCrimes]
+        });
+      });
   };
   onRegionWillChange = (location) => {
     console.log('onRegionWillChange', location);
@@ -103,6 +128,10 @@ export default class BaseMap extends Component {
     this.setState({ userTrackingMode });
     console.log('onChangeUserTrackingMode', userTrackingMode);
   };
+
+  componentDidMount() {
+
+  }
 
   componentWillMount() {
     this._offlineProgressSubscription = Mapbox.addOfflinePackProgressListener(progress => {
@@ -195,6 +224,8 @@ export default class BaseMap extends Component {
           onUpdateUserLocation={this.onUpdateUserLocation}
           onLongPress={this.onLongPress}
           onTap={this.onTap}
+          logoIsHidden={true}
+          contentInset={[15,0,0,0]}
         />
       <View style={styles.mapButtons}>
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ menuIcon }</Text>
@@ -202,6 +233,10 @@ export default class BaseMap extends Component {
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ alertIcon }</Text>
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ noViewIcon }</Text>
         </View>
+      <Button
+        onPress={ () => this.props.data.navigation.navigate('DrawerOpen')}
+        title="Menu"
+      />
       </View>
     );
   }
@@ -348,7 +383,7 @@ const styles = StyleSheet.create({
     alignItems: 'stretch'
   },
   map: {
-    flex: 1
+    flex: 4
   },
   scrollView: {
     flex: 1
@@ -358,29 +393,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   }
 });
-
-/*
-
-      ∩＿＿＿∩
-     |ノ      ヽ
-    /   ●    ● | クマ──！！
-   |     (_●_) ミ
-  彡､     |∪|  ､｀＼
- / ＿＿   ヽノ /´>   )
-(＿＿＿）     /  (_／
-  |        /
-  |   ／＼  ＼
-  | /     )   )
-   ∪     （   ＼
-           ＼＿)
-
-*/
-
-
-
-
-
-
 
 // <ScrollView style={styles.scrollView}>
 //   {this._renderButtons()}
