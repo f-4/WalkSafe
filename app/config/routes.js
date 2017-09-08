@@ -1,4 +1,4 @@
-import React from 'react';
+//import React from 'react';
 import { DrawerNavigator, StackNavigator } from 'react-navigation';
 
 import Landing from '../screens/Landing';
@@ -13,53 +13,53 @@ export const HomeScreen = DrawerNavigator({
   Home: {
     screen: MyHomeScreen,
     navigationOptions: {
-      drawerLabel: 'Home'
+      drawerLabel: 'Home',
     },
   },
   Uber: {
     screen: CallUber,
     navigationOptions: {
-      drawerLabel: 'Get an Uber ride'
+      drawerLabel: 'Get an Uber ride',
     },
   },
   NineOneOne: {
     screen: MyNineOneOne,
     navigationOptions: {
-      drawerLabel: '911'
+      drawerLabel: '911',
     },
   },
   Contacts: {
     screen: Contacts,
     navigationOptions: {
-      drawerLabel: 'Emergency Contacts'
+      drawerLabel: 'Emergency Contacts',
     },
   },
   About: {
     screen: About,
     navigationOptions: {
-      drawerLabel: 'About'
+      drawerLabel: 'About',
     },
   },
   Logout: {
     screen: Logout,
     navigationOptions: {
-      drawerLabel: 'Logout'
+      drawerLabel: 'Logout',
     },
   },
 }, {
-  headerMode: 'none'
+  headerMode: 'none',
 });
 
 export const Root = StackNavigator({
   Landing: {
-    screen: Landing
+    screen: Landing,
   },
   Home: {
     screen: HomeScreen,
     navigationOptions: {
-      gesturesEnabled: false
+      gesturesEnabled: false,
     },
-  }
+  },
 }, {
-  headerMode: 'none'
+  headerMode: 'none',
 });
