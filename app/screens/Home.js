@@ -5,9 +5,9 @@ import Menu from '../components/buttons/Menu';
 import BaseMap from '../components/base-map.js';
 
 class MyHomeScreen extends Component {
-  render () {
+  render() {
     return (
-      <BaseMap data={ this.props }/>
+      <BaseMap data={this.props} />
     );
   }
 }

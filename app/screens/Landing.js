@@ -5,12 +5,12 @@ import Login from '../components/buttons/Login';
 import Signup from '../components/buttons/Signup';
 
 class Landing extends Component {
-  render () {
+  render() {
     return (
       <View>
         <Text>WalkSafe</Text>
-        <Login data={ this.props }/>
-        <Signup data={ this.props }/>
+        <Login data={this.props} />
+        <Signup data={this.props} />
       </View>
     );
   }

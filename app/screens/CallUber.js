@@ -3,11 +3,11 @@ import { Text, View } from 'react-native';
 import { DrawerNavigator } from 'react-navigation';
 
 class CallUber extends Component {
-  render () {
+  render() {
     return (
-        <View>
-          <Text>Uber will come</Text>
-        </View>
+      <View>
+        <Text>Uber will come</Text>
+      </View>
     );
   }
 }

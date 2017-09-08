@@ -1,4 +1,4 @@
-import React from 'react';
+//import React from 'react';
 import { DrawerNavigator, StackNavigator } from 'react-navigation';
 
 import Landing from '../screens/Landing';
@@ -6,6 +6,7 @@ import MyHomeScreen from '../screens/Home';
 import CallUber from '../screens/CallUber';
 import Contacts from '../screens/Contacts';
 import About from '../screens/About';
+import Tutorial from '../screens/Tutorial';
 import MyNineOneOne from '../screens/NineOneOne';
 import Logout from '../components/buttons/Logout';
 
@@ -13,53 +14,59 @@ export const HomeScreen = DrawerNavigator({
   Home: {
     screen: MyHomeScreen,
     navigationOptions: {
-      drawerLabel: 'Home'
+      drawerLabel: 'Home',
     },
   },
   Uber: {
     screen: CallUber,
     navigationOptions: {
-      drawerLabel: 'Get an Uber ride'
+      drawerLabel: 'Get an Uber ride',
     },
   },
   NineOneOne: {
     screen: MyNineOneOne,
     navigationOptions: {
-      drawerLabel: '911'
+      drawerLabel: '911',
     },
   },
   Contacts: {
     screen: Contacts,
     navigationOptions: {
-      drawerLabel: 'Emergency Contacts'
+      drawerLabel: 'Emergency Contacts',
     },
   },
   About: {
     screen: About,
     navigationOptions: {
-      drawerLabel: 'About'
+      drawerLabel: 'About',
     },
   },
   Logout: {
     screen: Logout,
     navigationOptions: {
-      drawerLabel: 'Logout'
+      drawerLabel: 'Logout',
+    },
+  },
+  Tutorial: {
+    screen: Tutorial,
+    navigationOptions: {
+      drawerLabel: 'Tutorial',
     },
   },
 }, {
-  headerMode: 'none'
+  headerMode: 'none',
 });
 
 export const Root = StackNavigator({
   Landing: {
-    screen: Landing
+    screen: Landing,
   },
   Home: {
     screen: HomeScreen,
     navigationOptions: {
-      gesturesEnabled: false
+      gesturesEnabled: false,
     },
-  }
+  },
 }, {
-  headerMode: 'none'
+  headerMode: 'none',
 });
