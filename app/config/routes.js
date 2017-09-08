@@ -6,6 +6,7 @@ import MyHomeScreen from '../screens/Home';
 import CallUber from '../screens/CallUber';
 import Contacts from '../screens/Contacts';
 import About from '../screens/About';
+import Tutorial from '../screens/Tutorial';
 import MyNineOneOne from '../screens/NineOneOne';
 import Logout from '../components/buttons/Logout';
 
@@ -44,6 +45,12 @@ export const HomeScreen = DrawerNavigator({
     screen: Logout,
     navigationOptions: {
       drawerLabel: 'Logout',
+    },
+  },
+  Tutorial: {
+    screen: Tutorial,
+    navigationOptions: {
+      drawerLabel: 'Tutorial',
     },
   },
 }, {
