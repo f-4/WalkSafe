@@ -34,7 +34,21 @@ export default class BaseMap extends Component {
     },
     zoom: 14,
     userTrackingMode: Mapbox.userTrackingMode.none,
-    annotations: []
+    annotations: [],
+    annotationsHistory: []
+  };
+
+  onCrimesToggleClick = () => {
+    const crimes = this.state.annotations.filter(a => a.type === 'point');
+
+    if (crimes.length > 0) {
+      this.setState({
+        annotationsHistory: this.state.annotations.concat(crimes),
+        annotations: this.state.annotations.filter(a => a.type !== 'point')
+      })
+    } else {
+      this.setState({ annotations: this.state.annotationsHistory });
+    }
   };
 
   onRegionDidChange = (location) => {
@@ -127,10 +141,6 @@ export default class BaseMap extends Component {
     this.setState({ userTrackingMode });
     console.log('onChangeUserTrackingMode', userTrackingMode);
   };
-
-  componentDidMount() {
-
-  }
 
   componentWillMount() {
     this._offlineProgressSubscription = Mapbox.addOfflinePackProgressListener(progress => {
@@ -230,7 +240,7 @@ export default class BaseMap extends Component {
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ menuIcon }</Text>
           <Text onPress={ () => this.setState({ userTrackingMode: Mapbox.userTrackingMode.followWithHeading })} >{ locationIcon }</Text>
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ alertIcon }</Text>
-          <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ noViewIcon }</Text>
+          <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
         </View>
       </View>
     );
