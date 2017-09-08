@@ -14,14 +14,13 @@ import { MAPBOX_ACCESS_TOKEN, SPOTCRIME_API_KEY } from 'react-native-dotenv';
 import axios from 'axios';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+import menuIcon from './icons/Menu';
+import locationIcon from './icons/Location';
+import alertIcon from './icons/Alert';
+import noViewIcon from './icons/NoView';
 
 const accessToken = MAPBOX_ACCESS_TOKEN;
 Mapbox.setAccessToken(accessToken);
-
-const menuIcon = (<Icon name="bars" size={30} color="#000" />);
-const locationIcon = (<Icon name="location-arrow" size={30} color="#000" />);
-const alertIcon = (<Icon name="exclamation-circle" size={30} color="#ef1f1f" />);
-const noViewIcon = (<Icon name="eye-slash" size={30} color="#000" />);
 
 export default class BaseMap extends Component {
   constructor(props) {
