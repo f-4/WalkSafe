@@ -1,4 +1,3 @@
-//import React from 'react';
 import { DrawerNavigator, StackNavigator } from 'react-navigation';
 
 import Landing from '../screens/Landing';
@@ -8,49 +7,58 @@ import Contacts from '../screens/Contacts';
 import About from '../screens/About';
 import Tutorial from '../screens/Tutorial';
 import MyNineOneOne from '../screens/NineOneOne';
+
+import Profile from '../components/icons/Profile';
+import OrderUber from '../components/icons/Uber';
+import Call911 from '../components/icons/Call911';
+import EmergencyContacts from '../components/icons/EmergencyContacts';
+import AboutIcon from '../components/icons/About';
+import LogoutIcon from '../components/icons/Logout';
+import TutorialIcon from '../components/icons/Tutorial';
+
 import Logout from '../components/buttons/Logout';
 
 export const HomeScreen = DrawerNavigator({
   Home: {
     screen: MyHomeScreen,
     navigationOptions: {
-      drawerLabel: 'Home',
+      drawerLabel: Profile,
     },
   },
   Uber: {
     screen: CallUber,
     navigationOptions: {
-      drawerLabel: 'Get an Uber ride',
+      drawerLabel: OrderUber,
     },
   },
   NineOneOne: {
     screen: MyNineOneOne,
     navigationOptions: {
-      drawerLabel: '911',
+      drawerLabel: Call911,
     },
   },
   Contacts: {
     screen: Contacts,
     navigationOptions: {
-      drawerLabel: 'Emergency Contacts',
+      drawerLabel: EmergencyContacts,
     },
   },
   About: {
     screen: About,
     navigationOptions: {
-      drawerLabel: 'About',
-    },
-  },
-  Logout: {
-    screen: Logout,
-    navigationOptions: {
-      drawerLabel: 'Logout',
+      drawerLabel: AboutIcon,
     },
   },
   Tutorial: {
     screen: Tutorial,
     navigationOptions: {
-      drawerLabel: 'Tutorial',
+      drawerLabel: TutorialIcon,
+    },
+  },
+  Logout: {
+    screen: Logout,
+    navigationOptions: {
+      drawerLabel: LogoutIcon,
     },
   },
 }, {
