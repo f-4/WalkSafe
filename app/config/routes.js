@@ -8,6 +8,14 @@ import Contacts from '../screens/Contacts';
 import About from '../screens/About';
 import Tutorial from '../screens/Tutorial';
 import MyNineOneOne from '../screens/NineOneOne';
+
+import OrderUber from '../components/icons/Uber';
+import Call911 from '../components/icons/Call911';
+import EmergencyContacts from '../components/icons/EmergencyContacts';
+import AboutIcon from '../components/icons/About';
+import LogoutIcon from '../components/icons/Logout';
+import TutorialIcon from '../components/icons/Tutorial';
+
 import Logout from '../components/buttons/Logout';
 
 export const HomeScreen = DrawerNavigator({
@@ -20,37 +28,37 @@ export const HomeScreen = DrawerNavigator({
   Uber: {
     screen: CallUber,
     navigationOptions: {
-      drawerLabel: 'Get an Uber ride',
+      drawerLabel: OrderUber,
     },
   },
   NineOneOne: {
     screen: MyNineOneOne,
     navigationOptions: {
-      drawerLabel: '911',
+      drawerLabel: Call911,
     },
   },
   Contacts: {
     screen: Contacts,
     navigationOptions: {
-      drawerLabel: 'Emergency Contacts',
+      drawerLabel: EmergencyContacts,
     },
   },
   About: {
     screen: About,
     navigationOptions: {
-      drawerLabel: 'About',
+      drawerLabel: AboutIcon,
     },
   },
   Logout: {
     screen: Logout,
     navigationOptions: {
-      drawerLabel: 'Logout',
+      drawerLabel: LogoutIcon,
     },
   },
   Tutorial: {
     screen: Tutorial,
     navigationOptions: {
-      drawerLabel: 'Tutorial',
+      drawerLabel: TutorialIcon,
     },
   },
 }, {
