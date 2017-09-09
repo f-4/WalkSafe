@@ -6,7 +6,7 @@ import styles from '../../assets/styles/Icons.styles';
 const logoutIcon = (<Icon name="logout-variant" size={30} color="#919191" />);
 
 const Logout =
-  <View style={styles.container}>
+  <View style={{marginTop: 'auto'}}>
     <Text>{ logoutIcon }</Text>
   </View>;
 
