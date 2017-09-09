@@ -9,6 +9,7 @@ import About from '../screens/About';
 import Tutorial from '../screens/Tutorial';
 import MyNineOneOne from '../screens/NineOneOne';
 
+import CloseIcon from '../components/icons/Close';
 import OrderUber from '../components/icons/Uber';
 import Call911 from '../components/icons/Call911';
 import EmergencyContacts from '../components/icons/EmergencyContacts';
@@ -22,7 +23,7 @@ export const HomeScreen = DrawerNavigator({
   Home: {
     screen: MyHomeScreen,
     navigationOptions: {
-      drawerLabel: 'Home',
+      drawerLabel: CloseIcon,
     },
   },
   Uber: {
@@ -49,16 +50,16 @@ export const HomeScreen = DrawerNavigator({
       drawerLabel: AboutIcon,
     },
   },
-  Logout: {
-    screen: Logout,
-    navigationOptions: {
-      drawerLabel: LogoutIcon,
-    },
-  },
   Tutorial: {
     screen: Tutorial,
     navigationOptions: {
       drawerLabel: TutorialIcon,
+    },
+  },
+  Logout: {
+    screen: Logout,
+    navigationOptions: {
+      drawerLabel: LogoutIcon,
     },
   },
 }, {

@@ -7,7 +7,7 @@ class Logout extends Component {
     return (
       <View>
         <Button
-          onPress={() => this.props.data.navigation.navigate('Home')}
+          onPress={() => console.log('Was touched')}
           title="Logout"
         />
       </View>
