@@ -87,7 +87,7 @@ export default class DrawerMenu extends Component {
                   {
                     icon: 'report', value: 'Call 911',
                     onPress: () => {
-                      Communications.phonecall('+16508479115', true);
+                      Communications.phonecall('+123456789', true);
                     },
                   },
                   {
