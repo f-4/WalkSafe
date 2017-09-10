@@ -8,7 +8,8 @@ import {
   StatusBar,
   View,
   Button,
-  ScrollView
+  ScrollView,
+  TextInput
 } from 'react-native';
 import { MAPBOX_ACCESS_TOKEN, SPOTCRIME_API_KEY } from 'react-native-dotenv';
 import axios from 'axios';
@@ -35,8 +36,26 @@ export default class BaseMap extends Component {
     zoom: 14,
     userTrackingMode: Mapbox.userTrackingMode.none,
     annotations: [],
-    annotationsHistory: []
+    annotationsHistory: [],
+    searchText: ''
   };
+
+  onPressSearchButton = () => {
+    if (this.state.searchText.length > 0) {
+      axios.get('http://localhost:1337/map/search', {
+        params: {
+          address: this.state.searchText
+        }
+      })
+        .then(res => {
+          const coordinates = res.data.entity.features[0].center;
+          this._map.setCenterCoordinate(coordinates[1], coordinates[0])
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
+  }
 
   onCrimesToggleClick = () => {
     const crimes = this.state.annotations.filter(a => a.type === 'point');
@@ -240,6 +259,15 @@ export default class BaseMap extends Component {
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ alertIcon }</Text>
           <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
         </View>
+        <TextInput
+          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+          onChangeText={(searchText) => this.setState({searchText})}
+          value={this.state.searchText}
+        />
+        <Button
+          onPress={() => this.onPressSearchButton()}
+          title="Search"
+        />
       </View>
     );
   }
