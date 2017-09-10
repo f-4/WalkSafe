@@ -8,7 +8,8 @@ import {
   StatusBar,
   View,
   Button,
-  ScrollView
+  ScrollView,
+  TextInput
 } from 'react-native';
 import { MAPBOX_ACCESS_TOKEN, SPOTCRIME_API_KEY } from 'react-native-dotenv';
 import axios from 'axios';
@@ -35,8 +36,26 @@ export default class BaseMap extends Component {
     zoom: 14,
     userTrackingMode: Mapbox.userTrackingMode.none,
     annotations: [],
-    annotationsHistory: []
+    annotationsHistory: [],
+    searchText: ''
   };
+
+  onPressSearchButton = () => {
+    if (this.state.searchText.length > 0) {
+      axios.get('http://localhost:1337/map/search', {
+        params: {
+          address: this.state.searchText
+        }
+      })
+        .then(res => {
+          const coordinates = res.data.entity.features[0].center;
+          this._map.setCenterCoordinate(coordinates[1], coordinates[0])
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
+  }
 
   onCrimesToggleClick = () => {
     const crimes = this.state.annotations.filter(a => a.type === 'point');
@@ -69,34 +88,32 @@ export default class BaseMap extends Component {
         const newCrimes = response.data.crimes.map(crime => {
           let image;
           switch(crime.type) {
-            case 'Theft':
-              image = 'http://www.hershberglaw.ca/wp-content/uploads/2014/03/icon-9.png';
-              break;
-            case 'Assault':
-              image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/36066-200.png';
-              break;
             case 'Arrest':
-              image = 'https://www.votesilo.com/images/bill-subject-icons/crime-law-enforcement-icon.svg';
-              break;
-            case 'Burglary':
-              image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/80199-200.png';
-              break;
-            case 'Shooting':
-              image = 'https://www.shareicon.net/download/2015/12/25/693155_hand.svg';
+              image = 'arrest';
               break;
             case 'Arson':
-              image = 'http://cdn.onlinewebfonts.com/svg/download_504940.png';
+              image = 'arson';
               break;
-            case 'Vandalism':
-              image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/60818-200.png';
+            case 'Assault':
+              image = 'assault' ;
               break;
             case 'Burglary':
-              image = 'https://maxcdn.icons8.com/windows8/PNG/512/City/burglary-512.png';
+              image = 'burglary';
+              break;
             case 'Robbery':
-              image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/21302-200.png';
+              image = 'robbery';
+              break;
+            case 'Shooting':
+              image = 'shooting';
+              break;
+            case 'Theft':
+              image = 'theft';
+              break;
+            case 'Vandalism':
+              image = 'vandalism';
               break;
             default:
-              image = 'https://maxcdn.icons8.com/Share/icon/City//police_badge1600.png';
+              image = 'other';
           }
           return {
             coordinates: [crime.lat, crime.lon],
@@ -105,8 +122,8 @@ export default class BaseMap extends Component {
             subtitle: `${crime.address} ${crime.date}`,
             annotationImage: {
               source: { uri: image },
-              height: 30,
-              width: 30
+              height: 45,
+              width: 45
             },
             id: crime.cdid.toString()
           };
@@ -242,6 +259,15 @@ export default class BaseMap extends Component {
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ alertIcon }</Text>
           <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
         </View>
+        <TextInput
+          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+          onChangeText={(searchText) => this.setState({searchText})}
+          value={this.state.searchText}
+        />
+        <Button
+          onPress={() => this.onPressSearchButton()}
+          title="Search"
+        />
       </View>
     );
   }
