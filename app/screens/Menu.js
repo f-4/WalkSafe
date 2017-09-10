@@ -12,7 +12,7 @@ import emergencyIcon from '../components/icons/Call911';
 const uiTheme = {
     fontFamily: 'Roboto',
     palette: {
-      primaryColor: COLOR.green500,
+      primaryColor: COLOR.cyan500,
       accentColor: COLOR.pink500,
     },
     toolbar: {
@@ -68,7 +68,6 @@ export default class DrawerMenu extends Component {
                         primaryText: 'Pedo Bear',
                         secondaryText: 'pedo@bear.com',
                     },
-                    rightElement: 'arrow-drop-down',
                   }}
                 />
               </Drawer.Header>
@@ -78,26 +77,25 @@ export default class DrawerMenu extends Component {
                 items={[
                   {
                     icon: 'directions-car', value: 'Order an Uber',
-                    //active: this.state.active == 'bookmark',
+                    active: this.state.active == 'Uber',
                     onPress: () => {
-                      this.setState({ active: 'bookmark' });
+                      this.setState({ active: 'Uber' });
                       this.props.navigation.navigate('Uber');
                       console.log('I was pressed');
                     },
                   },
                   {
                     icon: 'report', value: 'Call 911',
-                    active: this.state.active == 'calendar',
                     onPress: () => {
                       Communications.phonecall('+16508479115', true);
                     },
                   },
                   {
                     icon: 'people', value: 'Emergency Contacts',
-                    active: this.state.active == 'client',
+                    active: this.state.active == 'Contacts',
                     onPress: () => {
-                      this.setState({ active: 'client' });
-                      this.props.navigation.navigate('Client');
+                      this.setState({ active: 'Contacts' });
+                      this.props.navigation.navigate('Contacts');
                     },
                   },
                 ]}
@@ -107,26 +105,26 @@ export default class DrawerMenu extends Component {
                 items={[
                   {
                     icon: 'slideshow', value: 'Tutorial',
-                    active: this.state.active == 'info',
+                    active: this.state.active == 'Tutorial',
                     onPress: () => {
-                      this.setState({ active: 'info' });
+                      this.setState({ active: 'Tutorial' });
                       this.props.navigation.navigate('Tutorial');
                     },
                   },
                   {
                     icon: 'info', value: 'About',
-                    active: this.state.active == 'settings',
+                    active: this.state.active == 'About',
                     onPress: () => {
-                      this.setState({ active: 'settings' });
-                      this.props.navigation.navigate('Settings');
+                      this.setState({ active: 'About' });
+                      this.props.navigation.navigate('About');
                     },
                   },
                   {
                     icon: 'input', value: 'Logout',
-                    active: this.state.active == 'settings',
+                    //active: this.state.active == '',
                     onPress: () => {
-                      this.setState({ active: 'settings' });
-                      this.props.navigation.navigate('Settings');
+                      //this.setState({ active: '' });
+                      this.props.navigation.navigate('Landing');
                     },
                   },
                 ]}
