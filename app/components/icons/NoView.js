@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React from 'react';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const noViewIcon = (<Icon name="eye-slash" size={30} color="#000" />);
+const noViewIcon = (<Icon name="visibility-off" size={30} color="#000" />);
 
 export default noViewIcon;
