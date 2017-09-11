@@ -6,6 +6,7 @@ import Signup from '../components/buttons/Signup';
 
 class Landing extends Component {
   render() {
+    console.log('Landing page props', this.props);
     return (
       <View>
         <Text>WalkSafe</Text>
