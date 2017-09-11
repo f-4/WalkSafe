@@ -13,12 +13,14 @@ import {
 } from 'react-native';
 import { MAPBOX_ACCESS_TOKEN, SPOTCRIME_API_KEY } from 'react-native-dotenv';
 import axios from 'axios';
+import mapStyle from '../assets/styles/Map.style';
 
-import Icon from 'react-native-vector-icons/FontAwesome';
+import searchIcon from './icons/Search';
 import menuIcon from './icons/Menu';
 import locationIcon from './icons/Location';
 import alertIcon from './icons/Alert';
 import noViewIcon from './icons/NoView';
+import viewCrimes from './icons/ViewCrimes';
 
 const accessToken = MAPBOX_ACCESS_TOKEN;
 Mapbox.setAccessToken(accessToken);
@@ -37,7 +39,8 @@ export default class BaseMap extends Component {
     userTrackingMode: Mapbox.userTrackingMode.none,
     annotations: [],
     annotationsHistory: [],
-    searchText: ''
+    searchText: '',
+    renderCrimes: true
   };
 
   onPressSearchButton = () => {
@@ -59,6 +62,10 @@ export default class BaseMap extends Component {
 
   onCrimesToggleClick = () => {
     const crimes = this.state.annotations.filter(a => a.type === 'point');
+
+    this.setState({
+      renderCrimes: !this.state.renderCrimes
+    });
 
     if (crimes.length > 0) {
       this.setState({
@@ -227,10 +234,24 @@ export default class BaseMap extends Component {
     StatusBar.setHidden(false);
     console.log('line 24', this.props)
     return (
-      <View style={styles.container}>
+      <View style={mapStyle.container}>
+        <View style={mapStyle.searchBar}>
+          <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ menuIcon }</Text>
+          <TextInput
+            style={mapStyle.searchInput}
+            onChangeText={(searchText) => this.setState({searchText})}
+            value={this.state.searchText}
+          />
+          <Text
+            onPress={() => this.onPressSearchButton()}
+            title="Search"
+          >
+            { searchIcon }
+          </Text>
+        </View>
         <MapView
           ref={map => { this._map = map; }}
-          style={styles.map}
+          style={mapStyle.map}
           initialCenterCoordinate={this.state.center}
           initialZoomLevel={this.state.zoom}
           initialDirection={0}
@@ -253,21 +274,16 @@ export default class BaseMap extends Component {
           logoIsHidden={true}
           contentInset={[15,0,0,0]}
         />
-      <View style={styles.mapButtons}>
-          <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ menuIcon }</Text>
+        <View style={mapStyle.mapButtons}>
           <Text onPress={ () => this.setState({ userTrackingMode: Mapbox.userTrackingMode.followWithHeading })} >{ locationIcon }</Text>
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ alertIcon }</Text>
-          <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
+          {this.state.renderCrimes &&
+            <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
+          }
+          {!this.state.renderCrimes &&
+            <Text onPress={ () => this.onCrimesToggleClick()} >{ viewCrimes }</Text>
+          }
         </View>
-        <TextInput
-          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={(searchText) => this.setState({searchText})}
-          value={this.state.searchText}
-        />
-        <Button
-          onPress={() => this.onPressSearchButton()}
-          title="Search"
-        />
       </View>
     );
   }
@@ -408,22 +424,22 @@ export default class BaseMap extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'stretch'
-  },
-  map: {
-    flex: 4
-  },
-  scrollView: {
-    flex: 1
-  },
-  mapButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  }
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     alignItems: 'stretch'
+//   },
+//   map: {
+//     flex: 4
+//   },
+//   scrollView: {
+//     flex: 1
+//   },
+//   mapButtons: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between'
+//   }
+// });
 
 // <ScrollView style={styles.scrollView}>
 //   {this._renderButtons()}
