@@ -59,7 +59,10 @@ export default StyleSheet.create({
     borderRadius: 25,
     marginBottom: 10,
     backgroundColor: '#fff',
-    overflow: 'hidden',
+    shadowOpacity: 0.75,
+    shadowRadius: 5,
+    shadowColor: '#616163',
+    shadowOffset: { height: 0, width: 0 },
   },
   crimeView: {
     flexDirection: 'column',
@@ -69,8 +72,12 @@ export default StyleSheet.create({
     width: 45,
     borderRadius: 25,
     backgroundColor: '#fff',
-    overflow: 'hidden',
+    shadowOpacity: 0.75,
+    shadowRadius: 5,
+    shadowColor: '#616163',
+    shadowOffset: { height: 0, width: 0 },
   },
-  buttonsRight: {
+  curLoc: {
+
   }
 });

@@ -9,7 +9,8 @@ import {
   View,
   Button,
   ScrollView,
-  TextInput
+  TextInput,
+  TouchableHighlight
 } from 'react-native';
 import { MAPBOX_ACCESS_TOKEN, SPOTCRIME_API_KEY } from 'react-native-dotenv';
 import axios from 'axios';
@@ -303,17 +304,23 @@ export default class BaseMap extends Component {
             <Text onPress={ () => this.sendLocationToContacts()} >{ alertIcon }</Text>
           </View>
           <View style={mapStyle.buttonsRight}>
-            <View style={mapStyle.currentLocation}>
+            <TouchableHighlight
+              style={mapStyle.currentLocation}
+            >
               <Text onPress={ () => this.setState({ userTrackingMode: Mapbox.userTrackingMode.followWithHeading })} >{ locationIcon }</Text>
-            </View>
-            <View style={mapStyle.crimeView}>
-              {this.state.renderCrimes &&
-                <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
-              }
-              {!this.state.renderCrimes &&
-                <Text onPress={ () => this.onCrimesToggleClick()} >{ viewCrimes }</Text>
-              }
-            </View>
+            </TouchableHighlight>
+            <TouchableHighlight
+              style={mapStyle.crimeView}
+            >
+              <View>
+                {this.state.renderCrimes &&
+                  <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
+                }
+                {!this.state.renderCrimes &&
+                  <Text onPress={ () => this.onCrimesToggleClick()} >{ viewCrimes }</Text>
+                }
+              </View>
+            </TouchableHighlight>
           </View>
         </View>
       </View>
