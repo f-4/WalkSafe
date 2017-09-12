@@ -261,6 +261,8 @@ export default class BaseMap extends Component {
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ menuIcon }</Text>
           <TextInput
             style={mapStyle.searchInput}
+            placeholder={'Search'}
+            placeholderTextColor={'#919191'}
             onChangeText={(searchText) => this.setState({searchText})}
             value={this.state.searchText}
           />
@@ -297,14 +299,22 @@ export default class BaseMap extends Component {
           contentInset={[15,0,0,0]}
         />
         <View style={mapStyle.mapButtons}>
-          <Text onPress={ () => this.setState({ userTrackingMode: Mapbox.userTrackingMode.followWithHeading })} >{ locationIcon }</Text>
-          <Text onPress={ () => this.sendLocationToContacts()} >{ alertIcon }</Text>
-          {this.state.renderCrimes &&
-            <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
-          }
-          {!this.state.renderCrimes &&
-            <Text onPress={ () => this.onCrimesToggleClick()} >{ viewCrimes }</Text>
-          }
+          <View style={mapStyle.alert}>
+            <Text onPress={ () => this.sendLocationToContacts()} >{ alertIcon }</Text>
+          </View>
+          <View style={mapStyle.buttonsRight}>
+            <View style={mapStyle.currentLocation}>
+              <Text onPress={ () => this.setState({ userTrackingMode: Mapbox.userTrackingMode.followWithHeading })} >{ locationIcon }</Text>
+            </View>
+            <View style={mapStyle.crimeView}>
+              {this.state.renderCrimes &&
+                <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
+              }
+              {!this.state.renderCrimes &&
+                <Text onPress={ () => this.onCrimesToggleClick()} >{ viewCrimes }</Text>
+              }
+            </View>
+          </View>
         </View>
       </View>
     );
