@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { MAPBOX_ACCESS_TOKEN, SPOTCRIME_API_KEY } from 'react-native-dotenv';
 import axios from 'axios';
+import Communications from 'react-native-communications';
+import SendSMS from 'react-native-sms';
 import mapStyle from '../assets/styles/Map.style';
 
 import searchIcon from './icons/Search';
@@ -40,7 +42,11 @@ export default class BaseMap extends Component {
     annotations: [],
     annotationsHistory: [],
     searchText: '',
-    renderCrimes: true
+    renderCrimes: true,
+    currentLocation: {
+      latitude: 0,
+      longitude: 0
+    }
   };
 
   onPressSearchButton = () => {
@@ -78,7 +84,13 @@ export default class BaseMap extends Component {
   };
 
   onRegionDidChange = (location) => {
-    this.setState({ currentZoom: location.zoomLevel });
+    this.setState({
+      currentZoom: location.zoomLevel,
+      currentLocation: {
+        latitude: location.latitude,
+        longitude: location.longitude
+      }
+    });
     console.log('onRegionDidChange', location);
 
     axios.get('http://api.spotcrime.com/crimes.json', {params: {
@@ -176,12 +188,22 @@ export default class BaseMap extends Component {
     this._offlineErrorSubscription = Mapbox.addOfflineErrorListener(error => {
       console.log('offline error', error);
     });
-  }
+  };
 
   componentWillUnmount() {
     this._offlineProgressSubscription.remove();
     this._offlineMaxTilesSubscription.remove();
     this._offlineErrorSubscription.remove();
+  };
+
+  sendLocationToContacts = () => {
+    SendSMS.send({
+  		body: `Hey! Just wanted to let you know I'm currently at ${this.state.currentLocation.latitude}, ${this.state.currentLocation.longitude}`,
+  		recipients: ['0123456789', '9876543210'],
+  		successTypes: ['sent', 'queued']
+  	}, (completed, cancelled, error) => {
+  		console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
+  	});
   }
 
   addNewMarkers = () => {
@@ -276,7 +298,7 @@ export default class BaseMap extends Component {
         />
         <View style={mapStyle.mapButtons}>
           <Text onPress={ () => this.setState({ userTrackingMode: Mapbox.userTrackingMode.followWithHeading })} >{ locationIcon }</Text>
-          <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ alertIcon }</Text>
+          <Text onPress={ () => this.sendLocationToContacts()} >{ alertIcon }</Text>
           {this.state.renderCrimes &&
             <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
           }
@@ -423,24 +445,3 @@ export default class BaseMap extends Component {
     );
   }
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     alignItems: 'stretch'
-//   },
-//   map: {
-//     flex: 4
-//   },
-//   scrollView: {
-//     flex: 1
-//   },
-//   mapButtons: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between'
-//   }
-// });
-
-// <ScrollView style={styles.scrollView}>
-//   {this._renderButtons()}
-// </ScrollView>
