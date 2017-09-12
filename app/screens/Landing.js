@@ -29,6 +29,7 @@ import {
   Text,
   View
 } from 'react-native';
+import { FACEBOOK_URL, GOOGLE_URL } from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SafariView from 'react-native-safari-view';
 
@@ -48,6 +49,7 @@ class Landing extends Component {
     });
   };
 
+
   componentWillUnmount() {
     // Remove event listener
     Linking.removeEventListener('url', this.handleOpenURL);
@@ -66,11 +68,16 @@ class Landing extends Component {
   };
 
   // Handle Login with Facebook button tap
-  loginWithFaceook = () => this.openURL(process.env.FACEBOOK_URL);
+  loginWithFacebook = () => {
+    console.log('here is the FB URL:', FACEBOOK_URL);
+    this.openURL(FACEBOOK_URL);
+  }
 
   // Handle Login with Google button tap
-  loginWithGoogle = () => this.openURL(process.env.GOOGLE_URL);
-
+  loginWithGoogle = () => {
+    console.log('here is the Google URL:', GOOGLE_URL);
+    this.openURL(`${process.env.GOOGLE_URL}`);
+  }
   openURL = (url) => {
     if (Platform.OS === 'ios') {
       SafariView.show({
@@ -161,7 +168,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 20,
-    textAligh: 'center',
+    textAlign: 'center',
     margin: 10,
   },
   text: {
