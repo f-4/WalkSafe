@@ -4,6 +4,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'stretch',
+    paddingTop: 30
   },
   map: {
     flex: 4
@@ -14,17 +15,20 @@ export default StyleSheet.create({
   mapButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: -70,
     paddingLeft: 8,
     paddingRight: 8,
     paddingTop: 10,
-    paddingBottom: 10
+    paddingBottom: 10,
+    zIndex: 1000
   },
   searchBar: {
     flexDirection: 'row',
-    marginTop: 20,
+    marginBottom: -50,
     paddingLeft: 8,
     paddingRight: 8,
-    paddingBottom: 8
+    paddingBottom: 8,
+    zIndex: 1000
   },
   searchInput: {
     height: 30,
