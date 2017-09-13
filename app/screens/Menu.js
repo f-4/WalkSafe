@@ -58,10 +58,6 @@ export default class DrawerMenu extends Component {
                     container: { backgroundColor: '#fafafa' },
                   }}
                   avatar={<Image style={AvatarStyles.profileImg} source={require('../assets/safetydance.png')}/>}
-                  accounts={[
-                    { avatar: <Avatar text="P" /> },
-                    { avatar: <Avatar text="B" /> },
-                  ]}
                   footer={{
                     dense: true,
                     centerElement: {

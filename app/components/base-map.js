@@ -9,7 +9,8 @@ import {
   View,
   Button,
   ScrollView,
-  TextInput
+  TextInput,
+  TouchableHighlight
 } from 'react-native';
 import { MAPBOX_ACCESS_TOKEN, SPOTCRIME_API_KEY } from 'react-native-dotenv';
 import axios from 'axios';
@@ -261,6 +262,8 @@ export default class BaseMap extends Component {
           <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ menuIcon }</Text>
           <TextInput
             style={mapStyle.searchInput}
+            placeholder={'Search'}
+            placeholderTextColor={'#919191'}
             onChangeText={(searchText) => this.setState({searchText})}
             value={this.state.searchText}
           />
@@ -297,14 +300,28 @@ export default class BaseMap extends Component {
           contentInset={[15,0,0,0]}
         />
         <View style={mapStyle.mapButtons}>
-          <Text onPress={ () => this.setState({ userTrackingMode: Mapbox.userTrackingMode.followWithHeading })} >{ locationIcon }</Text>
-          <Text onPress={ () => this.sendLocationToContacts()} >{ alertIcon }</Text>
-          {this.state.renderCrimes &&
-            <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
-          }
-          {!this.state.renderCrimes &&
-            <Text onPress={ () => this.onCrimesToggleClick()} >{ viewCrimes }</Text>
-          }
+          <View style={mapStyle.alert}>
+            <Text onPress={ () => this.sendLocationToContacts()} >{ alertIcon }</Text>
+          </View>
+          <View style={mapStyle.buttonsRight}>
+            <TouchableHighlight
+              style={mapStyle.currentLocation}
+            >
+              <Text onPress={ () => this.setState({ userTrackingMode: Mapbox.userTrackingMode.followWithHeading })} >{ locationIcon }</Text>
+            </TouchableHighlight>
+            <TouchableHighlight
+              style={mapStyle.crimeView}
+            >
+              <View>
+                {this.state.renderCrimes &&
+                  <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
+                }
+                {!this.state.renderCrimes &&
+                  <Text onPress={ () => this.onCrimesToggleClick()} >{ viewCrimes }</Text>
+                }
+              </View>
+            </TouchableHighlight>
+          </View>
         </View>
       </View>
     );
