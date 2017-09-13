@@ -58,8 +58,9 @@ export default class BaseMap extends Component {
         }
       })
         .then(res => {
-          const coordinates = res.data.entity.features[0].center;
-          this._map.setCenterCoordinate(coordinates[1], coordinates[0])
+          // Coordinates received are in [lon, lat] order
+          const coordinates = res.data.center;
+          this._map.setCenterCoordinate(coordinates[1], coordinates[0]);
         })
         .catch(err => {
           console.error(err);
