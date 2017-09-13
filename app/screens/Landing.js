@@ -31,13 +31,13 @@ export default Landing;
 // } from 'react-native';
 // import { FACEBOOK_URL, GOOGLE_URL } from 'react-native-dotenv';
 // import Icon from 'react-native-vector-icons/FontAwesome';
-// import SafariView from 'react-native-safari-view';
-//
+
+
 // class Landing extends Component {
 //   state = {
 //     user: undefined, // user has not logged in yet
 //   };
-//
+
 //   componentDidMount() {
 //     // Add event listener to OAuthLogin:// URLs
 //     Linking.addEventListener('url', this.handeOpenURL);
@@ -47,50 +47,44 @@ export default Landing;
 //         this.handleOpenURL({ url });
 //       }
 //     });
+
+
 //   };
-//
-//
+
+//   //////dsds
 //   componentWillUnmount() {
 //     // Remove event listener
 //     Linking.removeEventListener('url', this.handleOpenURL);
 //   }
-//
+
 //   handleOpenURL = ({ url }) => {
-//     // Extract stringified user string out of the URL
+//     // extract stringified user string out of the URL
+//     console.log('line62 handleOpenURL running');
 //     const [, user_string] = url.match(/user=([^#]+)/);
+
 //     this.setState({
-//       // Decode the user string and parse it into JSON
+//       // decode the user string and parse it into JSON
 //       user: JSON.parse(decodeURI(user_string))
 //     });
-//     if ( Platform.OS === 'ios') {
-//       SafariView.dismiss();
-//     }
 //   };
-//
+
 //   // Handle Login with Facebook button tap
 //   loginWithFacebook = () => {
 //     console.log('here is the FB URL:', FACEBOOK_URL);
 //     this.openURL(FACEBOOK_URL);
 //   }
-//
+
 //   // Handle Login with Google button tap
 //   loginWithGoogle = () => {
 //     console.log('here is the Google URL:', GOOGLE_URL);
-//     this.openURL(`${process.env.GOOGLE_URL}`);
+//     this.openURL(GOOGLE_URL);
 //   }
+
 //   openURL = (url) => {
-//     if (Platform.OS === 'ios') {
-//       SafariView.show({
-//         url: url,
-//         fromBottom: true,
-//       });
-//     }
-//     // Or Linking.openURL on Android
-//     else {
-//       Linking.openURL(url);
-//     }
+//     console.log("line83", url)
+//     Linking.openURL(url);
 //   };
-//
+
 //   render() {
 //     const { user } = this.state;
 //     return (
@@ -142,12 +136,12 @@ export default Landing;
 //     );
 //   }
 // }
-//
+
 // const iconStyles = {
 //   borderRadius: 10,
 //   iconStyle: { paddingVertical: 5 },
 // };
-//
+
 // const styles = StyleSheet.create({
 //   container: {
 //     flex: 1,
@@ -183,5 +177,5 @@ export default Landing;
 //     marginBottom: 30,
 //   },
 // });
-//
+
 // export default Landing;
