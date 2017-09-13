@@ -52,7 +52,7 @@ export default class BaseMap extends Component {
 
   onPressSearchButton = () => {
     if (this.state.searchText.length > 0) {
-      axios.get('http://localhost:1337/map/search', {
+      axios.get('http://localhost:3000/map/search', {
         params: {
           address: this.state.searchText
         }
@@ -284,7 +284,7 @@ export default class BaseMap extends Component {
           scrollEnabled={true}
           zoomEnabled={true}
           showsUserLocation={true}
-          styleURL={Mapbox.mapStyles.streets}
+          styleURL={'mapbox://styles/sonrisa722611/cj7i1e4is56hk2rom5n9ppbwv'}
           userTrackingMode={this.state.userTrackingMode}
           annotations={this.state.annotations}
           annotationsAreImmutable
