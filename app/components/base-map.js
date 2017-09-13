@@ -154,6 +154,9 @@ export default class BaseMap extends Component {
   };
   onRightAnnotationTapped = (e) => {
     console.log('onRightAnnotationTapped', e);
+    this.setState({
+      annotations: this.state.annotations.filter(a => a.subtitle !== e.subtitle)
+    });
   };
   onLongPress = (location) => {
     console.log('onLongPress', location);
