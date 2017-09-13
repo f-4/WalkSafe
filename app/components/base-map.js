@@ -12,7 +12,7 @@ import {
   TextInput,
   TouchableHighlight
 } from 'react-native';
-import { MAPBOX_ACCESS_TOKEN, SPOTCRIME_API_KEY } from 'react-native-dotenv';
+import { MAPBOX_ACCESS_TOKEN } from 'react-native-dotenv';
 import axios from 'axios';
 import Communications from 'react-native-communications';
 import SendSMS from 'react-native-sms';
@@ -35,8 +35,8 @@ export default class BaseMap extends Component {
 
   state = {
     center: {
-      latitude: 40.72052634,
-      longitude: -73.97686958312988
+      latitude: 34.0522,
+      longitude: -118.2437
     },
     zoom: 14,
     userTrackingMode: Mapbox.userTrackingMode.none,
@@ -61,16 +61,16 @@ export default class BaseMap extends Component {
           // Coordinates received are in reverse order
           const coordinates = res.data.center.reverse();
           const address = res.data.place_name.split(',');
-          const searchPoint = {
-            coordinates: coordinates,
-            type: 'point',
-            id: 'search',
-            title: address[0],
-            subtitle: address.slice(1).join(',')
-          };
-          // Add marker on searched location
+
+          // Add/update marker on searched location
           this.setState({
-            annotations: [...this.state.annotations, searchPoint]
+            annotations: [...this.state.annotations, {
+              coordinates: coordinates,
+              type: 'point',
+              id: 'search',
+              title: address[0],
+              subtitle: address.slice(1).join(',')
+            }]
           });
           // Move map view to searched location
           this._map.setCenterCoordinate(...coordinates);
@@ -141,6 +141,21 @@ export default class BaseMap extends Component {
   };
   onLongPress = (location) => {
     console.log('onLongPress', location);
+    // Add favorite marker on long press
+    this.setState({
+      annotations: [...this.state.annotations, {
+        coordinates: [location.latitude, location.longitude],
+        type: 'point',
+        title: 'Favorite',
+        subtitle: `${location.latitude}, ${location.longitude}`,
+        annotationImage: {
+          source: { uri: 'http://icons.iconarchive.com/icons/hopstarter/soft-scraps/256/Button-Favorite-icon.png' },
+          height: 25,
+          width: 25
+        },
+        id: `${location.latitude}, ${location.longitude}`
+      }]
+    });
   };
   onTap = (location) => {
     console.log('onTap', location);
