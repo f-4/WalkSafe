@@ -91,16 +91,16 @@ export default class BaseMap extends Component {
   onCrimesToggleClick = () => {
     if (!this.state.hideCrimes) {
       // Filter only crime points
-      const crimes = this.state.annotations.filter(a => {
-        return a.type === 'point' && a.title !== 'Favorite' && a.id !== 'search'
+      const crimes = this.state.annotations.filter(crime => {
+        return crime.type === 'point' && crime.title !== 'Favorite' && crime.id !== 'search'
       });
       console.log('CRIMES', crimes)
       // Stash away crimes and filter from annotations
       this.setState({
         hideCrimes: !this.state.hideCrimes,
         hiddenCrimes: crimes,
-        annotations: this.state.annotations.filter(a => {
-          return a.title === 'Favorite' || a.id === 'search'
+        annotations: this.state.annotations.filter(crime => {
+          return crime.title === 'Favorite' || crime.id === 'search'
         })
       });
     } else {
@@ -137,10 +137,10 @@ export default class BaseMap extends Component {
   onOpenAnnotation = (annotation) => {
     console.log('onOpenAnnotation', annotation);
   };
-  onRightAnnotationTapped = (e) => {
-    console.log('onRightAnnotationTapped', e);
+  onRightAnnotationTapped = (selectedCrime) => {
+    console.log('onRightAnnotationTapped', selectedCrime);
     this.setState({
-      annotations: this.state.annotations.filter(a => a.subtitle !== e.subtitle)
+      annotations: this.state.annotations.filter(crime => crime.subtitle !== selectedCrime.subtitle)
     });
   };
   onLongPress = (location) => {
