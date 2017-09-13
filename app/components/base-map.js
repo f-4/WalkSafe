@@ -43,7 +43,7 @@ export default class BaseMap extends Component {
     annotations: [],
     annotationsHistory: [],
     searchText: '',
-    renderCrimes: true,
+    hideCrimes: false,
     currentLocation: {
       latitude: 0,
       longitude: 0
@@ -85,7 +85,7 @@ export default class BaseMap extends Component {
     const crimes = this.state.annotations.filter(a => a.type === 'point');
 
     this.setState({
-      renderCrimes: !this.state.renderCrimes
+      hideCrimes: !this.state.hideCrimes
     });
 
     if (crimes.length > 0) {
@@ -107,25 +107,28 @@ export default class BaseMap extends Component {
       }
     });
     console.log('onRegionDidChange', location);
-
-    axios.get('http://localhost:3000/map/crimes', {params: {
-        lat: location.latitude,
-        lon: location.longitude
-    }})
-      .then(res => {
-        // Retrieve id of current crimes
-        const currentCrimesId = this.state.annotations.map(crime => {
-          return crime.id;
-        })
-        // Filter out existing crimes using id
-        const newCrimes = res.data.filter(crime => {
-          return !currentCrimesId.includes(crime.id);
+    // If hideCrimes toggle is false
+    if (!this.state.hideCrimes) {
+      // Retrieve nearby crimes
+      axios.get('http://localhost:3000/map/crimes', {params: {
+          lat: location.latitude,
+          lon: location.longitude
+      }})
+        .then(res => {
+          // Retrieve id of current crimes
+          const currentCrimesId = this.state.annotations.map(crime => {
+            return crime.id;
+          })
+          // Filter out existing crimes using id
+          const newCrimes = res.data.filter(crime => {
+            return !currentCrimesId.includes(crime.id);
+          });
+          // Add new crimes
+          this.setState({
+            annotations: [...this.state.annotations, ...newCrimes]
+          });
         });
-        // Add new crimes
-        this.setState({
-          annotations: [...this.state.annotations, ...newCrimes]
-        });
-      });
+    }
   };
   onRegionWillChange = (location) => {
     console.log('onRegionWillChange', location);
