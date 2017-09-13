@@ -172,6 +172,13 @@ export default class BaseMap extends Component {
           height: 25,
           width: 25
         },
+        rightCalloutAccessory: {
+          source: {
+            uri: 'https://openclipart.org/image/2400px/svg_to_png/16155/milker-X-icon.png'
+          },
+          height: 15,
+          width: 15,
+        },
         id: `${location.latitude}, ${location.longitude}`
       }]
     });
