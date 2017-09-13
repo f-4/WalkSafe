@@ -58,9 +58,22 @@ export default class BaseMap extends Component {
         }
       })
         .then(res => {
-          // Coordinates received are in [lon, lat] order
-          const coordinates = res.data.center;
-          this._map.setCenterCoordinate(coordinates[1], coordinates[0]);
+          // Coordinates received are in reverse order
+          const coordinates = res.data.center.reverse();
+          const address = res.data.place_name.split(',');
+          const searchPoint = {
+            coordinates: coordinates,
+            type: 'point',
+            id: 'search',
+            title: address[0],
+            subtitle: address.slice(1).join(',')
+          };
+          // Add marker on searched location
+          this.setState({
+            annotations: [...this.state.annotations, searchPoint]
+          });
+          // Move map view to searched location
+          this._map.setCenterCoordinate(...coordinates);
         })
         .catch(err => {
           console.error(err);
