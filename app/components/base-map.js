@@ -12,7 +12,7 @@ import {
   TextInput,
   TouchableHighlight
 } from 'react-native';
-import { MAPBOX_ACCESS_TOKEN, SPOTCRIME_API_KEY } from 'react-native-dotenv';
+import { MAPBOX_ACCESS_TOKEN } from 'react-native-dotenv';
 import axios from 'axios';
 import Communications from 'react-native-communications';
 import SendSMS from 'react-native-sms';
@@ -35,15 +35,15 @@ export default class BaseMap extends Component {
 
   state = {
     center: {
-      latitude: 40.72052634,
-      longitude: -73.97686958312988
+      latitude: 34.0522,
+      longitude: -118.2437
     },
     zoom: 14,
     userTrackingMode: Mapbox.userTrackingMode.none,
     annotations: [],
-    annotationsHistory: [],
+    hideCrimes: false,
+    hiddenCrimes: [],
     searchText: '',
-    renderCrimes: true,
     currentLocation: {
       latitude: 0,
       longitude: 0
@@ -52,14 +52,35 @@ export default class BaseMap extends Component {
 
   onPressSearchButton = () => {
     if (this.state.searchText.length > 0) {
-      axios.get('http://localhost:1337/map/search', {
+      axios.get('http://localhost:3000/map/search', {
         params: {
           address: this.state.searchText
         }
       })
         .then(res => {
-          const coordinates = res.data.entity.features[0].center;
-          this._map.setCenterCoordinate(coordinates[1], coordinates[0])
+          // Coordinates received are in reverse order
+          const coordinates = res.data.center.reverse();
+          const address = res.data.place_name.split(',');
+
+          // Add/update marker on searched location
+          this.setState({
+            annotations: [...this.state.annotations, {
+              coordinates: coordinates,
+              type: 'point',
+              id: 'search',
+              title: address[0],
+              subtitle: address.slice(1).join(','),
+              rightCalloutAccessory: {
+              source: {
+                uri: 'http://www.provmed.com/img/map-icon.png'
+              },
+              height: 15,
+              width: 15,
+              },
+            }]
+          });
+          // Move map view to searched location
+          this._map.setCenterCoordinate(...coordinates);
         })
         .catch(err => {
           console.error(err);
@@ -68,19 +89,29 @@ export default class BaseMap extends Component {
   }
 
   onCrimesToggleClick = () => {
-    const crimes = this.state.annotations.filter(a => a.type === 'point');
-
-    this.setState({
-      renderCrimes: !this.state.renderCrimes
-    });
-
-    if (crimes.length > 0) {
+    if (!this.state.hideCrimes) {
+      // Filter only crime points
+      const crimes = this.state.annotations.filter(crime => {
+        return crime.type === 'point' && crime.title !== 'Favorite' && crime.id !== 'search'
+      });
+      console.log('CRIMES', crimes)
+      // Stash away crimes and filter from annotations
       this.setState({
-        annotationsHistory: this.state.annotations.concat(crimes),
-        annotations: this.state.annotations.filter(a => a.type !== 'point')
-      })
+        hideCrimes: !this.state.hideCrimes,
+        hiddenCrimes: crimes,
+        annotations: this.state.annotations.filter(crime => {
+          return crime.title === 'Favorite' || crime.id === 'search'
+        })
+      });
     } else {
-      this.setState({ annotations: this.state.annotationsHistory });
+      this.setState({
+        hideCrimes: !this.state.hideCrimes,
+        annotations: this.state.annotations.concat(this.state.hiddenCrimes),
+        hiddenCrimes: []
+      }, () => {
+        // Retrieve nearby crimes at current location
+        this.retrieveNearbyCrimes();
+      });
     }
   };
 
@@ -91,70 +122,11 @@ export default class BaseMap extends Component {
         latitude: location.latitude,
         longitude: location.longitude
       }
+    }, () => {
+      // Retrieve nearby crimes of new location
+      this.retrieveNearbyCrimes();
     });
     console.log('onRegionDidChange', location);
-
-    axios.get('http://api.spotcrime.com/crimes.json', {params: {
-        lat: location.latitude,
-        lon: location.longitude,
-        key: SPOTCRIME_API_KEY,
-        radius: 0.01
-    }})
-      .then(response => {
-        const oldCrimes = this.state.annotations.map(crime => {
-          return crime.id;
-        });
-
-        const newCrimes = response.data.crimes.map(crime => {
-          let image;
-          switch(crime.type) {
-            case 'Arrest':
-              image = 'arrest';
-              break;
-            case 'Arson':
-              image = 'arson';
-              break;
-            case 'Assault':
-              image = 'assault' ;
-              break;
-            case 'Burglary':
-              image = 'burglary';
-              break;
-            case 'Robbery':
-              image = 'robbery';
-              break;
-            case 'Shooting':
-              image = 'shooting';
-              break;
-            case 'Theft':
-              image = 'theft';
-              break;
-            case 'Vandalism':
-              image = 'vandalism';
-              break;
-            default:
-              image = 'other';
-          }
-          return {
-            coordinates: [crime.lat, crime.lon],
-            type: 'point',
-            title: crime.type,
-            subtitle: `${crime.address} ${crime.date}`,
-            annotationImage: {
-              source: { uri: image },
-              height: 45,
-              width: 45
-            },
-            id: crime.cdid.toString()
-          };
-        }).filter(crime => {
-          return !oldCrimes.includes(crime.id);
-        });
-
-        this.setState({
-          annotations: [...this.state.annotations, ...newCrimes]
-        });
-      });
   };
   onRegionWillChange = (location) => {
     console.log('onRegionWillChange', location);
@@ -165,11 +137,36 @@ export default class BaseMap extends Component {
   onOpenAnnotation = (annotation) => {
     console.log('onOpenAnnotation', annotation);
   };
-  onRightAnnotationTapped = (e) => {
-    console.log('onRightAnnotationTapped', e);
+  onRightAnnotationTapped = (selectedCrime) => {
+    console.log('onRightAnnotationTapped', selectedCrime);
+    this.setState({
+      annotations: this.state.annotations.filter(crime => crime.subtitle !== selectedCrime.subtitle)
+    });
   };
   onLongPress = (location) => {
     console.log('onLongPress', location);
+    // Add favorite marker on long press
+    this.setState({
+      annotations: [...this.state.annotations, {
+        coordinates: [location.latitude, location.longitude],
+        type: 'point',
+        title: 'Favorite',
+        subtitle: `${location.latitude}, ${location.longitude}`,
+        annotationImage: {
+          source: { uri: 'http://icons.iconarchive.com/icons/hopstarter/soft-scraps/256/Button-Favorite-icon.png' },
+          height: 25,
+          width: 25
+        },
+        rightCalloutAccessory: {
+          source: {
+            uri: 'https://openclipart.org/image/2400px/svg_to_png/16155/milker-X-icon.png'
+          },
+          height: 15,
+          width: 15,
+        },
+        id: `${location.latitude}, ${location.longitude}`
+      }]
+    });
   };
   onTap = (location) => {
     console.log('onTap', location);
@@ -196,6 +193,31 @@ export default class BaseMap extends Component {
     this._offlineMaxTilesSubscription.remove();
     this._offlineErrorSubscription.remove();
   };
+
+  retrieveNearbyCrimes = () => {
+    // If hideCrimes is false
+    if (!this.state.hideCrimes) {
+      // Retrieve nearby crimes
+      axios.get('http://localhost:3000/map/crimes', {params: {
+          lat: this.state.currentLocation.latitude,
+          lon: this.state.currentLocation.longitude
+      }})
+        .then(res => {
+          // Retrieve id of current crimes
+          const currentCrimesId = this.state.annotations.map(crime => {
+            return crime.id;
+          });
+          // Filter out existing crimes using id
+          const newCrimes = res.data.filter(crime => {
+            return !currentCrimesId.includes(crime.id);
+          });
+          // Add new crimes
+          this.setState({
+            annotations: [...this.state.annotations, ...newCrimes]
+          });
+        });
+    }
+  }
 
   sendLocationToContacts = () => {
     SendSMS.send({
@@ -284,7 +306,7 @@ export default class BaseMap extends Component {
           scrollEnabled={true}
           zoomEnabled={true}
           showsUserLocation={true}
-          styleURL={Mapbox.mapStyles.streets}
+          styleURL={'mapbox://styles/sonrisa722611/cj7i1e4is56hk2rom5n9ppbwv'}
           userTrackingMode={this.state.userTrackingMode}
           annotations={this.state.annotations}
           annotationsAreImmutable
@@ -313,10 +335,10 @@ export default class BaseMap extends Component {
               style={mapStyle.crimeView}
             >
               <View>
-                {this.state.renderCrimes &&
+                {this.state.hideCrimes &&
                   <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
                 }
-                {!this.state.renderCrimes &&
+                {!this.state.hideCrimes &&
                   <Text onPress={ () => this.onCrimesToggleClick()} >{ viewCrimes }</Text>
                 }
               </View>
