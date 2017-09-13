@@ -10,35 +10,36 @@ import uberIcon from '../components/icons/Uber';
 import emergencyIcon from '../components/icons/Call911';
 
 const uiTheme = {
-    fontFamily: 'Roboto',
-    palette: {
-      primaryColor: COLOR.cyan500,
-      accentColor: COLOR.pink500,
+  fontFamily: 'Roboto',
+  palette: {
+    primaryColor: COLOR.cyan500,
+    accentColor: COLOR.pink500,
+  },
+  toolbar: {
+    container: {
+      height: 50,
+      paddingTop: 0,
     },
-    toolbar: {
-      container: {
-        height: 50,
-        paddingTop: 0,
-      },
-    },
-    avatar: {
-      container: {
-        backgroundColor: '#333'
-      }
+  },
+  avatar: {
+    container: {
+      backgroundColor: '#333'
     }
-  };
+  }
+};
 
 export default class DrawerMenu extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      active: 'people',
+      active: 'people'
     };
   }
 
-  _setInfoActive() {
-    this.setState({ active: 'info' });
-  }
+  // _setInfoActive() {
+  //   this.setState({ active: 'info' });
+  // }
+
 
   render() {
     return (
@@ -131,7 +132,7 @@ export default class DrawerMenu extends Component {
       </ThemeProvider>
     );
   }
-}
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -103,6 +103,12 @@ import DrawerMenu from '../screens/Menu';
 console.log('line102 from routes.js')
 
 export const stackNavigator = StackNavigator({
+  Home: {
+    screen: MyHomeScreen,
+    navigationOptions: {
+      header: null
+    }
+  },
   Uber: {
     screen: CallUber
   },
