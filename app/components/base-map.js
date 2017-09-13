@@ -41,9 +41,9 @@ export default class BaseMap extends Component {
     zoom: 14,
     userTrackingMode: Mapbox.userTrackingMode.none,
     annotations: [],
-    annotationsHistory: [],
-    searchText: '',
     hideCrimes: false,
+    hiddenCrimes: [],
+    searchText: '',
     currentLocation: {
       latitude: 0,
       longitude: 0
@@ -82,20 +82,26 @@ export default class BaseMap extends Component {
   }
 
   onCrimesToggleClick = () => {
-    const crimes = this.state.annotations.filter(a => a.type === 'point');
-
+    // Toggle hideCrimes boolean
     this.setState({
       hideCrimes: !this.state.hideCrimes
+    }, () => {
+      // Filter only crime points
+      const crimes = this.state.annotations.filter(a => {
+        a.type === 'point' && a.title !== 'Favorite' && a.id !== 'search'
+      });
+      if (this.state.hideCrimes) {
+        this.setState({
+          hiddenCrimes: crimes,
+          annotations: this.state.annotations.filter(a => a.title === 'Favorite' || a.id === 'search')
+        });
+      } else {
+        this.setState({
+          annotations: this.state.annotations.concat(this.state.hiddenCrimes),
+          hiddenCrimes: []
+        });
+      }
     });
-
-    if (crimes.length > 0) {
-      this.setState({
-        annotationsHistory: this.state.annotations.concat(crimes),
-        annotations: this.state.annotations.filter(a => a.type !== 'point')
-      })
-    } else {
-      this.setState({ annotations: this.state.annotationsHistory });
-    }
   };
 
   onRegionDidChange = (location) => {
@@ -107,7 +113,7 @@ export default class BaseMap extends Component {
       }
     });
     console.log('onRegionDidChange', location);
-    // If hideCrimes toggle is false
+    // If hideCrimes is false
     if (!this.state.hideCrimes) {
       // Retrieve nearby crimes
       axios.get('http://localhost:3000/map/crimes', {params: {
