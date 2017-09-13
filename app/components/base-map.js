@@ -325,10 +325,10 @@ export default class BaseMap extends Component {
               style={mapStyle.crimeView}
             >
               <View>
-                {this.state.renderCrimes &&
+                {this.state.hideCrimes &&
                   <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
                 }
-                {!this.state.renderCrimes &&
+                {!this.state.hideCrimes &&
                   <Text onPress={ () => this.onCrimesToggleClick()} >{ viewCrimes }</Text>
                 }
               </View>
