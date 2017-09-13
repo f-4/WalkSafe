@@ -49,9 +49,6 @@ export default class DrawerMenu extends Component {
             leftElement="arrow-back"
             onLeftElementPress={() => this.props.navigation.navigate('DrawerClose')}
             centerElement="Menu"
-            searable={{
-              autoFocus: true
-            }}
           />
           <View style={styles.container}>
             <Drawer>
