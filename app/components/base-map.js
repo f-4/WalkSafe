@@ -89,26 +89,27 @@ export default class BaseMap extends Component {
   }
 
   onCrimesToggleClick = () => {
-    // Toggle hideCrimes boolean
-    this.setState({
-      hideCrimes: !this.state.hideCrimes
-    }, () => {
+    if (!this.state.hideCrimes) {
       // Filter only crime points
       const crimes = this.state.annotations.filter(a => {
         a.type === 'point' && a.title !== 'Favorite' && a.id !== 'search'
       });
-      if (this.state.hideCrimes) {
-        this.setState({
-          hiddenCrimes: crimes,
-          annotations: this.state.annotations.filter(a => a.title === 'Favorite' || a.id === 'search')
-        });
-      } else {
-        this.setState({
-          annotations: this.state.annotations.concat(this.state.hiddenCrimes),
-          hiddenCrimes: []
-        });
-      }
-    });
+      // Stash away crimes and filter from annotations
+      this.setState({
+        hideCrimes: !this.state.hideCrimes,
+        hiddenCrimes: crimes,
+        annotations: this.state.annotations.filter(a => a.title === 'Favorite' || a.id === 'search')
+      });
+    } else {
+      this.setState({
+        hideCrimes: !this.state.hideCrimes,
+        annotations: this.state.annotations.concat(this.state.hiddenCrimes),
+        hiddenCrimes: []
+      }, () => {
+        // Retrieve nearby crimes at current location
+        this.retrieveNearbyCrimes();
+      });
+    }
   };
 
   onRegionDidChange = (location) => {
@@ -118,30 +119,11 @@ export default class BaseMap extends Component {
         latitude: location.latitude,
         longitude: location.longitude
       }
+    }, () => {
+      // Retrieve nearby crimes of new location
+      this.retrieveNearbyCrimes();
     });
     console.log('onRegionDidChange', location);
-    // If hideCrimes is false
-    if (!this.state.hideCrimes) {
-      // Retrieve nearby crimes
-      axios.get('http://localhost:3000/map/crimes', {params: {
-          lat: location.latitude,
-          lon: location.longitude
-      }})
-        .then(res => {
-          // Retrieve id of current crimes
-          const currentCrimesId = this.state.annotations.map(crime => {
-            return crime.id;
-          })
-          // Filter out existing crimes using id
-          const newCrimes = res.data.filter(crime => {
-            return !currentCrimesId.includes(crime.id);
-          });
-          // Add new crimes
-          this.setState({
-            annotations: [...this.state.annotations, ...newCrimes]
-          });
-        });
-    }
   };
   onRegionWillChange = (location) => {
     console.log('onRegionWillChange', location);
@@ -208,6 +190,31 @@ export default class BaseMap extends Component {
     this._offlineMaxTilesSubscription.remove();
     this._offlineErrorSubscription.remove();
   };
+
+  retrieveNearbyCrimes = () => {
+    // If hideCrimes is false
+    if (!this.state.hideCrimes) {
+      // Retrieve nearby crimes
+      axios.get('http://localhost:3000/map/crimes', {params: {
+          lat: this.state.currentLocation.latitude,
+          lon: this.state.currentLocation.longitude
+      }})
+        .then(res => {
+          // Retrieve id of current crimes
+          const currentCrimesId = this.state.annotations.map(crime => {
+            return crime.id;
+          })
+          // Filter out existing crimes using id
+          const newCrimes = res.data.filter(crime => {
+            return !currentCrimesId.includes(crime.id);
+          });
+          // Add new crimes
+          this.setState({
+            annotations: [...this.state.annotations, ...newCrimes]
+          });
+        });
+    }
+  }
 
   sendLocationToContacts = () => {
     SendSMS.send({
