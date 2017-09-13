@@ -320,7 +320,7 @@ export default class BaseMap extends Component {
           onLongPress={this.onLongPress}
           onTap={this.onTap}
           logoIsHidden={true}
-          contentInset={[15,0,0,0]}
+          contentInset={[70,0,0,0]}
         />
         <View style={mapStyle.mapButtons}>
           <View style={mapStyle.alert}>
