@@ -95,63 +95,20 @@ export default class BaseMap extends Component {
     });
     console.log('onRegionDidChange', location);
 
-    axios.get('http://api.spotcrime.com/crimes.json', {params: {
+    axios.get('http://localhost:3000/map/crimes', {params: {
         lat: location.latitude,
-        lon: location.longitude,
-        key: SPOTCRIME_API_KEY,
-        radius: 0.01
+        lon: location.longitude
     }})
-      .then(response => {
-        const oldCrimes = this.state.annotations.map(crime => {
+      .then(res => {
+        // Retrieve id of current crimes
+        const currentCrimesId = this.state.annotations.map(crime => {
           return crime.id;
+        })
+        // Filter out existing crimes using id
+        const newCrimes = res.data.filter(crime => {
+          return !currentCrimesId.includes(crime.id);
         });
-
-        const newCrimes = response.data.crimes.map(crime => {
-          let image;
-          switch(crime.type) {
-            case 'Arrest':
-              image = 'arrest';
-              break;
-            case 'Arson':
-              image = 'arson';
-              break;
-            case 'Assault':
-              image = 'assault' ;
-              break;
-            case 'Burglary':
-              image = 'burglary';
-              break;
-            case 'Robbery':
-              image = 'robbery';
-              break;
-            case 'Shooting':
-              image = 'shooting';
-              break;
-            case 'Theft':
-              image = 'theft';
-              break;
-            case 'Vandalism':
-              image = 'vandalism';
-              break;
-            default:
-              image = 'other';
-          }
-          return {
-            coordinates: [crime.lat, crime.lon],
-            type: 'point',
-            title: crime.type,
-            subtitle: `${crime.address} ${crime.date}`,
-            annotationImage: {
-              source: { uri: image },
-              height: 45,
-              width: 45
-            },
-            id: crime.cdid.toString()
-          };
-        }).filter(crime => {
-          return !oldCrimes.includes(crime.id);
-        });
-
+        // Add new crimes
         this.setState({
           annotations: [...this.state.annotations, ...newCrimes]
         });
