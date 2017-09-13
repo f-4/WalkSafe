@@ -69,7 +69,14 @@ export default class BaseMap extends Component {
               type: 'point',
               id: 'search',
               title: address[0],
-              subtitle: address.slice(1).join(',')
+              subtitle: address.slice(1).join(','),
+              rightCalloutAccessory: {
+              source: {
+                uri: 'http://www.provmed.com/img/map-icon.png'
+              },
+              height: 15,
+              width: 15,
+              },
             }]
           });
           // Move map view to searched location
