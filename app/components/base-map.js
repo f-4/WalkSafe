@@ -92,13 +92,16 @@ export default class BaseMap extends Component {
     if (!this.state.hideCrimes) {
       // Filter only crime points
       const crimes = this.state.annotations.filter(a => {
-        a.type === 'point' && a.title !== 'Favorite' && a.id !== 'search'
+        return a.type === 'point' && a.title !== 'Favorite' && a.id !== 'search'
       });
+      console.log('CRIMES', crimes)
       // Stash away crimes and filter from annotations
       this.setState({
         hideCrimes: !this.state.hideCrimes,
         hiddenCrimes: crimes,
-        annotations: this.state.annotations.filter(a => a.title === 'Favorite' || a.id === 'search')
+        annotations: this.state.annotations.filter(a => {
+          return a.title === 'Favorite' || a.id === 'search'
+        })
       });
     } else {
       this.setState({
@@ -203,7 +206,7 @@ export default class BaseMap extends Component {
           // Retrieve id of current crimes
           const currentCrimesId = this.state.annotations.map(crime => {
             return crime.id;
-          })
+          });
           // Filter out existing crimes using id
           const newCrimes = res.data.filter(crime => {
             return !currentCrimesId.includes(crime.id);
