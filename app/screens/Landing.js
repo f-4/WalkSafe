@@ -30,7 +30,7 @@ import {
 } from 'react-native';
 import { FACEBOOK_URL, GOOGLE_URL } from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import SafariView from 'react-native-safari-view';
+// import SafariView from 'react-native-safari-view';
 
 class Landing extends Component {
   state = {
@@ -39,19 +39,32 @@ class Landing extends Component {
 
   componentDidMount() {
     // Add event listener to OAuthLogin:// URLs
-    Linking.addEventListener('url', this.handeOpenURL);
+    Linking.addEventListener('url', this.testMe);
     // Launched from an external URL
+    console.log('Component did mount', this);
+
     Linking.getInitialURL().then((url) => {
+      console.log('What is the initial URL', url);
       if (url) {
-        this.handleOpenURL({ url });
+        this.testMe(url);
       }
     });
   };
 
   componentWillUnmount() {
     // Remove event listener
+    console.log('Does this component ever unmount');
     Linking.removeEventListener('url', this.handleOpenURL);
-  }
+  };
+
+  testMe = (url) => {
+    console.log(' I am the test listener', url);
+    const [, user_string] = url.url.match(/user=([^#]+)/);
+    this.setState({
+      // Decode the user string and parse it into JSON
+      user: JSON.parse(decodeURI(user_string))
+    });
+  };
 
   handleOpenURL = ({ url }) => {
     // Extract stringified user string out of the URL
@@ -60,9 +73,9 @@ class Landing extends Component {
       // Decode the user string and parse it into JSON
       user: JSON.parse(decodeURI(user_string))
     });
-    if ( Platform.OS === 'ios') {
-      SafariView.dismiss();
-    }
+    // if ( Platform.OS === 'ios') {
+    //   SafariView.dismiss();
+    // }
   };
 
   // Handle Login with Facebook button tap
@@ -77,16 +90,16 @@ class Landing extends Component {
     this.openURL(GOOGLE_URL);
   }
   openURL = (url) => {
-    if (Platform.OS === 'ios') {
-      SafariView.show({
-        url: url,
-        fromBottom: true,
-      });
-    }
+    // if (Platform.OS === 'ios') {
+    //   SafariView.show({
+    //     url: url,
+    //     fromBottom: true,
+    //   });
+    // }
     // Or Linking.openURL on Android
-    else {
+    // else {
       Linking.openURL(url);
-    }
+    // }
   };
 
   render() {
