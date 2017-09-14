@@ -34,13 +34,20 @@ export default Landing;
 
 
 // class Landing extends Component {
-//   state = {
-//     user: undefined, // user has not logged in yet
-//   };
+//   constructor(props, context) {
+//     super(props, context);
+//     this.state = {
+//       user: undefined, // user has not logged in yet
+//     };
+
+//     this.handleOpenURL = this.handleOpenURL.bind(this);
+//     this.loginWithGoogle = this.loginWithGoogle.bind(this);
+//     this.loginWithFacebook = this.loginWithGoogle.bind(this);
+//     this.openURLhandler = this.openURLhandler.bind(this);
+//   }
 
 //   componentDidMount() {
-//     // Add event listener to OAuthLogin:// URLs
-//     Linking.addEventListener('url', this.handeOpenURL);
+//     Linking.addEventListener('url', this.handleOpenURL);
 //     // Launched from an external URL
 //     Linking.getInitialURL().then((url) => {
 //       if (url) {
@@ -48,42 +55,40 @@ export default Landing;
 //       }
 //     });
 
-
 //   };
 
-//   //////dsds
+
 //   componentWillUnmount() {
 //     // Remove event listener
 //     Linking.removeEventListener('url', this.handleOpenURL);
 //   }
 
-//   handleOpenURL = ({ url }) => {
+//   handleOpenURL({ url }) {
 //     // extract stringified user string out of the URL
-//     console.log('line62 handleOpenURL running');
 //     const [, user_string] = url.match(/user=([^#]+)/);
 
 //     this.setState({
 //       // decode the user string and parse it into JSON
 //       user: JSON.parse(decodeURI(user_string))
 //     });
-//   };
+//   }
 
 //   // Handle Login with Facebook button tap
-//   loginWithFacebook = () => {
+//   loginWithFacebook() {
+//     console.log('this')
 //     console.log('here is the FB URL:', FACEBOOK_URL);
-//     this.openURL(FACEBOOK_URL);
+//     this.openURLhandler(FACEBOOK_URL);
 //   }
 
 //   // Handle Login with Google button tap
-//   loginWithGoogle = () => {
+//   loginWithGoogle() {
 //     console.log('here is the Google URL:', GOOGLE_URL);
-//     this.openURL(GOOGLE_URL);
+//     this.openURLhandler(GOOGLE_URL);
 //   }
 
-//   openURL = (url) => {
-//     console.log("line83", url)
+//   openURLhandler(url) {
 //     Linking.openURL(url);
-//   };
+//   }
 
 //   render() {
 //     const { user } = this.state;
@@ -179,3 +184,4 @@ export default Landing;
 // });
 
 // export default Landing;
+

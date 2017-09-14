@@ -306,7 +306,7 @@ export default class BaseMap extends Component {
           scrollEnabled={true}
           zoomEnabled={true}
           showsUserLocation={true}
-          styleURL={'mapbox://styles/sonrisa722611/cj7i1e4is56hk2rom5n9ppbwv'}
+          styleURL={'mapbox://styles/sonrisa722611/cj7jmjbrw6o0s2ro0fu4agt50'}
           userTrackingMode={this.state.userTrackingMode}
           annotations={this.state.annotations}
           annotationsAreImmutable
