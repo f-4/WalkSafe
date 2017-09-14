@@ -76,6 +76,8 @@
 // }, {
 //   headerMode: 'none',
 // });
+
+console.log('line80 from routes.js')
 import { DrawerNavigator, StackNavigator } from 'react-navigation';
 
 import Landing from '../screens/Landing';
@@ -97,6 +99,8 @@ import TutorialIcon from '../components/icons/Tutorial';
 import Logout from '../components/buttons/Logout';
 
 import DrawerMenu from '../screens/Menu';
+
+console.log('line102 from routes.js')
 
 export const stackNavigator = StackNavigator({
   Uber: {
