@@ -27,10 +27,12 @@ import {
   StyleSheet,
   Platform,
   Text,
-  View
+  View,
+  Button
 } from 'react-native';
 import { FACEBOOK_URL, GOOGLE_URL } from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Home from '../components/buttons/Home';
 
 
 class Landing extends Component {
@@ -42,11 +44,13 @@ class Landing extends Component {
 
     this.handleOpenURL = this.handleOpenURL.bind(this);
     this.loginWithGoogle = this.loginWithGoogle.bind(this);
-    this.loginWithFacebook = this.loginWithGoogle.bind(this);
+    this.loginWithFacebook = this.loginWithFacebook.bind(this);
     this.openURLhandler = this.openURLhandler.bind(this);
   }
 
   componentDidMount() {
+    console.log('What is this', this);
+    // console.log('Whar are props', props);
     Linking.addEventListener('url', this.handleOpenURL);
     // Launched from an external URL
     Linking.getInitialURL().then((url) => {
@@ -102,6 +106,7 @@ class Landing extends Component {
               <View style={styles.avatar}>
                 <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
               </View>
+              <Home data={this.props} />
             </View>
           : // Show Please log in message if not
             <View style={styles.content}>

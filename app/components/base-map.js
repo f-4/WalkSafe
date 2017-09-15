@@ -25,6 +25,7 @@ import alertIcon from './icons/Alert';
 import noViewIcon from './icons/NoView';
 import viewCrimes from './icons/ViewCrimes';
 
+
 const accessToken = MAPBOX_ACCESS_TOKEN;
 Mapbox.setAccessToken(accessToken);
 
