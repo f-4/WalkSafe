@@ -156,7 +156,7 @@ export default class BaseMap extends Component {
     // If selected marker is searched location marker
     if (selectedPoint.id === 'search') {
       // Retrieve walking directions from current location to searched location
-      axios.get('http://localhost:3000/map/directions', {
+      axios.get(`${HOST}:${PORT}/map/directions`, {
         params: {
           start: `${this.state.userLocation.longitude},${this.state.userLocation.latitude}`,
           end: `${selectedPoint.longitude},${selectedPoint.latitude}`
