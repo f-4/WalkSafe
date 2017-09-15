@@ -50,7 +50,6 @@ class Landing extends Component {
 
   componentDidMount() {
     console.log('What is this', this);
-    // console.log('Whar are props', props);
     Linking.addEventListener('url', this.handleOpenURL);
     // Launched from an external URL
     Linking.getInitialURL().then((url) => {
@@ -120,27 +119,26 @@ class Landing extends Component {
                 Please log in to continue {'\n'}
                 to MapGruff
               </Text>
+              <View style={styles.buttons}>
+                <Icon.Button
+                  name="facebook"
+                  backgroundColor="#3b5998"
+                  onPress={this.loginWithFacebook}
+                  {...iconStyles}
+                >
+                  Login with Facebook
+                </Icon.Button>
+                <Icon.Button
+                  name="google"
+                  backgroundColor="#DD4B39"
+                  onPress={this.loginWithGoogle}
+                  {...iconStyles}
+                >
+                  Login with Google
+                </Icon.Button>
+              </View>
             </View>
           }
-          {/* Login buttons */}
-          <View style={styles.buttons}>
-            <Icon.Button
-              name="facebook"
-              backgroundColor="#3b5998"
-              onPress={this.loginWithFacebook}
-              {...iconStyles}
-            >
-              Login with Facebook
-            </Icon.Button>
-            <Icon.Button
-              name="google"
-              backgroundColor="#DD4B39"
-              onPress={this.loginWithGoogle}
-              {...iconStyles}
-            >
-              Login with Google
-            </Icon.Button>
-          </View>
         </View>
     );
   }
