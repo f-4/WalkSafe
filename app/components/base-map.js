@@ -48,6 +48,10 @@ export default class BaseMap extends Component {
     currentLocation: {
       latitude: 0,
       longitude: 0
+    },
+    userLocation: {
+      latitude: 0,
+      longitude: 0
     }
   };
 
@@ -134,6 +138,14 @@ export default class BaseMap extends Component {
   };
   onUpdateUserLocation = (location) => {
     console.log('onUpdateUserLocation', location);
+    // Save coordinates of user's location
+    this.setState({
+      userLocation: {
+        longitude: location.longitude,
+        latitude: location.latitude
+      }
+    })
+
   };
   onOpenAnnotation = (annotation) => {
     console.log('onOpenAnnotation', annotation);
@@ -143,6 +155,29 @@ export default class BaseMap extends Component {
     // If selected marker is searched location marker
     if (selectedPoint.id === 'search') {
       // Retrieve walking directions from current location to searched location
+      axios.get('http://localhost:3000/map/directions', {
+        params: {
+          start: `${this.state.userLocation.longitude},${this.state.userLocation.latitude}`,
+          end: `${selectedPoint.longitude},${selectedPoint.latitude}`
+        }
+      })
+        .then(res => {
+          // Map coordinates into [lat, lon] from [lon, lat]
+          const coordinates = res.data.geometry.coordinates.map(coordinate => {
+            return coordinate.reverse();
+          });
+          // Render array of coordinates into map
+          this.setState({
+            annotations: [...this.state.annotations, {
+              coordinates: coordinates,
+              type: 'polyline',
+              strokeColor: '#00FB00',
+              strokeWidth: 4,
+              strokeAlpha: .5,
+              id: 'directions'
+            }]
+          });
+        });
     } else {
       // Else remove selected marker
       this.setState({
