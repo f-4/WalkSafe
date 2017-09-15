@@ -48,7 +48,16 @@ export default StyleSheet.create({
   },
   alert: {
     flexDirection: 'column',
-    justifyContent: 'flex-end'
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 45,
+    width: 45,
+    borderRadius: 25,
+    backgroundColor: '#ef1f1f',
+    shadowOpacity: 0.75,
+    shadowRadius: 5,
+    shadowColor: '#616163',
+    shadowOffset: { height: 0, width: 0 },
   },
   currentLocation: {
     flexDirection: 'column',
@@ -77,4 +86,8 @@ export default StyleSheet.create({
     shadowColor: '#616163',
     shadowOffset: { height: 0, width: 0 },
   },
+  buttonsLeft: {
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+  }
 });

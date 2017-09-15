@@ -324,8 +324,10 @@ export default class BaseMap extends Component {
           contentInset={[15,0,0,0]}
         />
         <View style={mapStyle.mapButtons}>
-          <View style={mapStyle.alert}>
-            <Text onPress={ () => this.sendLocationToContacts()} >{ alertIcon }</Text>
+          <View style={mapStyle.buttonsLeft}>
+            <View style={mapStyle.alert}>
+              <Text onPress={ () => this.sendLocationToContacts()} >{ alertIcon }</Text>
+            </View>
           </View>
           <View style={mapStyle.buttonsRight}>
             <TouchableHighlight style={mapStyle.currentLocation}>
