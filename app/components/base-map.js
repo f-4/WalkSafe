@@ -96,16 +96,16 @@ export default class BaseMap extends Component {
   onCrimesToggleClick = () => {
     if (!this.state.hideCrimes) {
       // Filter only crime points
-      const crimes = this.state.annotations.filter(crime => {
-        return crime.type === 'point' && crime.title !== 'Marked Unsafe' && crime.id !== 'search'
+      const crimes = this.state.annotations.filter(annotation => {
+        return annotation.type === 'point' && annotation.title !== 'Marked Unsafe' && annotation.id !== 'search'
       });
       console.log('CRIMES', crimes)
       // Stash away crimes and filter from annotations
       this.setState({
         hideCrimes: !this.state.hideCrimes,
         hiddenCrimes: crimes,
-        annotations: this.state.annotations.filter(crime => {
-          return crime.title === 'Marked Unsafe' || crime.id === 'search'
+        annotations: this.state.annotations.filter(annotation => {
+          return annotation.title === 'Marked Unsafe' || annotation.id === 'search' || annotation.type !== 'point'
         })
       });
     } else {
@@ -247,13 +247,13 @@ export default class BaseMap extends Component {
           lon: this.state.currentLocation.longitude
       }})
         .then(res => {
-          // Retrieve id of current crimes
-          const currentCrimesId = this.state.annotations.map(crime => {
-            return crime.id;
+          // Retrieve id of annotations
+          const annotationsId = this.state.annotations.map(annotation => {
+            return annotation.id;
           });
           // Filter out existing crimes using id
           const newCrimes = res.data.filter(crime => {
-            return !currentCrimesId.includes(crime.id);
+            return !annotationsId.includes(crime.id);
           });
           // Add new crimes
           this.setState({
