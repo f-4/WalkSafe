@@ -12,7 +12,7 @@ import {
   TextInput,
   TouchableHighlight
 } from 'react-native';
-import { MAPBOX_ACCESS_TOKEN } from 'react-native-dotenv';
+import { MAPBOX_ACCESS_TOKEN, HOST, PORT } from 'react-native-dotenv';
 import axios from 'axios';
 import Communications from 'react-native-communications';
 import SendSMS from 'react-native-sms';
@@ -24,6 +24,7 @@ import locationIcon from './icons/Location';
 import alertIcon from './icons/Alert';
 import noViewIcon from './icons/NoView';
 import viewCrimes from './icons/ViewCrimes';
+
 
 const accessToken = MAPBOX_ACCESS_TOKEN;
 Mapbox.setAccessToken(accessToken);
@@ -52,7 +53,7 @@ export default class BaseMap extends Component {
 
   onPressSearchButton = () => {
     if (this.state.searchText.length > 0) {
-      axios.get('http://localhost:3000/map/search', {
+      axios.get(`${HOST}:${PORT}/map/search`, {
         params: {
           address: this.state.searchText
         }
@@ -198,7 +199,7 @@ export default class BaseMap extends Component {
     // If hideCrimes is false
     if (!this.state.hideCrimes) {
       // Retrieve nearby crimes
-      axios.get('http://localhost:3000/map/crimes', {params: {
+      axios.get(`${HOST}:${PORT}/map/crimes`, {params: {
           lat: this.state.currentLocation.latitude,
           lon: this.state.currentLocation.longitude
       }})
