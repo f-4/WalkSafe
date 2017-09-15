@@ -93,7 +93,7 @@ export default class BaseMap extends Component {
     if (!this.state.hideCrimes) {
       // Filter only crime points
       const crimes = this.state.annotations.filter(crime => {
-        return crime.type === 'point' && crime.title !== 'Favorite' && crime.id !== 'search'
+        return crime.type === 'point' && crime.title !== 'Marked Unsafe' && crime.id !== 'search'
       });
       console.log('CRIMES', crimes)
       // Stash away crimes and filter from annotations
@@ -101,7 +101,7 @@ export default class BaseMap extends Component {
         hideCrimes: !this.state.hideCrimes,
         hiddenCrimes: crimes,
         annotations: this.state.annotations.filter(crime => {
-          return crime.title === 'Favorite' || crime.id === 'search'
+          return crime.title === 'Marked Unsafe' || crime.id === 'search'
         })
       });
     } else {
@@ -146,15 +146,15 @@ export default class BaseMap extends Component {
   };
   onLongPress = (location) => {
     console.log('onLongPress', location);
-    // Add favorite marker on long press
+    // Add Marked Unsafe marker on long press
     this.setState({
       annotations: [...this.state.annotations, {
         coordinates: [location.latitude, location.longitude],
         type: 'point',
-        title: 'Favorite',
-        subtitle: `${location.latitude}, ${location.longitude}`,
+        title: 'Marked Unsafe',
+        subtitle: new Date().toLocaleString('en-US'),
         annotationImage: {
-          source: { uri: 'http://icons.iconarchive.com/icons/hopstarter/soft-scraps/256/Button-Favorite-icon.png' },
+          source: { uri: 'http://www.freeiconspng.com/uploads/emergency-alert-icon-alert-icon-8.png' },
           height: 25,
           width: 25
         },
