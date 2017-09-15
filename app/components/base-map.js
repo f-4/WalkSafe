@@ -138,11 +138,19 @@ export default class BaseMap extends Component {
   onOpenAnnotation = (annotation) => {
     console.log('onOpenAnnotation', annotation);
   };
-  onRightAnnotationTapped = (selectedCrime) => {
-    console.log('onRightAnnotationTapped', selectedCrime);
-    this.setState({
-      annotations: this.state.annotations.filter(crime => crime.subtitle !== selectedCrime.subtitle)
-    });
+  onRightAnnotationTapped = (selectedPoint) => {
+    console.log('onRightAnnotationTapped', selectedPoint);
+    // If selected marker is searched location marker
+    if (selectedPoint.id === 'search') {
+      // Retrieve walking directions from current location to searched location
+    } else {
+      // Else remove selected marker
+      this.setState({
+        annotations: this.state.annotations.filter(point => {
+          return point.subtitle !== selectedPoint.subtitle;
+        })
+      });
+    }
   };
   onLongPress = (location) => {
     console.log('onLongPress', location);
