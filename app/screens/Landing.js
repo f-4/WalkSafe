@@ -72,7 +72,7 @@
 //     );
 //   }
 // }
-
+//
 // export default Landing;
 console.log('.env')
 import React, { Component } from 'react';
