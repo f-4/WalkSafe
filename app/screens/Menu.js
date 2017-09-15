@@ -76,7 +76,7 @@ export default class DrawerMenu extends Component {
                     icon: 'directions-car', value: 'Order an Uber',
                     active: this.state.active == 'Uber',
                     onPress: () => {
-                      this.setState({ active: 'Uber' });
+                      //this.setState({ active: 'Uber' });
                       this.props.navigation.navigate('Uber');
                       console.log('I was pressed');
                     },
@@ -91,7 +91,7 @@ export default class DrawerMenu extends Component {
                     icon: 'people', value: 'Emergency Contacts',
                     active: this.state.active == 'Contacts',
                     onPress: () => {
-                      this.setState({ active: 'Contacts' });
+                      //this.setState({ active: 'Contacts' });
                       this.props.navigation.navigate('Contacts');
                     },
                   },
@@ -104,7 +104,7 @@ export default class DrawerMenu extends Component {
                     icon: 'slideshow', value: 'Tutorial',
                     active: this.state.active == 'Tutorial',
                     onPress: () => {
-                      this.setState({ active: 'Tutorial' });
+                      //this.setState({ active: 'Tutorial' });
                       this.props.navigation.navigate('Tutorial');
                     },
                   },
@@ -112,7 +112,7 @@ export default class DrawerMenu extends Component {
                     icon: 'info', value: 'About',
                     active: this.state.active == 'About',
                     onPress: () => {
-                      this.setState({ active: 'About' });
+                      //this.setState({ active: 'About' });
                       this.props.navigation.navigate('About');
                     },
                   },
@@ -120,7 +120,6 @@ export default class DrawerMenu extends Component {
                     icon: 'input', value: 'Logout',
                     //active: this.state.active == '',
                     onPress: () => {
-                      //this.setState({ active: '' });
                       this.props.navigation.navigate('Landing');
                     },
                   },
@@ -138,18 +137,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF',
-  },
-  header: {
-    backgroundColor: '#455A64',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
   },
 });

@@ -24,12 +24,12 @@ export default StyleSheet.create({
   },
   searchBar: {
     flexDirection: 'row',
-    marginBottom: -70,
+    marginBottom: -90,
     marginHorizontal: 10,
+    zIndex: 1000,
     paddingHorizontal: 10,
     paddingTop: 8,
     paddingBottom: 8,
-    zIndex: 1000,
     backgroundColor: '#fff',
     borderRadius: 5,
     shadowOpacity: 0.75,
@@ -48,7 +48,7 @@ export default StyleSheet.create({
   },
   alert: {
     flexDirection: 'column',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   currentLocation: {
     flexDirection: 'column',
@@ -77,7 +77,4 @@ export default StyleSheet.create({
     shadowColor: '#616163',
     shadowOffset: { height: 0, width: 0 },
   },
-  curLoc: {
-
-  }
 });

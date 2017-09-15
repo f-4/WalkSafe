@@ -138,6 +138,7 @@ export const Root = DrawerNavigator({
     screen: MyHomeScreen,
     navigationOptions: {
       gesturesEnabled: false,
+      header: null
     },
   },
   Stack: {
