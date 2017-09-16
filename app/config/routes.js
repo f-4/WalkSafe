@@ -133,6 +133,9 @@ export const stackNavigator = StackNavigator({
 export const Root = DrawerNavigator({
   Landing: {
     screen: Landing,
+    navigationOptions: ({navigation}) => ({
+      drawerLockMode: 'locked-closed'
+    })
   },
   Home: {
     screen: MyHomeScreen,

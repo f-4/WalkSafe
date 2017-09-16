@@ -74,6 +74,7 @@ class Landing extends Component {
       // decode the user string and parse it into JSON
       user: JSON.parse(decodeURI(user_string))
     });
+    console.log('line 77', this.state);
   }
 
   // Handle Login with Facebook button tap
@@ -94,6 +95,7 @@ class Landing extends Component {
 
   render() {
     const { user } = this.state;
+    console.log('line 98', this.state);
     return (
       <View style={styles.container}>
         { user
