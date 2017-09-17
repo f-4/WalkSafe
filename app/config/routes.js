@@ -100,8 +100,6 @@ import Logout from '../components/buttons/Logout';
 
 import DrawerMenu from '../screens/Menu';
 
-console.log('line102 from routes.js')
-
 export const stackNavigator = StackNavigator({
   Home: {
     screen: MyHomeScreen,
@@ -133,9 +131,9 @@ export const stackNavigator = StackNavigator({
 export const Root = DrawerNavigator({
   Landing: {
     screen: Landing,
-    navigationOptions: ({navigation}) => ({
+    navigationOptions: {
       drawerLockMode: 'locked-closed'
-    })
+    }
   },
   Home: {
     screen: MyHomeScreen,

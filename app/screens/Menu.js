@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, StatusBar, View, Image } from 'react-native';
 import { COLOR, ThemeProvider, Toolbar, Drawer, Avatar } from 'react-native-material-ui';
 import Container from '../components/Container';
+import axios from 'axios';
 import AvatarStyles from '../assets/styles/Icons.styles';
 import Communications from 'react-native-communications';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -32,8 +33,25 @@ export default class DrawerMenu extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      active: 'people'
+      name: null,
+      avatar: null,
+      email: null
     };
+  }
+
+  componentDidMount() {
+    axios.get('http://127.0.0.1:3000/api/user/contacts')
+      .then(res => {
+        console.log('USER ENDPOINT: ', res);
+        this.setState({
+          name: res.data,
+          avatar: res.data,
+          email: res.data
+        });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
   // _setInfoActive() {
@@ -62,7 +80,7 @@ export default class DrawerMenu extends Component {
                   footer={{
                     dense: true,
                     centerElement: {
-                        primaryText: 'Pedo Bear',
+                        primaryText: this.state.name,
                         secondaryText: 'pedo@bear.com',
                     },
                   }}
@@ -77,8 +95,8 @@ export default class DrawerMenu extends Component {
                     active: this.state.active == 'Uber',
                     onPress: () => {
                       //this.setState({ active: 'Uber' });
-                      this.props.navigation.navigate('Uber');
-                      console.log('I was pressed');
+                      //this.props.navigation.navigate('Uber');
+                      console.log('I was pressed', this.state);
                     },
                   },
                   {
