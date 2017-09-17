@@ -242,23 +242,42 @@ export default class BaseMap extends Component {
   retrieveNearbyCrimes = () => {
     // If hideCrimes is false
     if (!this.state.hideCrimes) {
+      const latitude = this.state.currentLocation.latitude;
+      const longitude = this.state.currentLocation.longitude;
+
       // Retrieve nearby crimes
       axios.get(`${HOST}:${PORT}/map/crimes`, {params: {
-          lat: this.state.currentLocation.latitude,
-          lon: this.state.currentLocation.longitude
+          lat: latitude,
+          lon: longitude
       }})
         .then(res => {
-          // Retrieve id of annotations
-          const annotationsId = this.state.annotations.map(annotation => {
-            return annotation.id;
+          const latRange = [latitude - 1, latitude + 1];
+          const lonRange = [longitude - 1, longitude + 1];
+          console.log('latRange', latRange)
+          console.log('lonRange', lonRange)
+          // Retrieve only nearby crimes within 1 degree of current location
+          const nearbyCrimes = this.state.annotations.filter(annotation => {
+            return annotation.type === 'point' && annotation.coordinates[0] <= latRange[1] && annotation.coordinates[0] >= latRange[0] && annotation.coordinates[1] <= lonRange[1] && annotation.coordinates[1] >= lonRange[0]
           });
+
+          // Retrieve other annotations
+          const otherAnnotations = this.state.annotations.filter(annotation => {
+            return annotation.title === 'Marked Unsafe' || annotation.id === 'search' || annotation.type !== 'point'
+          });
+
+          // Retrieve id of nearby crimes
+          const crimesId = nearbyCrimes.map(crime => {
+            return crime.id;
+          });
+
           // Filter out existing crimes using id
           const newCrimes = res.data.filter(crime => {
-            return !annotationsId.includes(crime.id);
+            return !crimesId.includes(crime.id);
           });
+
           // Add new crimes
           this.setState({
-            annotations: [...this.state.annotations, ...newCrimes]
+            annotations: [...otherAnnotations, ...newCrimes]
           });
         });
     }
