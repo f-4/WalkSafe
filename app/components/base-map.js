@@ -88,7 +88,8 @@ export default class BaseMap extends Component {
               height: 15,
               width: 15,
               },
-            }]
+            }],
+            showDirections: false
           });
           // Move map view to searched location
           this._map.setCenterCoordinate(...coordinates);
@@ -158,8 +159,14 @@ export default class BaseMap extends Component {
   };
   onRightAnnotationTapped = (selectedPoint) => {
     console.log('onRightAnnotationTapped', selectedPoint);
-    // If selected marker is searched location marker
-    if (selectedPoint.id === 'search') {
+    // If selected marker is search and directions are already shown
+    if (selectedPoint.id === 'search' && this.state.showDirections == true) {
+      // Remove directions annotations
+        this.setState({
+          annotations: this.state.annotations.filter(annotation => annotation.id !== 'directions'),
+          showDirections: false
+        });
+    } else if (selectedPoint.id === 'search') {
       // Retrieve walking directions from current location to searched location
       axios.get(`${HOST}:${PORT}/api/map/directions`, {
         params: {
@@ -181,7 +188,8 @@ export default class BaseMap extends Component {
               strokeWidth: 4,
               strokeAlpha: .5,
               id: 'directions'
-            }]
+            }],
+            showDirections: true
           });
         });
     } else {
