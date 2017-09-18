@@ -58,7 +58,7 @@ export default class BaseMap extends Component {
 
   onPressSearchButton = () => {
     if (this.state.searchText.length > 0) {
-      axios.get(`${HOST}:${PORT}/map/search`, {
+      axios.get(`${HOST}:${PORT}/api/map/search`, {
         params: {
           address: this.state.searchText
         }
@@ -156,7 +156,7 @@ export default class BaseMap extends Component {
     // If selected marker is searched location marker
     if (selectedPoint.id === 'search') {
       // Retrieve walking directions from current location to searched location
-      axios.get(`${HOST}:${PORT}/map/directions`, {
+      axios.get(`${HOST}:${PORT}/api/map/directions`, {
         params: {
           start: `${this.state.userLocation.longitude},${this.state.userLocation.latitude}`,
           end: `${selectedPoint.longitude},${selectedPoint.latitude}`
@@ -246,7 +246,7 @@ export default class BaseMap extends Component {
       const longitude = this.state.currentLocation.longitude;
 
       // Retrieve nearby crimes
-      axios.get(`${HOST}:${PORT}/map/crimes`, {params: {
+      axios.get(`${HOST}:${PORT}/api/map/crimes`, {params: {
           lat: latitude,
           lon: longitude
       }})
