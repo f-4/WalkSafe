@@ -68,9 +68,14 @@ export default class BaseMap extends Component {
           const coordinates = res.data.center.reverse();
           const address = res.data.place_name.split(',');
 
+          // Filter out directions annotation
+          const filteredAnnotations = this.state.annotations.filter(annotation => {
+            return annotation.id !== 'directions';
+          });
+
           // Add/update marker on searched location
           this.setState({
-            annotations: [...this.state.annotations, {
+            annotations: [...filteredAnnotations, {
               coordinates: coordinates,
               type: 'point',
               id: 'search',
