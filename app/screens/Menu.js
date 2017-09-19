@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, StatusBar, View, Image } from 'react-native';
 import { COLOR, ThemeProvider, Toolbar, Drawer, Avatar } from 'react-native-material-ui';
 import Container from '../components/Container';
+import axios from 'axios';
 import AvatarStyles from '../assets/styles/Icons.styles';
 import Communications from 'react-native-communications';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,35 +11,65 @@ import uberIcon from '../components/icons/Uber';
 import emergencyIcon from '../components/icons/Call911';
 
 const uiTheme = {
-    fontFamily: 'Roboto',
-    palette: {
-      primaryColor: COLOR.cyan500,
-      accentColor: COLOR.pink500,
+  fontFamily: 'Roboto',
+  palette: {
+    primaryColor: COLOR.cyan500,
+    accentColor: COLOR.pink500,
+  },
+  toolbar: {
+    container: {
+      height: 50,
+      paddingTop: 0,
     },
-    toolbar: {
-      container: {
-        height: 50,
-        paddingTop: 0,
-      },
-    },
-    avatar: {
-      container: {
-        backgroundColor: '#333'
-      }
+  },
+  avatar: {
+    container: {
+      backgroundColor: '#333'
     }
-  };
+  }
+};
 
 export default class DrawerMenu extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      active: 'people',
+      name: null,
+      avatar: null,
+      email: null
     };
   }
 
-  _setInfoActive() {
-    this.setState({ active: 'info' });
+  componentDidMount() {
+    axios.get('http://127.0.0.1:3000/api/user/user')
+      .then(res => {
+        console.log('USER ENDPOINT: ', res);
+        this.setState({
+          name: res.data,
+          avatar: res.data,
+          email: res.data
+        });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
+
+  onLogout = () => {
+    console.log('USER WAS LOGGED OUT');
+    axios.get('http://127.0.0.1:3000/api/auth/logout')
+      .then(res => {
+        console.log('LOGOUT ENDPOINT: ', res);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+    this.props.navigation.navigate('Landing');
+  }
+
+  // _setInfoActive() {
+  //   this.setState({ active: 'info' });
+  // }
+
 
   render() {
     return (
@@ -61,7 +92,7 @@ export default class DrawerMenu extends Component {
                   footer={{
                     dense: true,
                     centerElement: {
-                        primaryText: 'Pedo Bear',
+                        primaryText: this.state.name,
                         secondaryText: 'pedo@bear.com',
                     },
                   }}
@@ -75,9 +106,9 @@ export default class DrawerMenu extends Component {
                     icon: 'directions-car', value: 'Order an Uber',
                     active: this.state.active == 'Uber',
                     onPress: () => {
-                      this.setState({ active: 'Uber' });
-                      this.props.navigation.navigate('Uber');
-                      console.log('I was pressed');
+                      //this.setState({ active: 'Uber' });
+                      //this.props.navigation.navigate('Uber');
+                      console.log('I was pressed', this.state);
                     },
                   },
                   {
@@ -90,7 +121,7 @@ export default class DrawerMenu extends Component {
                     icon: 'people', value: 'Emergency Contacts',
                     active: this.state.active == 'Contacts',
                     onPress: () => {
-                      this.setState({ active: 'Contacts' });
+                      //this.setState({ active: 'Contacts' });
                       this.props.navigation.navigate('Contacts');
                     },
                   },
@@ -103,7 +134,7 @@ export default class DrawerMenu extends Component {
                     icon: 'slideshow', value: 'Tutorial',
                     active: this.state.active == 'Tutorial',
                     onPress: () => {
-                      this.setState({ active: 'Tutorial' });
+                      //this.setState({ active: 'Tutorial' });
                       this.props.navigation.navigate('Tutorial');
                     },
                   },
@@ -111,7 +142,7 @@ export default class DrawerMenu extends Component {
                     icon: 'info', value: 'About',
                     active: this.state.active == 'About',
                     onPress: () => {
-                      this.setState({ active: 'About' });
+                      //this.setState({ active: 'About' });
                       this.props.navigation.navigate('About');
                     },
                   },
@@ -119,8 +150,7 @@ export default class DrawerMenu extends Component {
                     icon: 'input', value: 'Logout',
                     //active: this.state.active == '',
                     onPress: () => {
-                      //this.setState({ active: '' });
-                      this.props.navigation.navigate('Landing');
+                      this.onLogout();
                     },
                   },
                 ]}
@@ -131,24 +161,11 @@ export default class DrawerMenu extends Component {
       </ThemeProvider>
     );
   }
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF',
-  },
-  header: {
-    backgroundColor: '#455A64',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
   },
 });

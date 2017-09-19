@@ -10,7 +10,8 @@ import {
   Button,
   ScrollView,
   TextInput,
-  TouchableHighlight
+  TouchableHighlight,
+  TouchableOpacity
 } from 'react-native';
 import { MAPBOX_ACCESS_TOKEN, HOST, PORT } from 'react-native-dotenv';
 import axios from 'axios';
@@ -366,18 +367,16 @@ export default class BaseMap extends Component {
           contentInset={[70,0,0,0]}
         />
         <View style={mapStyle.mapButtons}>
-          <View style={mapStyle.alert}>
-            <Text onPress={ () => this.sendLocationToContacts()} >{ alertIcon }</Text>
+          <View style={mapStyle.buttonsLeft}>
+            <View style={mapStyle.alert}>
+              <Text onPress={ () => this.sendLocationToContacts()} >{ alertIcon }</Text>
+            </View>
           </View>
           <View style={mapStyle.buttonsRight}>
-            <TouchableHighlight
-              style={mapStyle.currentLocation}
-            >
+            <TouchableHighlight style={mapStyle.currentLocation}>
               <Text onPress={ () => this.setState({ userTrackingMode: Mapbox.userTrackingMode.followWithHeading })} >{ locationIcon }</Text>
             </TouchableHighlight>
-            <TouchableHighlight
-              style={mapStyle.crimeView}
-            >
+            <TouchableHighlight style={mapStyle.crimeView} >
               <View>
                 {this.state.hideCrimes &&
                   <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>

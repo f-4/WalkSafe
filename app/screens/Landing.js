@@ -94,6 +94,7 @@ class Landing extends Component {
 
   render() {
     const { user } = this.state;
+    console.log('line 98', this.state);
     return (
       <View style={styles.container}>
         { user
