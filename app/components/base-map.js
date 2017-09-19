@@ -227,21 +227,9 @@ export default class BaseMap extends Component {
   };
 
   componentWillMount() {
-    this._offlineProgressSubscription = Mapbox.addOfflinePackProgressListener(progress => {
-      console.log('offline pack progress', progress);
-    });
-    this._offlineMaxTilesSubscription = Mapbox.addOfflineMaxAllowedTilesListener(tiles => {
-      console.log('offline max allowed tiles', tiles);
-    });
-    this._offlineErrorSubscription = Mapbox.addOfflineErrorListener(error => {
-      console.log('offline error', error);
-    });
   };
 
   componentWillUnmount() {
-    this._offlineProgressSubscription.remove();
-    this._offlineMaxTilesSubscription.remove();
-    this._offlineErrorSubscription.remove();
   };
 
   retrieveNearbyCrimes = () => {
@@ -340,6 +328,7 @@ export default class BaseMap extends Component {
           onTap={this.onTap}
           logoIsHidden={true}
           contentInset={[70,0,0,0]}
+          annotationsAreImmutable={true}
         />
         <View style={mapStyle.mapButtons}>
           <View style={mapStyle.buttonsLeft}>
