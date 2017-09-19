@@ -57,7 +57,7 @@ export default class BaseMap extends Component {
 
   onPressSearchButton = () => {
     if (this.state.searchText.length > 0) {
-      axios.get(`${HOST}:${PORT}/api/map/search`, {
+      axios.get(`${HOST}:${PORT}/api/map/geocode/forward`, {
         params: {
           address: this.state.searchText
         }
@@ -120,14 +120,11 @@ export default class BaseMap extends Component {
   };
 
   onRegionDidChange = (location) => {
-    this.setState({
-      currentZoom: location.zoomLevel,
       currentLocation: {
         latitude: location.latitude,
         longitude: location.longitude
       }
     }, () => {
-      // Retrieve nearby crimes of new location
       this.retrieveNearbyCrimes();
     });
   };
@@ -217,13 +214,14 @@ export default class BaseMap extends Component {
   };
 
   retrieveNearbyCrimes = () => {
-    // If showCrimes is true
-    if (this.state.showCrimes) {
-      // // Retrieve nearby crimes
+      // Retrieve nearby crimes
       // axios.get(`${HOST}:${PORT}/api/map/crimes`, {params: {
       //     lat: latitude,
       //     lon: longitude
       // }})
+      //   .then(res => {
+
+      //   })
       //   .then(res => {
       //     const latRange = [latitude - 3, latitude + 3];
       //     const lonRange = [longitude - 3, longitude + 3];
@@ -254,7 +252,7 @@ export default class BaseMap extends Component {
       //       annotations: [...otherAnnotations, ...newCrimes]
       //     });
       //   });
-    }
+    // }
   }
 
   sendLocationToContacts = () => {
