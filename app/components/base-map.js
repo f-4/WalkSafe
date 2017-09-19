@@ -50,6 +50,10 @@ export default class BaseMap extends Component {
       latitude: 0,
       longitude: 0
     },
+    userLocation: {
+      latitude: 0,
+      longitude: 0
+    }
   };
 
   onPressSearchButton = () => {
@@ -93,16 +97,16 @@ export default class BaseMap extends Component {
   onCrimesToggleClick = () => {
     if (!this.state.hideCrimes) {
       // Filter only crime points
-      const crimes = this.state.annotations.filter(crime => {
-        return crime.type === 'point' && crime.title !== 'Favorite' && crime.id !== 'search'
+      const crimes = this.state.annotations.filter(annotation => {
+        return annotation.type === 'point' && annotation.title !== 'Marked Unsafe' && annotation.id !== 'search'
       });
       console.log('CRIMES', crimes)
       // Stash away crimes and filter from annotations
       this.setState({
         hideCrimes: !this.state.hideCrimes,
         hiddenCrimes: crimes,
-        annotations: this.state.annotations.filter(crime => {
-          return crime.title === 'Favorite' || crime.id === 'search'
+        annotations: this.state.annotations.filter(annotation => {
+          return annotation.title === 'Marked Unsafe' || annotation.id === 'search' || annotation.type !== 'point'
         })
       });
     } else {
@@ -135,27 +139,66 @@ export default class BaseMap extends Component {
   };
   onUpdateUserLocation = (location) => {
     console.log('onUpdateUserLocation', location);
+    // Save coordinates of user's location
+    this.setState({
+      userLocation: {
+        longitude: location.longitude,
+        latitude: location.latitude
+      }
+    })
+
   };
   onOpenAnnotation = (annotation) => {
     console.log('onOpenAnnotation', annotation);
   };
-  onRightAnnotationTapped = (selectedCrime) => {
-    console.log('onRightAnnotationTapped', selectedCrime);
-    this.setState({
-      annotations: this.state.annotations.filter(crime => crime.subtitle !== selectedCrime.subtitle)
-    });
+  onRightAnnotationTapped = (selectedPoint) => {
+    console.log('onRightAnnotationTapped', selectedPoint);
+    // If selected marker is searched location marker
+    if (selectedPoint.id === 'search') {
+      // Retrieve walking directions from current location to searched location
+      axios.get('http://localhost:3000/map/directions', {
+        params: {
+          start: `${this.state.userLocation.longitude},${this.state.userLocation.latitude}`,
+          end: `${selectedPoint.longitude},${selectedPoint.latitude}`
+        }
+      })
+        .then(res => {
+          // Map coordinates into [lat, lon] from [lon, lat]
+          const coordinates = res.data.geometry.coordinates.map(coordinate => {
+            return coordinate.reverse();
+          });
+          // Render array of coordinates into map
+          this.setState({
+            annotations: [...this.state.annotations, {
+              coordinates: coordinates,
+              type: 'polyline',
+              strokeColor: '#00FB00',
+              strokeWidth: 4,
+              strokeAlpha: .5,
+              id: 'directions'
+            }]
+          });
+        });
+    } else {
+      // Else remove selected marker
+      this.setState({
+        annotations: this.state.annotations.filter(point => {
+          return point.subtitle !== selectedPoint.subtitle;
+        })
+      });
+    }
   };
   onLongPress = (location) => {
     console.log('onLongPress', location);
-    // Add favorite marker on long press
+    // Add Marked Unsafe marker on long press
     this.setState({
       annotations: [...this.state.annotations, {
         coordinates: [location.latitude, location.longitude],
         type: 'point',
-        title: 'Favorite',
-        subtitle: `${location.latitude}, ${location.longitude}`,
+        title: 'Marked Unsafe',
+        subtitle: new Date().toLocaleString('en-US'),
         annotationImage: {
-          source: { uri: 'http://icons.iconarchive.com/icons/hopstarter/soft-scraps/256/Button-Favorite-icon.png' },
+          source: { uri: 'http://www.freeiconspng.com/uploads/emergency-alert-icon-alert-icon-8.png' },
           height: 25,
           width: 25
         },
@@ -205,13 +248,13 @@ export default class BaseMap extends Component {
           lon: this.state.currentLocation.longitude
       }})
         .then(res => {
-          // Retrieve id of current crimes
-          const currentCrimesId = this.state.annotations.map(crime => {
-            return crime.id;
+          // Retrieve id of annotations
+          const annotationsId = this.state.annotations.map(annotation => {
+            return annotation.id;
           });
           // Filter out existing crimes using id
           const newCrimes = res.data.filter(crime => {
-            return !currentCrimesId.includes(crime.id);
+            return !annotationsId.includes(crime.id);
           });
           // Add new crimes
           this.setState({
@@ -321,7 +364,7 @@ export default class BaseMap extends Component {
           onLongPress={this.onLongPress}
           onTap={this.onTap}
           logoIsHidden={true}
-          contentInset={[15,0,0,0]}
+          contentInset={[70,0,0,0]}
         />
         <View style={mapStyle.mapButtons}>
           <View style={mapStyle.buttonsLeft}>
