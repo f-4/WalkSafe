@@ -40,7 +40,7 @@ export default class BaseMap extends Component {
       latitude: 34.0522,
       longitude: -118.2437
     },
-    zoom: 14,
+    zoom: 11,
     userTrackingMode: Mapbox.userTrackingMode.none,
     annotations: [],
     showCrimes: true,
@@ -329,6 +329,8 @@ export default class BaseMap extends Component {
           logoIsHidden={true}
           contentInset={[70,0,0,0]}
           annotationsAreImmutable={true}
+          maximumZoomLevel= {17}
+          minimumZoomLevel= {11}
         />
         <View style={mapStyle.mapButtons}>
           <View style={mapStyle.buttonsLeft}>
