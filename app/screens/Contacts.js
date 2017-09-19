@@ -8,6 +8,7 @@ import {
   Button,
   TextInput
 } from 'react-native';
+import axios from 'axios';
 import Modal from 'react-native-modal';
 
 export default class ModalTester extends Component {
@@ -37,6 +38,21 @@ export default class ModalTester extends Component {
     ]
   }
 
+  componentWillMount() {
+    axios.get('http://127.0.0.1:3000/api/user/contacts')
+      .then(res => {
+        console.log('CONTACTS ENDPOINT: ', res);
+        // this.setState({
+        //   name: res.data,
+        //   avatar: res.data,
+        //   email: res.data
+        // });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
   _renderContacts = () => {
     return this.state.contacts.map((contact) => {
       return <View key={contact.id}><Text>{contact.name}</Text></View>
@@ -58,7 +74,7 @@ export default class ModalTester extends Component {
 
   _handleContactSubmit = () => {
     let id = this.state.newContact;
-    id.id = Math.floor(Math.random() * (100000 - 1)) + 1;
+    id.id = Math.floor(Math.random() * (10000000 - 1)) + 1;
     this.setState({ visibleModal: null });
     this.setState({newContact: id});
     this.setState({contacts: [...this.state.contacts, id]});

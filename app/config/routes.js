@@ -100,7 +100,7 @@ import Logout from '../components/buttons/Logout';
 
 import DrawerMenu from '../screens/Menu';
 
-export const stackNavigator = StackNavigator({
+export const stackNavigator = DrawerNavigator({
   Home: {
     screen: MyHomeScreen,
     navigationOptions: {
@@ -125,26 +125,43 @@ export const stackNavigator = StackNavigator({
   Logout: {
     screen: Logout
   },
+}, {
+  contentComponent: DrawerMenu,
 });
 
 
-export const Root = DrawerNavigator({
+
+export const Root = StackNavigator({
   Landing: {
     screen: Landing,
     navigationOptions: {
       drawerLockMode: 'locked-closed'
     }
   },
-  Home: {
-    screen: MyHomeScreen,
-    navigationOptions: {
-      gesturesEnabled: false,
-      header: null
-    },
-  },
   Stack: {
     screen: stackNavigator
   }
 }, {
-  contentComponent: DrawerMenu,
+  headerMode: 'none'
 });
+
+// export const Root = DrawerNavigator({
+//   Landing: {
+//     screen: Landing,
+//     navigationOptions: {
+//       drawerLockMode: 'locked-closed'
+//     }
+//   },
+//   Home: {
+//     screen: MyHomeScreen,
+//     navigationOptions: {
+//       gesturesEnabled: false,
+//       header: null
+//     },
+//   },
+//   Stack: {
+//     screen: stackNavigator
+//   }
+// }, {
+//   contentComponent: DrawerMenu,
+// });

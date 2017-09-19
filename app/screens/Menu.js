@@ -40,7 +40,7 @@ export default class DrawerMenu extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://127.0.0.1:3000/api/user/contacts')
+    axios.get('http://127.0.0.1:3000/api/user/user')
       .then(res => {
         console.log('USER ENDPOINT: ', res);
         this.setState({
@@ -52,6 +52,18 @@ export default class DrawerMenu extends Component {
       .catch(err => {
         console.error(err);
       });
+  }
+
+  onLogout = () => {
+    console.log('USER WAS LOGGED OUT');
+    axios.get('http://127.0.0.1:3000/api/auth/logout')
+      .then(res => {
+        console.log('LOGOUT ENDPOINT: ', res);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+    this.props.navigation.navigate('Landing');
   }
 
   // _setInfoActive() {
@@ -138,7 +150,7 @@ export default class DrawerMenu extends Component {
                     icon: 'input', value: 'Logout',
                     //active: this.state.active == '',
                     onPress: () => {
-                      this.props.navigation.navigate('Landing');
+                      this.onLogout();
                     },
                   },
                 ]}
