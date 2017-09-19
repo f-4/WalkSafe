@@ -43,8 +43,8 @@ export default class BaseMap extends Component {
     zoom: 14,
     userTrackingMode: Mapbox.userTrackingMode.none,
     annotations: [],
-    hideCrimes: false,
-    hiddenCrimes: [],
+    showCrimes: true,
+    showDirections: false,
     searchText: '',
     currentLocation: {
       latitude: 0,
@@ -101,27 +101,20 @@ export default class BaseMap extends Component {
   }
 
   onCrimesToggleClick = () => {
-    if (!this.state.hideCrimes) {
-      // Filter only crime points
-      const crimes = this.state.annotations.filter(annotation => {
-        return annotation.type === 'point' && annotation.title !== 'Marked Unsafe' && annotation.id !== 'search'
-      });
-      console.log('CRIMES', crimes)
-      // Stash away crimes and filter from annotations
+    if (this.state.showCrimes) {
+      // Remove all crime points
       this.setState({
-        hideCrimes: !this.state.hideCrimes,
-        hiddenCrimes: crimes,
         annotations: this.state.annotations.filter(annotation => {
-          return annotation.title === 'Marked Unsafe' || annotation.id === 'search' || annotation.type === 'polyline'
-        })
+          return annotation.title === 'Marked Unsafe' || annotation.id === 'search' || annotation.type === 'polyline';
+        }),
+        showCrimes: !this.state.showCrimes
       });
     } else {
+      // Set showCrimes to true
       this.setState({
-        hideCrimes: !this.state.hideCrimes,
-        annotations: this.state.annotations.concat(this.state.hiddenCrimes),
-        hiddenCrimes: []
+        showCrimes: !this.state.showCrimes
       }, () => {
-        // Retrieve nearby crimes at current location
+        // Retrieve nearby crimes at current screen location
         this.retrieveNearbyCrimes();
       });
     }
@@ -152,21 +145,14 @@ export default class BaseMap extends Component {
         latitude: location.latitude
       }
     })
-
   };
   onOpenAnnotation = (annotation) => {
     console.log('onOpenAnnotation', annotation);
   };
   onRightAnnotationTapped = (selectedPoint) => {
     console.log('onRightAnnotationTapped', selectedPoint);
-    // If selected marker is search and directions are already shown
-    if (selectedPoint.id === 'search' && this.state.showDirections == true) {
-      // Remove directions annotations
-        this.setState({
-          annotations: this.state.annotations.filter(annotation => annotation.id !== 'directions'),
-          showDirections: false
-        });
-    } else if (selectedPoint.id === 'search') {
+    // If selected marker is search and directions are not shown
+    if (selectedPoint.id === 'search' && !this.state.showDirections) {
       // Retrieve walking directions from current location to searched location
       axios.get(`${HOST}:${PORT}/api/map/directions`, {
         params: {
@@ -189,8 +175,14 @@ export default class BaseMap extends Component {
               strokeAlpha: .5,
               id: 'directions'
             }],
-            showDirections: true
+            showDirections: !this.state.showDirections
           });
+        });
+    } else if (selectedPoint.id === 'search') {
+      // Remove directions annotation
+        this.setState({
+          annotations: this.state.annotations.filter(annotation => annotation.id !== 'directions'),
+          showDirections: !this.state.showDirections
         });
     } else {
       // Else remove selected marker
@@ -253,46 +245,43 @@ export default class BaseMap extends Component {
   };
 
   retrieveNearbyCrimes = () => {
-    // If hideCrimes is false
-    if (!this.state.hideCrimes) {
-      const latitude = this.state.currentLocation.latitude;
-      const longitude = this.state.currentLocation.longitude;
+    // If showCrimes is true
+    if (this.state.showCrimes) {
+      // // Retrieve nearby crimes
+      // axios.get(`${HOST}:${PORT}/api/map/crimes`, {params: {
+      //     lat: latitude,
+      //     lon: longitude
+      // }})
+      //   .then(res => {
+      //     const latRange = [latitude - 3, latitude + 3];
+      //     const lonRange = [longitude - 3, longitude + 3];
+      //     console.log('latRange', latRange)
+      //     console.log('lonRange', lonRange)
+      //     // Retrieve only nearby crimes within 3 degree of current location
+      //     const nearbyCrimes = this.state.annotations.filter(annotation => {
+      //       return annotation.type === 'point' && annotation.coordinates[0] <= latRange[1] && annotation.coordinates[0] >= latRange[0] && annotation.coordinates[1] <= lonRange[1] && annotation.coordinates[1] >= lonRange[0]
+      //     });
 
-      // Retrieve nearby crimes
-      axios.get(`${HOST}:${PORT}/api/map/crimes`, {params: {
-          lat: latitude,
-          lon: longitude
-      }})
-        .then(res => {
-          const latRange = [latitude - 1, latitude + 1];
-          const lonRange = [longitude - 1, longitude + 1];
-          console.log('latRange', latRange)
-          console.log('lonRange', lonRange)
-          // Retrieve only nearby crimes within 1 degree of current location
-          const nearbyCrimes = this.state.annotations.filter(annotation => {
-            return annotation.type === 'point' && annotation.coordinates[0] <= latRange[1] && annotation.coordinates[0] >= latRange[0] && annotation.coordinates[1] <= lonRange[1] && annotation.coordinates[1] >= lonRange[0]
-          });
+      //     // Retrieve other annotations
+      //     const otherAnnotations = this.state.annotations.filter(annotation => {
+      //       return annotation.title === 'Marked Unsafe' || annotation.id === 'search' || annotation.type === 'polyline'
+      //     });
 
-          // Retrieve other annotations
-          const otherAnnotations = this.state.annotations.filter(annotation => {
-            return annotation.title === 'Marked Unsafe' || annotation.id === 'search' || annotation.type !== 'point'
-          });
+      //     // Retrieve id of nearby crimes
+      //     const crimesId = nearbyCrimes.map(crime => {
+      //       return crime.id;
+      //     });
 
-          // Retrieve id of nearby crimes
-          const crimesId = nearbyCrimes.map(crime => {
-            return crime.id;
-          });
+      //     // Filter out existing crimes using id
+      //     const newCrimes = res.data.filter(crime => {
+      //       return !crimesId.includes(crime.id);
+      //     });
 
-          // Filter out existing crimes using id
-          const newCrimes = res.data.filter(crime => {
-            return !crimesId.includes(crime.id);
-          });
-
-          // Add new crimes
-          this.setState({
-            annotations: [...otherAnnotations, ...newCrimes]
-          });
-        });
+      //     // Add new crimes
+      //     this.setState({
+      //       annotations: [...otherAnnotations, ...newCrimes]
+      //     });
+      //   });
     }
   }
 
@@ -305,12 +294,6 @@ export default class BaseMap extends Component {
   		console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
   	});
   }
-
-  removeMarker2 = () => {
-    this.setState({
-      annotations: this.state.annotations.filter(a => a.id !== 'marker2')
-    });
-  };
 
   render() {
     StatusBar.setHidden(false);
@@ -327,7 +310,7 @@ export default class BaseMap extends Component {
             value={this.state.searchText}
           />
           <Text
-            onPress={() => this.onPressSearchButton()}
+            onPress={ () => this.onPressSearchButton()}
             title="Search"
           >
             { searchIcon }
@@ -370,10 +353,10 @@ export default class BaseMap extends Component {
             </TouchableHighlight>
             <TouchableHighlight style={mapStyle.crimeView}>
               <View>
-                {this.state.hideCrimes &&
+                {!this.state.showCrimes &&
                   <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
                 }
-                {!this.state.hideCrimes &&
+                {this.state.showCrimes &&
                   <Text onPress={ () => this.onCrimesToggleClick()} >{ viewCrimes }</Text>
                 }
               </View>
