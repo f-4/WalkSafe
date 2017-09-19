@@ -1,5 +1,6 @@
 'use strict';
 /* eslint no-console: 0 */
+
 import React, { Component } from 'react';
 import Mapbox, { MapView } from 'react-native-mapbox-gl';
 import {
@@ -18,14 +19,12 @@ import axios from 'axios';
 import Communications from 'react-native-communications';
 import SendSMS from 'react-native-sms';
 import mapStyle from '../assets/styles/Map.style';
-
 import searchIcon from './icons/Search';
 import menuIcon from './icons/Menu';
 import locationIcon from './icons/Location';
 import alertIcon from './icons/Alert';
 import noViewIcon from './icons/NoView';
 import viewCrimes from './icons/ViewCrimes';
-
 
 const accessToken = MAPBOX_ACCESS_TOKEN;
 Mapbox.setAccessToken(accessToken);
@@ -37,8 +36,8 @@ export default class BaseMap extends Component {
 
   state = {
     center: {
-      latitude: 34.0522,
-      longitude: -118.2437
+      latitude: 33.8949,
+      longitude: -118.226
     },
     zoom: 11,
     userTrackingMode: Mapbox.userTrackingMode.none,
@@ -67,7 +66,6 @@ export default class BaseMap extends Component {
           // Coordinates received are in reverse order
           const coordinates = res.data.center.reverse();
           const address = res.data.place_name.split(',');
-
           // Filter out search and directions annotation
           const filteredAnnotations = this.state.annotations.filter(annotation => {
             return annotation.id !== 'search' && annotation.id !== 'directions';
@@ -91,6 +89,7 @@ export default class BaseMap extends Component {
             }],
             showDirections: false
           });
+
           // Move map view to searched location
           this._map.setCenterCoordinate(...coordinates);
         })
@@ -131,13 +130,9 @@ export default class BaseMap extends Component {
       // Retrieve nearby crimes of new location
       this.retrieveNearbyCrimes();
     });
-    console.log('onRegionDidChange', location);
   };
-  onRegionWillChange = (location) => {
-    console.log('onRegionWillChange', location);
-  };
+
   onUpdateUserLocation = (location) => {
-    console.log('onUpdateUserLocation', location);
     // Save coordinates of user's location
     this.setState({
       userLocation: {
@@ -146,11 +141,8 @@ export default class BaseMap extends Component {
       }
     })
   };
-  onOpenAnnotation = (annotation) => {
-    console.log('onOpenAnnotation', annotation);
-  };
+
   onRightAnnotationTapped = (selectedPoint) => {
-    console.log('onRightAnnotationTapped', selectedPoint);
     // If selected marker is search and directions are not shown
     if (selectedPoint.id === 'search' && !this.state.showDirections) {
       // Retrieve walking directions from current location to searched location
@@ -193,8 +185,8 @@ export default class BaseMap extends Component {
       });
     }
   };
+
   onLongPress = (location) => {
-    console.log('onLongPress', location);
     // Add Marked Unsafe marker on long press
     this.setState({
       annotations: [...this.state.annotations, {
@@ -218,18 +210,10 @@ export default class BaseMap extends Component {
       }]
     });
   };
-  onTap = (location) => {
-    console.log('onTap', location);
-  };
+
   onChangeUserTrackingMode = (userTrackingMode) => {
+    // Allows switching back to current location view
     this.setState({ userTrackingMode });
-    console.log('onChangeUserTrackingMode', userTrackingMode);
-  };
-
-  componentWillMount() {
-  };
-
-  componentWillUnmount() {
   };
 
   retrieveNearbyCrimes = () => {
@@ -297,10 +281,7 @@ export default class BaseMap extends Component {
             onChangeText={(searchText) => this.setState({searchText})}
             value={this.state.searchText}
           />
-          <Text
-            onPress={ () => this.onPressSearchButton()}
-            title="Search"
-          >
+          <Text onPress={ () => this.onPressSearchButton()} title="Search">
             { searchIcon }
           </Text>
         </View>
@@ -317,20 +298,16 @@ export default class BaseMap extends Component {
           styleURL={'mapbox://styles/sonrisa722611/cj7jmjbrw6o0s2ro0fu4agt50'}
           userTrackingMode={this.state.userTrackingMode}
           annotations={this.state.annotations}
-          annotationsAreImmutable
+          annotationsAreImmutable={true}
           onChangeUserTrackingMode={this.onChangeUserTrackingMode}
           onRegionDidChange={this.onRegionDidChange}
-          onRegionWillChange={this.onRegionWillChange}
-          onOpenAnnotation={this.onOpenAnnotation}
           onRightAnnotationTapped={this.onRightAnnotationTapped}
           onUpdateUserLocation={this.onUpdateUserLocation}
           onLongPress={this.onLongPress}
-          onTap={this.onTap}
           logoIsHidden={true}
           contentInset={[70,0,0,0]}
-          annotationsAreImmutable={true}
-          maximumZoomLevel= {17}
-          minimumZoomLevel= {11}
+          maximumZoomLevel={17}
+          minimumZoomLevel={11}
         />
         <View style={mapStyle.mapButtons}>
           <View style={mapStyle.buttonsLeft}>
