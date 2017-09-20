@@ -45,6 +45,7 @@ export default class BaseMap extends Component {
     showCrimes: true,
     showDirections: false,
     searchText: '',
+    searchAddress: '',
     currentLocation: {
       latitude: 0,
       longitude: 0
@@ -91,6 +92,7 @@ export default class BaseMap extends Component {
               width: 15,
               },
             }],
+            searchAddress: address,
             showDirections: false
           });
 
@@ -200,28 +202,39 @@ export default class BaseMap extends Component {
   };
 
   onLongPress = (location) => {
-    // Add Marked Unsafe marker on long press
-    this.setState({
-      annotations: [...this.state.annotations, {
-        coordinates: [location.latitude, location.longitude],
-        type: 'point',
-        title: 'Marked Unsafe',
-        subtitle: new Date().toLocaleString('en-US'),
-        annotationImage: {
-          source: { uri: 'http://www.freeiconspng.com/uploads/emergency-alert-icon-alert-icon-8.png' },
-          height: 25,
-          width: 25
-        },
-        rightCalloutAccessory: {
-          source: {
-            uri: 'https://openclipart.org/image/2400px/svg_to_png/16155/milker-X-icon.png'
-          },
-          height: 15,
-          width: 15,
-        },
-        id: `${location.latitude}, ${location.longitude}`
-      }]
-    });
+    // Retrieve address of long pressed location
+    axios.get(`${HOST}:${PORT}/api/map/geocode/reverse`, {
+      params: {
+        latitude: location.latitude,
+        longitude: location.longitude
+      }
+    })
+      .then(res => {
+        // Save address to use for annotation subtitle
+        const address = res.data.place_name.split(',');
+        // Add Marked Unsafe marker to state
+        this.setState({
+          annotations: [...this.state.annotations, {
+            coordinates: [location.latitude, location.longitude],
+            type: 'point',
+            title: 'Marked Unsafe',
+            subtitle: address.slice(0, 3).join(','),
+            annotationImage: {
+              source: { uri: 'http://www.freeiconspng.com/uploads/emergency-alert-icon-alert-icon-8.png' },
+              height: 25,
+              width: 25
+            },
+            rightCalloutAccessory: {
+              source: {
+                uri: 'https://openclipart.org/image/2400px/svg_to_png/16155/milker-X-icon.png'
+              },
+              height: 15,
+              width: 15,
+            },
+            id: `${location.latitude}, ${location.longitude}`
+          }]
+        });
+      });
   };
 
   onChangeUserTrackingMode = (userTrackingMode) => {
@@ -252,13 +265,49 @@ export default class BaseMap extends Component {
   }
 
   sendLocationToContacts = () => {
-    SendSMS.send({
-  		body: `Hey! Just wanted to let you know I'm currently at ${this.state.currentLocation.latitude}, ${this.state.currentLocation.longitude}`,
-  		recipients: ['0123456789', '9876543210'],
-  		successTypes: ['sent', 'queued']
-  	}, (completed, cancelled, error) => {
-  		console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
-  	});
+
+    if (this.state.showDirections) {
+      // Retrieve address of current location
+      axios.get(`${HOST}:${PORT}/api/map/geocode/reverse`, {
+          params: {
+            latitude: this.state.userLocation.latitude,
+            longitude: this.state.userLocation.longitude
+          }
+        })
+        .then(res => {
+          // Save address and destination to use for SMS
+          const address = res.data.place_name.split(',');
+          const destination = this.state.searchAddress;
+          // Open up SMS with content prefilled
+          SendSMS.send({
+            body: `Hey, I'm currently at ${address.slice(0, 3).join(',').toUpperCase()}. I'm walking to ${destination.slice(0, 3).join(',').toUpperCase()}.`,
+            recipients: ['0123456789', '9876543210'],
+            successTypes: ['sent', 'queued']
+          }, (completed, cancelled, error) => {
+            console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
+          });
+        });
+    } else {
+      // Retrieve address of current location
+      axios.get(`${HOST}:${PORT}/api/map/geocode/reverse`, {
+          params: {
+            latitude: this.state.userLocation.latitude,
+            longitude: this.state.userLocation.longitude
+          }
+        })
+        .then(res => {
+          // Save address to use for SMS
+          const address = res.data.place_name.split(',');
+          // Open up SMS with content prefilled
+          SendSMS.send({
+            body: `Hey, I'm currently at ${address.slice(0, 3).join(',').toUpperCase()}.`,
+            recipients: ['0123456789', '9876543210'],
+            successTypes: ['sent', 'queued']
+          }, (completed, cancelled, error) => {
+            console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
+          });
+        });
+    }
   }
 
   render() {
