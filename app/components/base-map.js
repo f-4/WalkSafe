@@ -263,13 +263,25 @@ export default class BaseMap extends Component {
   }
 
   sendLocationToContacts = () => {
-    SendSMS.send({
-  		body: `Hey! Just wanted to let you know I'm currently at ${this.state.currentLocation.latitude}, ${this.state.currentLocation.longitude}`,
-  		recipients: ['0123456789', '9876543210'],
-  		successTypes: ['sent', 'queued']
-  	}, (completed, cancelled, error) => {
-  		console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
-  	});
+    // Retrieve address of current location
+    axios.get(`${HOST}:${PORT}/api/map/geocode/reverse`, {
+        params: {
+          latitude: this.state.userLocation.latitude,
+          longitude: this.state.userLocation.longitude
+        }
+      })
+      .then(res => {
+        // Save address to use for SMS
+        const address = res.data.place_name.split(',');
+        // Open up SMS with content prefilled
+        SendSMS.send({
+          body: `Hey! Just wanted to let you know I'm currently at ${address.slice(0, 3)}.`,
+          recipients: ['0123456789', '9876543210'],
+          successTypes: ['sent', 'queued']
+        }, (completed, cancelled, error) => {
+          console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
+        });
+      });
   }
 
   render() {
