@@ -70,10 +70,10 @@ export default class DrawerMenu extends Component {
   //   this.setState({ active: 'info' });
   // }
 
+
   openURLhandler() {
     Linking.openURL('uber://?action=setPickup');
   }
-
 
 
   render() {
@@ -110,8 +110,8 @@ export default class DrawerMenu extends Component {
                   {
                     icon: 'directions-car', value: 'Order an Uber',
                     active: this.state.active == 'Uber',
-                    onPress: () => { this.openURLhandler()
-                    },
+                    onPress: () => { this.openURLhandler()},
+
                   },
                   {
                     icon: 'report', value: 'Call 911',
