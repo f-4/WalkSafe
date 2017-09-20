@@ -77,7 +77,6 @@
 //   headerMode: 'none',
 // });
 
-console.log('line80 from routes.js')
 import { DrawerNavigator, StackNavigator } from 'react-navigation';
 
 import Landing from '../screens/Landing';
@@ -100,18 +99,23 @@ import Logout from '../components/buttons/Logout';
 
 import DrawerMenu from '../screens/Menu';
 
-export const stackNavigator = DrawerNavigator({
+// const contactNavigator = StackNavigator({
+//   Contacts: {
+//     screen: Contacts,
+//     navigationOptions: ({navigation}) => ({
+//       headerStyle: {backgroundColor: 'red'},
+//       title: 'Contacts',
+//       headerTintColor: 'white'
+//     })
+//   },
+// });
+
+const stackNavigator = DrawerNavigator({
   Home: {
-    screen: MyHomeScreen,
-    navigationOptions: {
-      header: null
-    }
+    screen: MyHomeScreen
   },
   Uber: {
     screen: CallUber
-  },
-  NineOneOne: {
-    screen: MyNineOneOne
   },
   Contacts: {
     screen: Contacts
@@ -133,10 +137,7 @@ export const stackNavigator = DrawerNavigator({
 
 export const Root = StackNavigator({
   Landing: {
-    screen: Landing,
-    navigationOptions: {
-      drawerLockMode: 'locked-closed'
-    }
+    screen: Landing
   },
   Stack: {
     screen: stackNavigator
