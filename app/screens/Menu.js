@@ -92,7 +92,7 @@ export default class DrawerMenu extends Component {
                   footer={{
                     dense: true,
                     centerElement: {
-                        primaryText: this.state.name,
+                        primaryText: 'this.state.name',
                         secondaryText: 'pedo@bear.com',
                     },
                   }}

@@ -7,6 +7,7 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   addContactsButton: {
+    minWidth: 250,
     backgroundColor: 'rgba(255, 255, 255, 0)',
     padding: 12,
     marginTop: 30,
@@ -30,4 +31,16 @@ export default StyleSheet.create({
     justifyContent: 'flex-end',
     margin: 0,
   },
+  closeModal: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: -15,
+    marginRight: -15
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold'
+  }
 });
