@@ -72,10 +72,8 @@
 //     );
 //   }
 // }
-//
-//console.log
 // export default Landing;
-console.log('.env')
+
 import React, { Component } from 'react';
 import {
   Image,
@@ -117,11 +115,6 @@ class Landing extends Component {
 
   };
 
-<<<<<<< HEAD
-
-=======
-
->>>>>>> Update landing ofr rebase
   componentWillUnmount() {
     // Remove event listener
     Linking.removeEventListener('url', this.handleOpenURL);
