@@ -33,20 +33,20 @@ export default class DrawerMenu extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      name: null,
-      avatar: null,
+      name: '',
+      avatar: '../assets/safetydance.png',
       email: null
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     axios.get('http://127.0.0.1:3000/api/user/user')
       .then(res => {
-        console.log('USER ENDPOINT: ', res);
+        console.log('USER ENDPOINT: ', res.data[0].username);
         this.setState({
-          name: res.data,
-          avatar: res.data,
-          email: res.data
+          name: res.data[0].username,
+          avatar: res.data[0].avatar,
+          email: res.data[0].email
         });
       })
       .catch(err => {
@@ -93,12 +93,12 @@ export default class DrawerMenu extends Component {
                   style={{
                     container: { backgroundColor: '#fafafa' },
                   }}
-                  avatar={<Image style={AvatarStyles.profileImg} source={require('../assets/safetydance.png')}/>}
+                  avatar={<Image style={AvatarStyles.profileImg} source={{uri: this.state.avatar}}/>}
                   footer={{
                     dense: true,
                     centerElement: {
-                        primaryText: 'this.state.name',
-                        secondaryText: 'pedo@bear.com',
+                        primaryText: this.state.name,
+                        secondaryText: this.state.email,
                     },
                   }}
                 />
