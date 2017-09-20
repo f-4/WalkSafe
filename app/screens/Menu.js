@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, StatusBar, View, Image } from 'react-native';
+import { StyleSheet, Text, StatusBar, View, Image, Linking } from 'react-native';
 import { COLOR, ThemeProvider, Toolbar, Drawer, Avatar } from 'react-native-material-ui';
 import Container from '../components/Container';
 import axios from 'axios';
@@ -71,6 +71,11 @@ export default class DrawerMenu extends Component {
   // }
 
 
+  openURLhandler() {
+    Linking.openURL('uber://?action=setPickup');
+  }
+
+
   render() {
     return (
       <ThemeProvider uiTheme={uiTheme}>
@@ -105,11 +110,8 @@ export default class DrawerMenu extends Component {
                   {
                     icon: 'directions-car', value: 'Order an Uber',
                     active: this.state.active == 'Uber',
-                    onPress: () => {
-                      //this.setState({ active: 'Uber' });
-                      //this.props.navigation.navigate('Uber');
-                      console.log('I was pressed', this.state);
-                    },
+                    onPress: () => { this.openURLhandler()},
+
                   },
                   {
                     icon: 'report', value: 'Call 911',
