@@ -49,6 +49,10 @@ export default class BaseMap extends Component {
       latitude: 0,
       longitude: 0
     },
+    crimesLocation: {
+      latitude: 0,
+      longitude: 0
+    },
     userLocation: {
       latitude: 0,
       longitude: 0
@@ -120,12 +124,24 @@ export default class BaseMap extends Component {
   };
 
   onRegionDidChange = (location) => {
+    // Save new location
+    this.setState({
+      currentZoom: location.zoomLevel,
       currentLocation: {
         latitude: location.latitude,
         longitude: location.longitude
       }
     }, () => {
-      this.retrieveNearbyCrimes();
+      if (this.state.showCrimes) {
+        // Absolute differences of current location and rendered crimes location
+        const absoluteLat = Math.abs(location.latitude - this.state.crimesLocation.latitude);
+        const absoluteLon = Math.abs(location.longitude - this.state.crimesLocation.longitude);
+        // If location changed by more than .0005 degrees
+        if (absoluteLat > .0005 || absoluteLon > .0005) {
+          // Retrieve nearby crimes of new location
+          this.retrieveNearbyCrimes();
+        }
+      }
     });
   };
 
@@ -215,44 +231,24 @@ export default class BaseMap extends Component {
 
   retrieveNearbyCrimes = () => {
       // Retrieve nearby crimes
-      // axios.get(`${HOST}:${PORT}/api/map/crimes`, {params: {
-      //     lat: latitude,
-      //     lon: longitude
-      // }})
-      //   .then(res => {
-
-      //   })
-      //   .then(res => {
-      //     const latRange = [latitude - 3, latitude + 3];
-      //     const lonRange = [longitude - 3, longitude + 3];
-      //     console.log('latRange', latRange)
-      //     console.log('lonRange', lonRange)
-      //     // Retrieve only nearby crimes within 3 degree of current location
-      //     const nearbyCrimes = this.state.annotations.filter(annotation => {
-      //       return annotation.type === 'point' && annotation.coordinates[0] <= latRange[1] && annotation.coordinates[0] >= latRange[0] && annotation.coordinates[1] <= lonRange[1] && annotation.coordinates[1] >= lonRange[0]
-      //     });
-
-      //     // Retrieve other annotations
-      //     const otherAnnotations = this.state.annotations.filter(annotation => {
-      //       return annotation.title === 'Marked Unsafe' || annotation.id === 'search' || annotation.type === 'polyline'
-      //     });
-
-      //     // Retrieve id of nearby crimes
-      //     const crimesId = nearbyCrimes.map(crime => {
-      //       return crime.id;
-      //     });
-
-      //     // Filter out existing crimes using id
-      //     const newCrimes = res.data.filter(crime => {
-      //       return !crimesId.includes(crime.id);
-      //     });
-
-      //     // Add new crimes
-      //     this.setState({
-      //       annotations: [...otherAnnotations, ...newCrimes]
-      //     });
-      //   });
-    // }
+      axios.get(`${HOST}:${PORT}/api/map/crimes`, {params: {
+          lat: this.state.currentLocation.latitude,
+          lon: this.state.currentLocation.longitude
+      }})
+        .then(res => {
+          // Throw out old crimes
+          const otherAnnotations = this.state.annotations.filter(annotation => {
+            return annotation.title === 'Marked Unsafe' || annotation.id === 'search' || annotation.type === 'polyline'
+          });
+          // Add new crimes
+          this.setState({
+            annotations: [...otherAnnotations, ...res.data],
+            crimesLocation: {
+              latitude: this.state.currentLocation.latitude,
+              longitude: this.state.currentLocation.longitude
+            }
+          });
+        });
   }
 
   sendLocationToContacts = () => {
