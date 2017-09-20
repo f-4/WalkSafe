@@ -1,5 +1,6 @@
 'use strict';
 /* eslint no-console: 0 */
+
 import React, { Component } from 'react';
 import Mapbox, { MapView } from 'react-native-mapbox-gl';
 import {
@@ -18,14 +19,12 @@ import axios from 'axios';
 import Communications from 'react-native-communications';
 import SendSMS from 'react-native-sms';
 import mapStyle from '../assets/styles/Map.style';
-
 import searchIcon from './icons/Search';
 import menuIcon from './icons/Menu';
 import locationIcon from './icons/Location';
 import alertIcon from './icons/Alert';
 import noViewIcon from './icons/NoView';
 import viewCrimes from './icons/ViewCrimes';
-
 
 const accessToken = MAPBOX_ACCESS_TOKEN;
 Mapbox.setAccessToken(accessToken);
@@ -37,16 +36,20 @@ export default class BaseMap extends Component {
 
   state = {
     center: {
-      latitude: 34.0522,
-      longitude: -118.2437
+      latitude: 33.8949,
+      longitude: -118.226
     },
-    zoom: 14,
+    zoom: 11,
     userTrackingMode: Mapbox.userTrackingMode.none,
     annotations: [],
-    hideCrimes: false,
-    hiddenCrimes: [],
+    showCrimes: true,
+    showDirections: false,
     searchText: '',
     currentLocation: {
+      latitude: 0,
+      longitude: 0
+    },
+    crimesLocation: {
       latitude: 0,
       longitude: 0
     },
@@ -58,7 +61,7 @@ export default class BaseMap extends Component {
 
   onPressSearchButton = () => {
     if (this.state.searchText.length > 0) {
-      axios.get(`${HOST}:${PORT}/map/search`, {
+      axios.get(`${HOST}:${PORT}/api/map/geocode/forward`, {
         params: {
           address: this.state.searchText
         }
@@ -67,10 +70,14 @@ export default class BaseMap extends Component {
           // Coordinates received are in reverse order
           const coordinates = res.data.center.reverse();
           const address = res.data.place_name.split(',');
+          // Filter out search and directions annotation
+          const filteredAnnotations = this.state.annotations.filter(annotation => {
+            return annotation.id !== 'search' && annotation.id !== 'directions';
+          });
 
-          // Add/update marker on searched location
+          // Add marker on searched location
           this.setState({
-            annotations: [...this.state.annotations, {
+            annotations: [...filteredAnnotations, {
               coordinates: coordinates,
               type: 'point',
               id: 'search',
@@ -83,8 +90,10 @@ export default class BaseMap extends Component {
               height: 15,
               width: 15,
               },
-            }]
+            }],
+            showDirections: false
           });
+
           // Move map view to searched location
           this._map.setCenterCoordinate(...coordinates);
         })
@@ -95,33 +104,27 @@ export default class BaseMap extends Component {
   }
 
   onCrimesToggleClick = () => {
-    if (!this.state.hideCrimes) {
-      // Filter only crime points
-      const crimes = this.state.annotations.filter(annotation => {
-        return annotation.type === 'point' && annotation.title !== 'Marked Unsafe' && annotation.id !== 'search'
-      });
-      console.log('CRIMES', crimes)
-      // Stash away crimes and filter from annotations
+    if (this.state.showCrimes) {
+      // Remove all crime points
       this.setState({
-        hideCrimes: !this.state.hideCrimes,
-        hiddenCrimes: crimes,
         annotations: this.state.annotations.filter(annotation => {
-          return annotation.title === 'Marked Unsafe' || annotation.id === 'search' || annotation.type !== 'point'
-        })
+          return annotation.title === 'Marked Unsafe' || annotation.id === 'search' || annotation.type === 'polyline';
+        }),
+        showCrimes: !this.state.showCrimes
       });
     } else {
+      // Set showCrimes to true
       this.setState({
-        hideCrimes: !this.state.hideCrimes,
-        annotations: this.state.annotations.concat(this.state.hiddenCrimes),
-        hiddenCrimes: []
+        showCrimes: !this.state.showCrimes
       }, () => {
-        // Retrieve nearby crimes at current location
+        // Retrieve nearby crimes at current screen location
         this.retrieveNearbyCrimes();
       });
     }
   };
 
   onRegionDidChange = (location) => {
+    // Save new location
     this.setState({
       currentZoom: location.zoomLevel,
       currentLocation: {
@@ -129,16 +132,20 @@ export default class BaseMap extends Component {
         longitude: location.longitude
       }
     }, () => {
-      // Retrieve nearby crimes of new location
-      this.retrieveNearbyCrimes();
+      if (this.state.showCrimes) {
+        // Absolute differences of current location and rendered crimes location
+        const absoluteLat = Math.abs(location.latitude - this.state.crimesLocation.latitude);
+        const absoluteLon = Math.abs(location.longitude - this.state.crimesLocation.longitude);
+        // If location changed by more than .0005 degrees
+        if (absoluteLat > .0005 || absoluteLon > .0005) {
+          // Retrieve nearby crimes of new location
+          this.retrieveNearbyCrimes();
+        }
+      }
     });
-    console.log('onRegionDidChange', location);
   };
-  onRegionWillChange = (location) => {
-    console.log('onRegionWillChange', location);
-  };
+
   onUpdateUserLocation = (location) => {
-    console.log('onUpdateUserLocation', location);
     // Save coordinates of user's location
     this.setState({
       userLocation: {
@@ -146,17 +153,13 @@ export default class BaseMap extends Component {
         latitude: location.latitude
       }
     })
+  };
 
-  };
-  onOpenAnnotation = (annotation) => {
-    console.log('onOpenAnnotation', annotation);
-  };
   onRightAnnotationTapped = (selectedPoint) => {
-    console.log('onRightAnnotationTapped', selectedPoint);
-    // If selected marker is searched location marker
-    if (selectedPoint.id === 'search') {
+    // If selected marker is search and directions are not shown
+    if (selectedPoint.id === 'search' && !this.state.showDirections) {
       // Retrieve walking directions from current location to searched location
-      axios.get('http://localhost:3000/map/directions', {
+      axios.get(`${HOST}:${PORT}/api/map/directions`, {
         params: {
           start: `${this.state.userLocation.longitude},${this.state.userLocation.latitude}`,
           end: `${selectedPoint.longitude},${selectedPoint.latitude}`
@@ -176,8 +179,15 @@ export default class BaseMap extends Component {
               strokeWidth: 4,
               strokeAlpha: .5,
               id: 'directions'
-            }]
+            }],
+            showDirections: !this.state.showDirections
           });
+        });
+    } else if (selectedPoint.id === 'search') {
+      // Remove directions annotation
+        this.setState({
+          annotations: this.state.annotations.filter(annotation => annotation.id !== 'directions'),
+          showDirections: !this.state.showDirections
         });
     } else {
       // Else remove selected marker
@@ -188,8 +198,8 @@ export default class BaseMap extends Component {
       });
     }
   };
+
   onLongPress = (location) => {
-    console.log('onLongPress', location);
     // Add Marked Unsafe marker on long press
     this.setState({
       annotations: [...this.state.annotations, {
@@ -213,55 +223,32 @@ export default class BaseMap extends Component {
       }]
     });
   };
-  onTap = (location) => {
-    console.log('onTap', location);
-  };
+
   onChangeUserTrackingMode = (userTrackingMode) => {
+    // Allows switching back to current location view
     this.setState({ userTrackingMode });
-    console.log('onChangeUserTrackingMode', userTrackingMode);
-  };
-
-  componentWillMount() {
-    this._offlineProgressSubscription = Mapbox.addOfflinePackProgressListener(progress => {
-      console.log('offline pack progress', progress);
-    });
-    this._offlineMaxTilesSubscription = Mapbox.addOfflineMaxAllowedTilesListener(tiles => {
-      console.log('offline max allowed tiles', tiles);
-    });
-    this._offlineErrorSubscription = Mapbox.addOfflineErrorListener(error => {
-      console.log('offline error', error);
-    });
-  };
-
-  componentWillUnmount() {
-    this._offlineProgressSubscription.remove();
-    this._offlineMaxTilesSubscription.remove();
-    this._offlineErrorSubscription.remove();
   };
 
   retrieveNearbyCrimes = () => {
-    // If hideCrimes is false
-    if (!this.state.hideCrimes) {
       // Retrieve nearby crimes
-      axios.get(`${HOST}:${PORT}/map/crimes`, {params: {
+      axios.get(`${HOST}:${PORT}/api/map/crimes`, {params: {
           lat: this.state.currentLocation.latitude,
           lon: this.state.currentLocation.longitude
       }})
         .then(res => {
-          // Retrieve id of annotations
-          const annotationsId = this.state.annotations.map(annotation => {
-            return annotation.id;
-          });
-          // Filter out existing crimes using id
-          const newCrimes = res.data.filter(crime => {
-            return !annotationsId.includes(crime.id);
+          // Throw out old crimes
+          const otherAnnotations = this.state.annotations.filter(annotation => {
+            return annotation.title === 'Marked Unsafe' || annotation.id === 'search' || annotation.type === 'polyline'
           });
           // Add new crimes
           this.setState({
-            annotations: [...this.state.annotations, ...newCrimes]
+            annotations: [...otherAnnotations, ...res.data],
+            crimesLocation: {
+              latitude: this.state.currentLocation.latitude,
+              longitude: this.state.currentLocation.longitude
+            }
           });
         });
-    }
   }
 
   sendLocationToContacts = () => {
@@ -273,52 +260,6 @@ export default class BaseMap extends Component {
   		console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
   	});
   }
-
-  addNewMarkers = () => {
-    // Treat annotations as immutable and create a new one instead of using .push()
-    this.setState({
-      annotations: [ ...this.state.annotations, {
-        coordinates: [40.73312,-73.989],
-        type: 'point',
-        title: 'This is a new marker',
-        id: 'foo'
-      }, {
-        'coordinates': [[40.749857912194386, -73.96820068359375], [40.741924698522055,-73.9735221862793], [40.735681504432264,-73.97523880004883], [40.7315190495212,-73.97438049316406], [40.729177554196376,-73.97180557250975], [40.72345355209305,-73.97438049316406], [40.719290332250544,-73.97455215454102], [40.71369559554873,-73.97729873657227], [40.71200407096382,-73.97850036621094], [40.71031250340588,-73.98691177368163], [40.71031250340588,-73.99154663085938]],
-        'type': 'polygon',
-        'fillAlpha': 1,
-        'fillColor': '#000000',
-        'strokeAlpha': 1,
-        'id': 'new-black-polygon'
-      }]
-    });
-  };
-
-  updateMarker2 = () => {
-    // Treat annotations as immutable and use .map() instead of changing the array
-    this.setState({
-      annotations: this.state.annotations.map(annotation => {
-        if (annotation.id !== 'marker2') { return annotation; }
-        return {
-          coordinates: [40.714541341726175,-74.00579452514648],
-          'type': 'point',
-          title: 'New Title!',
-          subtitle: 'New Subtitle',
-          annotationImage: {
-            source: { uri: 'https://cldup.com/7NLZklp8zS.png' },
-            height: 25,
-            width: 25
-          },
-          id: 'marker2'
-        };
-      })
-    });
-  };
-
-  removeMarker2 = () => {
-    this.setState({
-      annotations: this.state.annotations.filter(a => a.id !== 'marker2')
-    });
-  };
 
   render() {
     StatusBar.setHidden(false);
@@ -334,10 +275,7 @@ export default class BaseMap extends Component {
             onChangeText={(searchText) => this.setState({searchText})}
             value={this.state.searchText}
           />
-          <Text
-            onPress={() => this.onPressSearchButton()}
-            title="Search"
-          >
+          <Text onPress={ () => this.onPressSearchButton()} title="Search">
             { searchIcon }
           </Text>
         </View>
@@ -354,17 +292,16 @@ export default class BaseMap extends Component {
           styleURL={'mapbox://styles/sonrisa722611/cj7jmjbrw6o0s2ro0fu4agt50'}
           userTrackingMode={this.state.userTrackingMode}
           annotations={this.state.annotations}
-          annotationsAreImmutable
+          annotationsAreImmutable={true}
           onChangeUserTrackingMode={this.onChangeUserTrackingMode}
           onRegionDidChange={this.onRegionDidChange}
-          onRegionWillChange={this.onRegionWillChange}
-          onOpenAnnotation={this.onOpenAnnotation}
           onRightAnnotationTapped={this.onRightAnnotationTapped}
           onUpdateUserLocation={this.onUpdateUserLocation}
           onLongPress={this.onLongPress}
-          onTap={this.onTap}
           logoIsHidden={true}
           contentInset={[70,0,0,0]}
+          maximumZoomLevel={17}
+          minimumZoomLevel={11}
         />
         <View style={mapStyle.mapButtons}>
           <View style={mapStyle.buttonsLeft}>
@@ -376,153 +313,18 @@ export default class BaseMap extends Component {
             <TouchableHighlight style={mapStyle.currentLocation}>
               <Text onPress={ () => this.setState({ userTrackingMode: Mapbox.userTrackingMode.followWithHeading })} >{ locationIcon }</Text>
             </TouchableHighlight>
-            <TouchableHighlight style={mapStyle.crimeView} >
+            <TouchableHighlight style={mapStyle.crimeView}>
               <View>
-                {this.state.hideCrimes &&
+                {!this.state.showCrimes &&
                   <Text onPress={ () => this.onCrimesToggleClick()} >{ noViewIcon }</Text>
                 }
-                {!this.state.hideCrimes &&
+                {this.state.showCrimes &&
                   <Text onPress={ () => this.onCrimesToggleClick()} >{ viewCrimes }</Text>
                 }
               </View>
             </TouchableHighlight>
           </View>
         </View>
-      </View>
-    );
-  }
-
-  _renderButtons() {
-    return (
-      <View>
-        <Text onPress={() => this._map && this._map.setDirection(0)}>
-          Set direction to 0
-        </Text>
-        <Text onPress={() => this._map && this._map.setZoomLevel(6)}>
-          Zoom out to zoom level 6
-        </Text>
-        <Text onPress={() => this._map && this._map.setCenterCoordinate(48.8589, 2.3447)}>
-          Go to Paris at current zoom level {parseInt(this.state.currentZoom)}
-        </Text>
-        <Text onPress={() => this._map && this._map.setCenterCoordinateZoomLevel(35.68829, 139.77492, 14)}>
-          Go to Tokyo at fixed zoom level 14
-        </Text>
-        <Text onPress={() => this._map && this._map.easeTo({ pitch: 30 })}>
-          Set pitch to 30 degrees
-        </Text>
-        <Text onPress={this.addNewMarkers}>
-          Add new marker
-        </Text>
-        <Text onPress={this.updateMarker2}>
-          Update marker2
-        </Text>
-        <Text onPress={() => this._map && this._map.selectAnnotation('marker1')}>
-          Open marker1 popup
-        </Text>
-        <Text onPress={() => this._map && this._map.deselectAnnotation()}>
-          Deselect annotation
-        </Text>
-        <Text onPress={this.removeMarker2}>
-          Remove marker2 annotation
-        </Text>
-        <Text onPress={() => this.setState({ annotations: [] })}>
-          Remove all annotations
-        </Text>
-        <Text onPress={() => this._map && this._map.setVisibleCoordinateBounds(40.712, -74.227, 40.774, -74.125, 100, 0, 0, 0)}>
-          Set visible bounds to 40.7, -74.2, 40.7, -74.1
-        </Text>
-        <Text onPress={() => this.setState({ userTrackingMode: Mapbox.userTrackingMode.followWithHeading })}>
-          Set userTrackingMode to followWithHeading
-        </Text>
-        <Text onPress={() => this._map && this._map.getCenterCoordinateZoomLevel((location)=> {
-            console.log(location);
-          })}>
-          Get location
-        </Text>
-        <Text onPress={() => this._map && this._map.getDirection((direction)=> {
-            console.log(direction);
-          })}>
-          Get direction
-        </Text>
-        <Text onPress={() => this._map && this._map.getBounds((bounds)=> {
-            console.log(bounds);
-          })}>
-          Get bounds
-        </Text>
-        <Text onPress={() => {
-            Mapbox.addOfflinePack({
-              name: 'test',
-              type: 'bbox',
-              bounds: [0, 0, 0, 0],
-              minZoomLevel: 0,
-              maxZoomLevel: 0,
-              metadata: { anyValue: 'you wish' },
-              styleURL: Mapbox.mapStyles.dark
-            }).then(() => {
-              console.log('Offline pack added');
-            }).catch(err => {
-              console.log(err);
-            });
-        }}>
-          Create offline pack
-        </Text>
-        <Text onPress={() => {
-            Mapbox.getOfflinePacks()
-              .then(packs => {
-                console.log(packs);
-              })
-              .catch(err => {
-                console.log(err);
-              });
-        }}>
-          Get offline packs
-        </Text>
-        <Text onPress={() => {
-            Mapbox.suspendOfflinePack('test')
-              .then(info => {
-                if (info.suspended) {
-                  console.log('Suspended', info.suspended);
-                } else {
-                  console.log('No packs to suspend');
-                }
-              })
-              .catch(err => {
-                console.log(err);
-              });
-        }}>
-          Pause/Suspend pack with name 'test'
-        </Text>
-        <Text onPress={() => {
-            Mapbox.resumeOfflinePack('test')
-              .then(info => {
-                if (info.resumed) {
-                  console.log('Resumed', info.resumed);
-                } else {
-                  console.log('No packs to resume');
-                }
-              })
-              .catch(err => {
-                console.log(err);
-              });
-        }}>
-          Resume pack with name 'test'
-        </Text>
-        <Text onPress={() => {
-            Mapbox.removeOfflinePack('test')
-              .then(info => {
-                if (info.deleted) {
-                  console.log('Deleted', info.deleted);
-                } else {
-                  console.log('No packs to delete');
-                }
-              })
-              .catch(err => {
-                console.log(err);
-              });
-        }}>
-          Remove pack with name 'test'
-        </Text>
-        <Text>User tracking mode is {this.state.userTrackingMode}</Text>
       </View>
     );
   }
