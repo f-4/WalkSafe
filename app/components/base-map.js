@@ -63,72 +63,86 @@ export default class BaseMap extends Component {
   };
 
   componentWillMount() {
-    axios.get('http://127.0.0.1:3000/api/user/contacts')
-      .then(res => {
-        let contactNumberArr = [];
-        res.data.forEach(contact => {
-          contactNumberArr.push(contact.phone_number);
-        });
-        this.setState({
-          contactNumbers: contactNumberArr
-        });
-        console.log("STAAATE", this.state.contactNumbers);
+
+    AsyncStorage.getItem('userToken')
+      .then((token) => {
+        // Set all axios headers in this component to have default header
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        // Retrieve contacts
+        axios.get(`${HOST}:${PORT}/api/user/contacts`)
+          .then(res => {
+            let contactNumberArr = [];
+            res.data.forEach(contact => {
+              contactNumberArr.push(contact.phone_number);
+            });
+            this.setState({
+              contactNumbers: contactNumberArr
+            });
+            console.log("STAAATE", this.state.contactNumbers);
+          })
+          .catch(err => {
+            console.error(err);
+          });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
       });
-  }
 
-  componentDidMount() {
-    // Testing AsyncStorage
-    const user = AsyncStorage.getItem('userToken');
-    console.log('What is the JSON URL', user);
-
-    // Testing AsyncStorage end
   }
 
   onPressSearchButton = () => {
     if (this.state.searchText.length > 0) {
-      axios.get(`${HOST}:${PORT}/api/map/geocode/forward`, {
-        params: {
-          address: this.state.searchText
-        }
-      })
-        .then(res => {
-          // Coordinates received are in reverse order
-          const coordinates = res.data.center.reverse();
-          const address = res.data.place_name.split(',');
-          // Filter out search and directions annotation
-          const filteredAnnotations = this.state.annotations.filter(annotation => {
-            return annotation.id !== 'search' && annotation.id !== 'directions';
-          });
+      AsyncStorage.getItem('userToken')
+        .then((token) => {
+          axios.get(`${HOST}:${PORT}/api/map/geocode/forward`, {
+            params: {
+              address: this.state.searchText
+            },
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          })
+            .then(res => {
+              // Coordinates received are in reverse order
+              const coordinates = res.data.center.reverse();
+              const address = res.data.place_name.split(',');
+              // Filter out search and directions annotation
+              const filteredAnnotations = this.state.annotations.filter(annotation => {
+                return annotation.id !== 'search' && annotation.id !== 'directions';
+              });
 
-          // Add marker on searched location
-          this.setState({
-            annotations: [...filteredAnnotations, {
-              coordinates: coordinates,
-              type: 'point',
-              id: 'search',
-              title: address[0],
-              subtitle: address.slice(1).join(','),
-              rightCalloutAccessory: {
-              source: {
-                uri: 'http://www.provmed.com/img/map-icon.png'
-              },
-              height: 15,
-              width: 15,
-              },
-            }],
-            searchAddress: address,
-            showDirections: false
-          });
+              // Add marker on searched location
+              this.setState({
+                annotations: [...filteredAnnotations, {
+                  coordinates: coordinates,
+                  type: 'point',
+                  id: 'search',
+                  title: address[0],
+                  subtitle: address.slice(1).join(','),
+                  rightCalloutAccessory: {
+                  source: {
+                    uri: 'http://www.provmed.com/img/map-icon.png'
+                  },
+                  height: 15,
+                  width: 15,
+                  },
+                }],
+                searchAddress: address,
+                showDirections: false
+              });
 
-          // Move map view to searched location
-          this._map.setCenterCoordinate(...coordinates);
+              // Move map view to searched location
+              this._map.setCenterCoordinate(...coordinates);
+            })
+            .catch(err => {
+              console.error(err);
+            });
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
         });
+
     }
   }
 
@@ -188,30 +202,40 @@ export default class BaseMap extends Component {
     // If selected marker is search and directions are not shown
     if (selectedPoint.id === 'search' && !this.state.showDirections) {
       // Retrieve walking directions from current location to searched location
-      axios.get(`${HOST}:${PORT}/api/map/directions`, {
-        params: {
-          start: `${this.state.userLocation.longitude},${this.state.userLocation.latitude}`,
-          end: `${selectedPoint.longitude},${selectedPoint.latitude}`
-        }
-      })
-        .then(res => {
-          // Map coordinates into [lat, lon] from [lon, lat]
-          const coordinates = res.data.geometry.coordinates.map(coordinate => {
-            return coordinate.reverse();
-          });
-          // Render array of coordinates into map
-          this.setState({
-            annotations: [...this.state.annotations, {
-              coordinates: coordinates,
-              type: 'polyline',
-              strokeColor: '#00FB00',
-              strokeWidth: 4,
-              strokeAlpha: .5,
-              id: 'directions'
-            }],
-            showDirections: !this.state.showDirections
-          });
+      AsyncStorage.getItem('userToken')
+        .then((token) => {
+          axios.get(`${HOST}:${PORT}/api/map/directions`, {
+            params: {
+              start: `${this.state.userLocation.longitude},${this.state.userLocation.latitude}`,
+              end: `${selectedPoint.longitude},${selectedPoint.latitude}`
+            },
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          })
+            .then(res => {
+              // Map coordinates into [lat, lon] from [lon, lat]
+              const coordinates = res.data.geometry.coordinates.map(coordinate => {
+                return coordinate.reverse();
+              });
+              // Render array of coordinates into map
+              this.setState({
+                annotations: [...this.state.annotations, {
+                  coordinates: coordinates,
+                  type: 'polyline',
+                  strokeColor: '#00FB00',
+                  strokeWidth: 4,
+                  strokeAlpha: .5,
+                  id: 'directions'
+                }],
+                showDirections: !this.state.showDirections
+              });
+            });
+        })
+        .catch((err) => {
+          console.error(err);
         });
+
     } else if (selectedPoint.id === 'search') {
       // Remove directions annotation
         this.setState({
@@ -230,38 +254,48 @@ export default class BaseMap extends Component {
 
   onLongPress = (location) => {
     // Retrieve address of long pressed location
-    axios.get(`${HOST}:${PORT}/api/map/geocode/reverse`, {
-      params: {
-        latitude: location.latitude,
-        longitude: location.longitude
-      }
-    })
-      .then(res => {
-        // Save address to use for annotation subtitle
-        const address = res.data.place_name.split(',');
-        // Add Marked Unsafe marker to state
-        this.setState({
-          annotations: [...this.state.annotations, {
-            coordinates: [location.latitude, location.longitude],
-            type: 'point',
-            title: 'Marked Unsafe',
-            subtitle: address.slice(0, 3).join(','),
-            annotationImage: {
-              source: { uri: 'http://www.freeiconspng.com/uploads/emergency-alert-icon-alert-icon-8.png' },
-              height: 25,
-              width: 25
-            },
-            rightCalloutAccessory: {
-              source: {
-                uri: 'https://openclipart.org/image/2400px/svg_to_png/16155/milker-X-icon.png'
-              },
-              height: 15,
-              width: 15,
-            },
-            id: `${location.latitude}, ${location.longitude}`
-          }]
-        });
+    AsyncStorage.getItem('userToken')
+      .then((token) => {
+        axios.get(`${HOST}:${PORT}/api/map/geocode/reverse`, {
+          params: {
+            latitude: location.latitude,
+            longitude: location.longitude
+          },
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+          .then(res => {
+            // Save address to use for annotation subtitle
+            const address = res.data.place_name.split(',');
+            // Add Marked Unsafe marker to state
+            this.setState({
+              annotations: [...this.state.annotations, {
+                coordinates: [location.latitude, location.longitude],
+                type: 'point',
+                title: 'Marked Unsafe',
+                subtitle: address.slice(0, 3).join(','),
+                annotationImage: {
+                  source: { uri: 'http://www.freeiconspng.com/uploads/emergency-alert-icon-alert-icon-8.png' },
+                  height: 25,
+                  width: 25
+                },
+                rightCalloutAccessory: {
+                  source: {
+                    uri: 'https://openclipart.org/image/2400px/svg_to_png/16155/milker-X-icon.png'
+                  },
+                  height: 15,
+                  width: 15,
+                },
+                id: `${location.latitude}, ${location.longitude}`
+              }]
+            });
+          });
+      })
+      .catch((err) => {
+        console.error(err);
       });
+
   };
 
   onChangeUserTrackingMode = (userTrackingMode) => {
@@ -271,23 +305,34 @@ export default class BaseMap extends Component {
 
   retrieveNearbyCrimes = () => {
       // Retrieve nearby crimes
-      axios.get(`${HOST}:${PORT}/api/map/crimes`, {params: {
-          lat: this.state.currentLocation.latitude,
-          lon: this.state.currentLocation.longitude
-      }})
-        .then(res => {
-          // Throw out old crimes
-          const otherAnnotations = this.state.annotations.filter(annotation => {
-            return annotation.title === 'Marked Unsafe' || annotation.id === 'search' || annotation.type === 'polyline'
-          });
-          // Add new crimes
-          this.setState({
-            annotations: [...otherAnnotations, ...res.data],
-            crimesLocation: {
-              latitude: this.state.currentLocation.latitude,
-              longitude: this.state.currentLocation.longitude
+      AsyncStorage.getItem('userToken')
+        .then((token) => {
+          axios.get(`${HOST}:${PORT}/api/map/crimes`, {
+            params: {
+              lat: this.state.currentLocation.latitude,
+              lon: this.state.currentLocation.longitude
+            },
+            headers: {
+              'Authorization': `Bearer ${token}`
             }
-          });
+          })
+            .then(res => {
+              // Throw out old crimes
+              const otherAnnotations = this.state.annotations.filter(annotation => {
+                return annotation.title === 'Marked Unsafe' || annotation.id === 'search' || annotation.type === 'polyline'
+              });
+              // Add new crimes
+              this.setState({
+                annotations: [...otherAnnotations, ...res.data],
+                crimesLocation: {
+                  latitude: this.state.currentLocation.latitude,
+                  longitude: this.state.currentLocation.longitude
+                }
+              });
+            });
+        })
+        .catch((err) => {
+          console.error(err);
         });
   }
 
@@ -295,44 +340,63 @@ export default class BaseMap extends Component {
 
     if (this.state.showDirections) {
       // Retrieve address of current location
-      axios.get(`${HOST}:${PORT}/api/map/geocode/reverse`, {
-          params: {
-            latitude: this.state.userLocation.latitude,
-            longitude: this.state.userLocation.longitude
-          }
+      AsyncStorage.getItem('userToken')
+        .then((token) => {
+          axios.get(`${HOST}:${PORT}/api/map/geocode/reverse`, {
+              params: {
+                latitude: this.state.userLocation.latitude,
+                longitude: this.state.userLocation.longitude
+              },
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            })
+            .then(res => {
+              // Save address and destination to use for SMS
+              const address = res.data.place_name.split(',');
+              const destination = this.state.searchAddress;
+              // Open up SMS with content prefilled
+              SendSMS.send({
+                body: `Hey, I'm currently at ${address.slice(0, 3).join(',').toUpperCase()}. I'm walking to ${destination.slice(0, 3).join(',').toUpperCase()}.`,
+                recipients: ['0123456789', '9876543210'],
+                successTypes: ['sent', 'queued']
+              }, (completed, cancelled, error) => {
+                console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
+              });
+            });
         })
-        .then(res => {
-          // Save address and destination to use for SMS
-          const address = res.data.place_name.split(',');
-          const destination = this.state.searchAddress;
-          // Open up SMS with content prefilled
-          SendSMS.send({
-            body: `Hey, I'm currently at ${address.slice(0, 3).join(',').toUpperCase()}. I'm walking to ${destination.slice(0, 3).join(',').toUpperCase()}.`,
-            recipients: ['0123456789', '9876543210'],
-            successTypes: ['sent', 'queued']
-          }, (completed, cancelled, error) => {
-            console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
-          });
+        .catch((err) => {
+          console.error(err);
         });
+
     } else {
       // Retrieve address of current location
-      axios.get(`${HOST}:${PORT}/api/map/geocode/reverse`, {
-          params: {
-            latitude: this.state.userLocation.latitude,
-            longitude: this.state.userLocation.longitude
-          }
+      AsyncStorage.getItem('userToken')
+        .then((token) => {
+          axios.get(`${HOST}:${PORT}/api/map/geocode/reverse`, {
+              params: {
+                latitude: this.state.userLocation.latitude,
+                longitude: this.state.userLocation.longitude
+              },
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            })
+            .then(res => {
+              // Save address to use for SMS
+              const address = res.data.place_name.split(',');
+              // Open up SMS with content prefilled
+              SendSMS.send({
+                body: `Hey, I'm currently at ${address.slice(0, 3).join(',').toUpperCase()}.`,
+                recipients: this.state.contactNumbers,
+                successTypes: ['sent', 'queued']
+              }, (completed, cancelled, error) => {
+                console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
+              });
+            });
         })
-        .then(res => {
-          // Save address to use for SMS
-          const address = res.data.place_name.split(',');
-          // Open up SMS with content prefilled
-          SendSMS.send({
-            body: `Hey, I'm currently at ${address.slice(0, 3).join(',').toUpperCase()}.`,
-            recipients: this.state.contactNumbers,
-            successTypes: ['sent', 'queued']
-          }, (completed, cancelled, error) => {
-            console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
-          });
+        .catch((err) => {
+          console.error(err);
         });
     }
   }

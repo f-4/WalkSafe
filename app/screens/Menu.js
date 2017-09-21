@@ -8,6 +8,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { HOST, PORT } from 'react-native-dotenv';
 import { COLOR, ThemeProvider, Toolbar, Drawer, Avatar } from 'react-native-material-ui';
 import Container from '../components/Container';
 import axios from 'axios';
@@ -48,30 +49,35 @@ export default class DrawerMenu extends Component {
   }
 
   componentWillMount() {
-    axios.get('http://127.0.0.1:3000/api/user/user')
-      .then(res => {
-        console.log('USER ENDPOINT: ', res.data[0]);
-        this.setState({
-          name: res.data[0].username,
-          avatar: res.data[0].avatar,
-          email: res.data[0].email
-        });
+    AsyncStorage.getItem('userToken')
+      .then((token) => {
+        // Set all axios headers in this component to have default header
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        // Retrieve user
+        axios.get(`${HOST}:${PORT}/api/user/user`)
+          .then(res => {
+            console.log('USER ENDPOINT: ', res.data[0]);
+            this.setState({
+              name: res.data[0].username,
+              avatar: res.data[0].avatar,
+              email: res.data[0].email
+            });
+          })
+          .catch(err => {
+            console.error(err);
+          });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
       });
+
   }
 
-  componentDidMount() {
-    // Testing AsyncStorage
-    const user = AsyncStorage.getItem('userToken');
-    console.log('What is the JSON URL', user);
 
-    // Testing AsyncStorage end
-  }
   onLogout = () => {
     console.log('USER WAS LOGGED OUT');
-    axios.get('http://127.0.0.1:3000/api/auth/logout')
+    axios.get(`${HOST}:${PORT}/api/auth/logout`)
       .then(res => {
         console.log('LOGOUT ENDPOINT: ', res);
       })

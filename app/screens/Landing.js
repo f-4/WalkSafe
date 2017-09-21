@@ -105,7 +105,6 @@ class Landing extends Component {
   }
 
   componentDidMount() {
-    console.log('What is this', this);
     Linking.addEventListener('url', this.handleOpenURL);
     // Launched from an external URL
     Linking.getInitialURL().then((url) => {
@@ -124,15 +123,25 @@ class Landing extends Component {
 
   handleOpenURL({ url }) {
     // extract stringified user string out of the URL
-    AsyncStorage.setItem('userToken', url);
-    const user = AsyncStorage.getItem('userToken');
-    console.log('What is the JSON URL', user);
-    const [, user_string] = url.match(/user=([^#]+)/);
+    console.log('What is the url', url);
+    // Scrub url data from token data
+    const userTokenUrlFirst = url.match(/token=([^#]+)(?=&user)/)[1].substring(3);
+    const userTokenUrl = userTokenUrlFirst.substring(0, userTokenUrlFirst.length - 3);
+    // console.log('what is the userToken to enter into the Storage', userTokenUrl);
 
-    this.setState({
-      // decode the user string and parse it into JSON
-      user: JSON.parse(decodeURI(user_string))
-    });
+    // insert token into the AsycStorage
+    AsyncStorage.setItem('userToken', userTokenUrl)
+      .then(() => {
+        // Find the user string
+        const [, user_string] = url.match(/user=([^#]+)/);
+        this.setState({
+          // decode the user string and parse it into JSON
+          user: JSON.parse(decodeURI(user_string))
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   }
 
   // Handle Login with Facebook button tap
