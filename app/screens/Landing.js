@@ -36,6 +36,7 @@ import {
   Text,
   View
 } from 'react-native';
+import RNRestart from 'react-native-restart';
 import { FACEBOOK_URL, GOOGLE_URL } from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from '../components/buttons/Home';
@@ -56,13 +57,17 @@ class Landing extends Component {
 
   componentWillMount() {
     // Check if user was already logged in
-    AsyncStorage.getItem('userObject')
-      .then((userObject) => {
-        this.setState({
-          user: userObject
-        });
-        //Navigate straight to Home screen if they were
-        this.props.navigation.navigate('Home');
+    AsyncStorage.getItem('userObjectStr')
+      .then((userObjectStr) => {
+        console.log('Does this user string string exist', userObjectStr);
+        if (userObjectStr) {
+          let user = JSON.parse(userObjectStr);
+          this.setState({
+            user: user
+          });
+          //Navigate straight to Home screen if they were
+          this.props.navigation.navigate('Home');
+        }
       })
       .catch((err) => {
         //Console an error if they weren't logged in
@@ -92,6 +97,7 @@ class Landing extends Component {
     const [, user_string] = url.match(/user=([^#]+)/);
     // Decode the user string and parse it into JSON
     const userObject = JSON.parse(decodeURI(user_string));
+    const userObjectStr = decodeURI(user_string);
 
     // Set up Google or Facebook Id and save into userId
     const facebookId = userObject.facebook_id;
@@ -108,14 +114,14 @@ class Landing extends Component {
     const userTokenUrl = userTokenUrlFirst.substring(0, userTokenUrlFirst.length - 3);
 
     // insert JWToken and userId into the AsycStorage
-    AsyncStorage.multiSet([['userToken', userTokenUrl], ['userId', userId], ['userObject', userObject]])
+    AsyncStorage.multiSet([['userToken', userTokenUrl], ['userId', userId], ['userObject', userObjectStr]])
       .then(() => {
         this.setState({
           user: userObject
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.log('AsyncStorage error', err);
       })
   }
 

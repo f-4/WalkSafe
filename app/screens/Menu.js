@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import { HOST, PORT } from 'react-native-dotenv';
+import RNRestart from 'react-native-restart';
 import { COLOR, ThemeProvider, Toolbar, Drawer, Avatar } from 'react-native-material-ui';
 import Container from '../components/Container';
 import axios from 'axios';
@@ -18,6 +19,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import uberIcon from '../components/icons/Uber';
 import emergencyIcon from '../components/icons/Call911';
+
 
 const uiTheme = {
   fontFamily: 'Roboto',
@@ -76,15 +78,22 @@ export default class DrawerMenu extends Component {
 
 
   onLogout = () => {
-    console.log('USER WAS LOGGED OUT');
-    axios.get(`${HOST}:${PORT}/api/auth/logout`)
-      .then(res => {
-        console.log('LOGOUT ENDPOINT: ', res);
+    console.log('Logging out', RNRestart);
+    AsyncStorage.multiRemove(['userToken', 'userId', 'userObject'])
+      .then(() => {
+        RNRestart.Restart()
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
-      });
-    this.props.navigation.navigate('Landing');
+      })
+    // axios.get(`${HOST}:${PORT}/api/auth/logout`)
+    //   .then(res => {
+    //     console.log('LOGOUT ENDPOINT: ', res);
+    //   })
+    //   .catch(err => {
+    //     console.error(err);
+    //   });
+
   }
 
   // _setInfoActive() {
