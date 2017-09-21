@@ -115,6 +115,7 @@ class Landing extends Component {
 
   };
 
+
   componentWillUnmount() {
     // Remove event listener
     Linking.removeEventListener('url', this.handleOpenURL);
@@ -122,6 +123,7 @@ class Landing extends Component {
 
   handleOpenURL({ url }) {
     // extract stringified user string out of the URL
+    console.log('What is the JSON URL', url);
     const [, user_string] = url.match(/user=([^#]+)/);
 
     this.setState({
