@@ -57,8 +57,26 @@ export default class BaseMap extends Component {
     userLocation: {
       latitude: 0,
       longitude: 0
-    }
+    },
+    contactNumbers: []
   };
+
+  componentWillMount() {
+    axios.get('http://127.0.0.1:3000/api/user/contacts')
+      .then(res => {
+        let contactNumberArr = [];
+        res.data.forEach(contact => {
+          contactNumberArr.push(contact.phone_number);
+        });
+        this.setState({
+          contactNumbers: contactNumberArr
+        });
+        console.log("STAAATE", this.state.contactNumbers);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
 
   onPressSearchButton = () => {
     if (this.state.searchText.length > 0) {
@@ -301,7 +319,7 @@ export default class BaseMap extends Component {
           // Open up SMS with content prefilled
           SendSMS.send({
             body: `Hey, I'm currently at ${address.slice(0, 3).join(',').toUpperCase()}.`,
-            recipients: ['0123456789', '9876543210'],
+            recipients: this.state.contactNumbers,
             successTypes: ['sent', 'queued']
           }, (completed, cancelled, error) => {
             console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
