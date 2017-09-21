@@ -4,15 +4,16 @@
 import React, { Component } from 'react';
 import Mapbox, { MapView } from 'react-native-mapbox-gl';
 import {
-  StyleSheet,
-  Text,
-  StatusBar,
-  View,
+  AsyncStorage,
   Button,
   ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
   TextInput,
   TouchableHighlight,
-  TouchableOpacity
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { MAPBOX_ACCESS_TOKEN, HOST, PORT } from 'react-native-dotenv';
 import axios from 'axios';
@@ -76,6 +77,14 @@ export default class BaseMap extends Component {
       .catch(err => {
         console.error(err);
       });
+  }
+
+  componentDidMount() {
+    // Testing AsyncStorage
+    const user = AsyncStorage.getItem('userToken');
+    console.log('What is the JSON URL', user);
+
+    // Testing AsyncStorage end
   }
 
   onPressSearchButton = () => {

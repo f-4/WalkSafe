@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import {
+  AsyncStorage,
+  Button,
+  StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   TouchableHighlight,
-  View,
-  StyleSheet,
-  Button,
-  TextInput
+  View
 } from 'react-native';
 import modalStyle from '../assets/styles/Modal.style';
 import style from '../assets/styles/Contacts.style';
@@ -49,6 +50,12 @@ export default class ModalTester extends Component {
   }
 
   componentDidMount() {
+    // Testing AsyncStorage
+    const user = AsyncStorage.getItem('userToken');
+    console.log('What is the JSON URL', user);
+
+    // Testing AsyncStorage end
+
     this._getContactLists();
   }
 

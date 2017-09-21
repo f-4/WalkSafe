@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, StatusBar, View, Image, Linking } from 'react-native';
+import {
+  AsyncStorage,
+  Image,
+  Linking,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { COLOR, ThemeProvider, Toolbar, Drawer, Avatar } from 'react-native-material-ui';
 import Container from '../components/Container';
 import axios from 'axios';
@@ -54,6 +62,13 @@ export default class DrawerMenu extends Component {
       });
   }
 
+  componentDidMount() {
+    // Testing AsyncStorage
+    const user = AsyncStorage.getItem('userToken');
+    console.log('What is the JSON URL', user);
+
+    // Testing AsyncStorage end
+  }
   onLogout = () => {
     console.log('USER WAS LOGGED OUT');
     axios.get('http://127.0.0.1:3000/api/auth/logout')

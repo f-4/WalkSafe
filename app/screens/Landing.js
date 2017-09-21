@@ -76,13 +76,14 @@
 
 import React, { Component } from 'react';
 import {
+  AsyncStorage,
+  Button,
   Image,
   Linking,
-  StyleSheet,
   Platform,
+  StyleSheet,
   Text,
-  View,
-  Button
+  View
 } from 'react-native';
 import { FACEBOOK_URL, GOOGLE_URL } from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -123,7 +124,9 @@ class Landing extends Component {
 
   handleOpenURL({ url }) {
     // extract stringified user string out of the URL
-    console.log('What is the JSON URL', url);
+    AsyncStorage.setItem('userToken', url);
+    const user = AsyncStorage.getItem('userToken');
+    console.log('What is the JSON URL', user);
     const [, user_string] = url.match(/user=([^#]+)/);
 
     this.setState({
