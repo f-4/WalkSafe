@@ -41,7 +41,7 @@ export default class ModalTester extends Component {
   componentWillMount() {
     AsyncStorage.multiGet(['userToken', 'userId'])
       .then((userData) => {
-        console.log('What is the contact userData', userData);
+        console.log('What is the Contact userData', userData);
         let token = userData[0][1];
         let userId = userData[1][1];
 

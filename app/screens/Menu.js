@@ -51,13 +51,23 @@ export default class DrawerMenu extends Component {
   }
 
   componentWillMount() {
-    AsyncStorage.getItem('userToken')
-      .then((token) => {
+    AsyncStorage.multiGet(['userToken', 'userId'])
+      .then((userData) => {
+        console.log('What is the Menu userData', userData);
+        let token = userData[0][1];
+        let userId = userData[1][1];
         // Set all axios headers in this component to have default header
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
+        // Set the initial userId state
+        this.setState({
+          userId: userId
+        });
         // Retrieve user
-        axios.get(`${HOST}:${PORT}/api/user/user`)
+        axios.get(`${HOST}:${PORT}/api/user/user`, {
+          params: {
+            userId: this.state.userId
+          }
+        })
           .then(res => {
             console.log('USER ENDPOINT: ', res.data[0]);
             this.setState({
@@ -78,9 +88,9 @@ export default class DrawerMenu extends Component {
 
 
   onLogout = () => {
-    console.log('Logging out', RNRestart);
     AsyncStorage.multiRemove(['userToken', 'userId', 'userObject'])
       .then(() => {
+        // Restarts the app and resets the states
         RNRestart.Restart()
       })
       .catch((err) => {
