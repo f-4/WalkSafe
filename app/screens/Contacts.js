@@ -12,10 +12,19 @@ import modalStyle from '../assets/styles/Modal.style';
 import style from '../assets/styles/Contacts.style';
 import axios from 'axios';
 import Modal from 'react-native-modal';
+import Swipeout from 'react-native-swipeout';
 
 import backArrow from '../components/icons/BackArrow';
 import Info from '../components/icons/Info';
 import Close from '../components/icons/Close';
+import Delete from '../components/icons/Delete';
+import Add from '../components/icons/Add';
+
+// const swipeoutBtns = [
+//   {
+//     text: 'Button'
+//   }
+// ];
 
 export default class ModalTester extends Component {
   state = {
@@ -56,11 +65,47 @@ export default class ModalTester extends Component {
       });
   }
 
+  _deleteContact = (id) => {
+    console.log('ORIGINAL', this.state.contacts);
+    console.log('ID FROM DELETE', id);
+    let contactIndex;
+    let contactList = this.state.contacts;
+    for (var i = 0; i < contactList.length; i++) {
+      if (contactList[i].id === id) { contactIndex = i }
+    }
+    console.log('HARDCODED', contactIndex);
+    // console.log('CONTACT ID', contactIndex);
+    let removedContact = this.state.contacts.splice(contactIndex, 1);
+    let newContactList = this.state.contacts;
+    // console.log('REMOVED', this.state.contacts.splice(contactIndex, 1));
+    // this.setState({
+    //   contacts: newContactList
+    // });
+    //console.log('NEW LIST', removedContact[0].contact_name);
+    this.setState({
+      contacts: newContactList
+    });
+    let data = {
+      user_id: '110720321859638286281',
+      contact_name: removedContact[0].contact_name
+    }
+    axios.delete('http://127.0.0.1:3000/api/user/contacts', { params: data })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(console.error);
+  }
+
   _renderContacts = () => {
     return this.state.contacts.map((contact) => {
       return <View style={style.contactList} key={contact.id}>
               <Text style={style.contactName}>{contact.contact_name}</Text>
-              <Text style={style.contactNumber}>+{contact.phone_number}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={style.contactNumber}>+{contact.phone_number}</Text>
+                <View style={{borderLeftWidth: 1, paddingLeft: 10, marginLeft: 10}}>
+                  <Text onPress={ () => this._deleteContact(contact.id)}>{ Delete }</Text>
+                </View>
+              </View>
             </View>
     })
   }
@@ -122,7 +167,7 @@ export default class ModalTester extends Component {
         onChangeText={(text) => this._setNumberToState(text)}
         style={style.textInput}
       />
-    {this._renderButton('Add contact', () => this._handleContactSubmit())}
+      {this._renderButton('Add contact', () => this._handleContactSubmit())}
     </View>
   )
 
@@ -138,8 +183,8 @@ export default class ModalTester extends Component {
           <View>
             {this._renderContacts()}
           </View>
-          <View>
-            {this._renderButton('Add contact', () => this.setState({ visibleModal: 4 }))}
+          <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', marginTop: 30}}>
+            <Text onPress={ () => this.setState({ visibleModal: 4 }) }>{ Add }</Text>
           </View>
         </View>
         <Modal isVisible={this.state.visibleModal === 4}>
