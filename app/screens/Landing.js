@@ -10,55 +10,6 @@
 //     this.state = {
 //       user: undefined, // user has not logged in yet
 //     };
-
-//     this.handleOpenURL = this.handleOpenURL.bind(this);
-//     this.loginWithGoogle = this.loginWithGoogle.bind(this);
-//     this.loginWithFacebook = this.loginWithFacebook.bind(this);
-//     this.openURLhandler = this.openURLhandler.bind(this);
-//   }
-
-//   componentDidMount() {
-//     console.log('What is this', this);
-//     Linking.addEventListener('url', this.handleOpenURL);
-//     // Launched from an external URL
-//     Linking.getInitialURL().then((url) => {
-//       if (url) {
-//         this.handleOpenURL({ url });
-//       }
-//     });
-
-//   };
-
-// //console.log('for Rebase')
-//   componentWillUnmount() {
-//     // Remove event listener
-//     Linking.removeEventListener('url', this.handleOpenURL);
-//   }
-
-//   handleOpenURL({ url }) {
-//     // extract stringified user string out of the URL
-//     const [, user_string] = url.match(/user=([^#]+)/);
-
-//     this.setState({
-//       // decode the user string and parse it into JSON
-//       user: JSON.parse(decodeURI(user_string))
-//     });
-//   }
-
-//   // Handle Login with Facebook button tap
-//   loginWithFacebook() {
-//     console.log('here is the FB URL:', FACEBOOK_URL);
-//     this.openURLhandler(FACEBOOK_URL);
-//   }
-
-//   // Handle Login with Google button tap
-//   loginWithGoogle() {
-//     console.log('here is the Google URL:', GOOGLE_URL);
-//     this.openURLhandler(GOOGLE_URL);
-//   }
-
-//   openURLhandler(url) {
-//     Linking.openURL(url);
 //   }
 
 //   render() {
@@ -89,7 +40,6 @@ import { FACEBOOK_URL, GOOGLE_URL } from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from '../components/buttons/Home';
 
-console.log('GOOOOOOGLE', GOOGLE_URL);
 
 class Landing extends Component {
   constructor(props, context) {
@@ -102,6 +52,22 @@ class Landing extends Component {
     this.loginWithGoogle = this.loginWithGoogle.bind(this);
     this.loginWithFacebook = this.loginWithFacebook.bind(this);
     this.openURLhandler = this.openURLhandler.bind(this);
+  }
+
+  componentWillMount() {
+    // Check if user was already logged in
+    AsyncStorage.getItem('userObject')
+      .then((userObject) => {
+        this.setState({
+          user: userObject
+        });
+        //Navigate straight to Home screen if they were
+        this.props.navigation.navigate('Home');
+      })
+      .catch((err) => {
+        //Console an error if they weren't logged in
+        console.error('User is not logged in yet', err);
+      });
   }
 
   componentDidMount() {
@@ -141,8 +107,8 @@ class Landing extends Component {
     // Remove last three characters
     const userTokenUrl = userTokenUrlFirst.substring(0, userTokenUrlFirst.length - 3);
 
-    // insert token into the AsycStorage
-    AsyncStorage.multiSet([['userToken', userTokenUrl], ['userId', userId]])
+    // insert JWToken and userId into the AsycStorage
+    AsyncStorage.multiSet([['userToken', userTokenUrl], ['userId', userId], ['userObject', userObject]])
       .then(() => {
         this.setState({
           user: userObject
