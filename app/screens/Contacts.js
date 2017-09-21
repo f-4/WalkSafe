@@ -39,13 +39,24 @@ export default class ModalTester extends Component {
   }
 
   componentWillMount() {
-    AsyncStorage.getItem('userToken')
-      .then((token) => {
+    AsyncStorage.multiGet(['userToken', 'userId'])
+      .then((userData) => {
+        console.log('What is the Contact userData', userData);
+        let token = userData[0][1];
+        let userId = userData[1][1];
+
         // Set all axios headers in this component to have default header
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
+        // Set the initial userId state
+        this.setState({
+          userId: userId
+        });
         // Retrieve contacts
-        axios.get(`${HOST}:${PORT}/api/user/contacts`)
+        axios.get(`${HOST}:${PORT}/api/user/contacts`, {
+          params: {
+            userId: this.state.userId
+          }
+        })
           .then(res => {
             this.setState({
               contacts: res.data
@@ -66,7 +77,11 @@ export default class ModalTester extends Component {
   }
 
   _getContactLists = () => {
-    axios.get(`${HOST}:${PORT}/api/user/contacts`)
+    axios.get(`${HOST}:${PORT}/api/user/contacts`, {
+      params: {
+        userId: this.state.userId
+      }
+    })
       .then(res => {
         console.log('CONTACTS ENDPOINT2: ', res.data);
         this.setState({
@@ -99,7 +114,7 @@ export default class ModalTester extends Component {
       contacts: newContactList
     });
     let data = {
-      user_id: '110720321859638286281',
+      user_id: this.state.userId,
       contact_name: removedContact[0].contact_name
     }
     axios.delete(`${HOST}:${PORT}/api/user/contacts`, { params: data })
@@ -125,7 +140,12 @@ export default class ModalTester extends Component {
 
   _handleContactSubmit = () => {
     let newContact = this.state.newContact;
-    axios.post(`${HOST}:${PORT}/api/user/contacts`, newContact)
+    console.log('What is the newContact object', this.state.newContact);
+    axios.post(`${HOST}:${PORT}/api/user/contacts`, {
+      contactName: this.state.newContact.contactName,
+      contactNumber: this.state.newContact.contactNumber,
+      userId: this.state.userId
+    })
       .then(res => {
         console.log(res);
         this._getContactLists();
