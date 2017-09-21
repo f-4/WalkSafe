@@ -4,15 +4,16 @@
 import React, { Component } from 'react';
 import Mapbox, { MapView } from 'react-native-mapbox-gl';
 import {
-  StyleSheet,
-  Text,
-  StatusBar,
-  View,
+  AsyncStorage,
   Button,
   ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
   TextInput,
   TouchableHighlight,
-  TouchableOpacity
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { MAPBOX_ACCESS_TOKEN, HOST, PORT } from 'react-native-dotenv';
 import axios from 'axios';
@@ -62,20 +63,32 @@ export default class BaseMap extends Component {
   };
 
   componentWillMount() {
-    axios.get('http://127.0.0.1:3000/api/user/contacts')
-      .then(res => {
-        let contactNumberArr = [];
-        res.data.forEach(contact => {
-          contactNumberArr.push(contact.phone_number);
-        });
-        this.setState({
-          contactNumbers: contactNumberArr
-        });
-        console.log("STAAATE", this.state.contactNumbers);
+
+    AsyncStorage.getItem('userToken')
+      .then((token) => {
+        // Set all axios headers in this component to have default header
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        // Retrieve contacts
+        axios.get(`${HOST}:${PORT}/api/user/contacts`)
+          .then(res => {
+            let contactNumberArr = [];
+            res.data.forEach(contact => {
+              contactNumberArr.push(contact.phone_number);
+            });
+            this.setState({
+              contactNumbers: contactNumberArr
+            });
+            console.log("STAAATE", this.state.contactNumbers);
+          })
+          .catch(err => {
+            console.error(err);
+          });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
       });
+
   }
 
   onPressSearchButton = () => {
@@ -203,6 +216,7 @@ export default class BaseMap extends Component {
             showDirections: !this.state.showDirections
           });
         });
+
     } else if (selectedPoint.id === 'search') {
       // Remove directions annotation
         this.setState({
@@ -253,6 +267,7 @@ export default class BaseMap extends Component {
           }]
         });
       });
+
   };
 
   onChangeUserTrackingMode = (userTrackingMode) => {
@@ -262,10 +277,12 @@ export default class BaseMap extends Component {
 
   retrieveNearbyCrimes = () => {
       // Retrieve nearby crimes
-      axios.get(`${HOST}:${PORT}/api/map/crimes`, {params: {
+      axios.get(`${HOST}:${PORT}/api/map/crimes`, {
+        params: {
           lat: this.state.currentLocation.latitude,
           lon: this.state.currentLocation.longitude
-      }})
+        }
+      })
         .then(res => {
           // Throw out old crimes
           const otherAnnotations = this.state.annotations.filter(annotation => {
@@ -305,6 +322,7 @@ export default class BaseMap extends Component {
             console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
           });
         });
+
     } else {
       // Retrieve address of current location
       axios.get(`${HOST}:${PORT}/api/map/geocode/reverse`, {

@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import {
+  AsyncStorage,
+  Button,
+  StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   TouchableHighlight,
-  View,
-  StyleSheet,
-  Button,
-  TextInput
+  View
 } from 'react-native';
+import { HOST, PORT } from 'react-native-dotenv';
 import modalStyle from '../assets/styles/Modal.style';
 import style from '../assets/styles/Contacts.style';
 import axios from 'axios';
@@ -37,15 +39,26 @@ export default class ModalTester extends Component {
   }
 
   componentWillMount() {
-    axios.get('http://127.0.0.1:3000/api/user/contacts')
-      .then(res => {
-        this.setState({
-          contacts: res.data
-        });
+    AsyncStorage.getItem('userToken')
+      .then((token) => {
+        // Set all axios headers in this component to have default header
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        // Retrieve contacts
+        axios.get(`${HOST}:${PORT}/api/user/contacts`)
+          .then(res => {
+            this.setState({
+              contacts: res.data
+            });
+          })
+          .catch(err => {
+            console.error(err);
+          });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
       });
+
   }
 
   componentDidMount() {
@@ -53,7 +66,7 @@ export default class ModalTester extends Component {
   }
 
   _getContactLists = () => {
-    axios.get('http://127.0.0.1:3000/api/user/contacts')
+    axios.get(`${HOST}:${PORT}/api/user/contacts`)
       .then(res => {
         console.log('CONTACTS ENDPOINT2: ', res.data);
         this.setState({
@@ -89,7 +102,7 @@ export default class ModalTester extends Component {
       user_id: '110720321859638286281',
       contact_name: removedContact[0].contact_name
     }
-    axios.delete('http://127.0.0.1:3000/api/user/contacts', { params: data })
+    axios.delete(`${HOST}:${PORT}/api/user/contacts`, { params: data })
       .then(res => {
         console.log(res);
       })
@@ -112,7 +125,7 @@ export default class ModalTester extends Component {
 
   _handleContactSubmit = () => {
     let newContact = this.state.newContact;
-    axios.post('http://127.0.0.1:3000/api/user/contacts', newContact)
+    axios.post(`${HOST}:${PORT}/api/user/contacts`, newContact)
       .then(res => {
         console.log(res);
         this._getContactLists();

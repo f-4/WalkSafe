@@ -76,13 +76,14 @@
 
 import React, { Component } from 'react';
 import {
+  AsyncStorage,
+  Button,
   Image,
   Linking,
-  StyleSheet,
   Platform,
+  StyleSheet,
   Text,
-  View,
-  Button
+  View
 } from 'react-native';
 import { FACEBOOK_URL, GOOGLE_URL } from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -104,7 +105,6 @@ class Landing extends Component {
   }
 
   componentDidMount() {
-    console.log('What is this', this);
     Linking.addEventListener('url', this.handleOpenURL);
     // Launched from an external URL
     Linking.getInitialURL().then((url) => {
@@ -115,19 +115,42 @@ class Landing extends Component {
 
   };
 
+
   componentWillUnmount() {
     // Remove event listener
     Linking.removeEventListener('url', this.handleOpenURL);
   }
 
   handleOpenURL({ url }) {
-    // extract stringified user string out of the URL
+    // Scrub google/facebook data from url
     const [, user_string] = url.match(/user=([^#]+)/);
+    // Decode the user string and parse it into JSON
+    const userObject = JSON.parse(decodeURI(user_string));
 
-    this.setState({
-      // decode the user string and parse it into JSON
-      user: JSON.parse(decodeURI(user_string))
-    });
+    // Set up Google or Facebook Id and save into userId
+    const facebookId = userObject.facebook_id;
+    const googleId = userObject.google_id;
+    const userId = facebookId || googleId;
+
+    console.log('What is the facebook_id', facebookId);
+    console.log('What is the google_id', googleId);
+    console.log('What is the userId', userId);
+
+    // Scrub token data from url and remove first three characters
+    const userTokenUrlFirst = url.match(/token=([^#]+)(?=&user)/)[1].substring(3);
+    // Remove last three characters
+    const userTokenUrl = userTokenUrlFirst.substring(0, userTokenUrlFirst.length - 3);
+
+    // insert token into the AsycStorage
+    AsyncStorage.multiSet([['userToken', userTokenUrl], ['userId', userId]])
+      .then(() => {
+        this.setState({
+          user: userObject
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   }
 
   // Handle Login with Facebook button tap
