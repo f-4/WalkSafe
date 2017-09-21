@@ -5,7 +5,6 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     height: 60,
-    marginBottom: 40,
     paddingTop: 40,
     paddingBottom: 5,
     paddingHorizontal: 16,

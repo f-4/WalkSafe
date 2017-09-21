@@ -17,7 +17,7 @@ export default StyleSheet.create({
     },
     scrollview: {
         flex: 1,
-        paddingTop: 50
+        paddingTop: 10,
     },
     scrollviewContentContainer: {
         paddingBottom: 50

@@ -87,6 +87,11 @@ import About from '../screens/About';
 import Tutorial from '../screens/Tutorial';
 import MyNineOneOne from '../screens/NineOneOne';
 
+import TutorialAbout from '../screens/tutorial/About';
+import Heatmap from '../screens/tutorial/Heatmap';
+import Legend from '../screens/tutorial/Legend';
+import CrimeIcons from '../screens/tutorial/CrimeIcons';
+
 import Profile from '../components/icons/Profile';
 import OrderUber from '../components/icons/Uber';
 import Call911 from '../components/icons/Call911';
@@ -110,6 +115,23 @@ import DrawerMenu from '../screens/Menu';
 //   },
 // });
 
+const tutorialNavigator = StackNavigator({
+  About: {
+    screen: TutorialAbout
+  },
+  Heatmap: {
+    screen: Heatmap
+  },
+  Legend: {
+    screen: Legend
+  },
+  CrimeIcons: {
+    screen: CrimeIcons
+  }
+}, {
+  headerMode: 'none'
+});
+
 const stackNavigator = DrawerNavigator({
   Home: {
     screen: MyHomeScreen
@@ -124,7 +146,10 @@ const stackNavigator = DrawerNavigator({
     screen: About
   },
   Tutorial: {
-    screen: Tutorial
+    screen: tutorialNavigator,
+    navigationOptions: {
+      gesturesEnabled: false,
+    },
   },
   Logout: {
     screen: Logout

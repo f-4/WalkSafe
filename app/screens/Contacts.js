@@ -212,7 +212,7 @@ export default class ModalTester extends Component {
           <Text style={style.headerText}>My contacts</Text>
           <Text style={style.headerText} onPress={ () => this.setState({ visibleModal: 1 })}>{ Info }</Text>
         </View>
-        <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+        <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between', marginTop: 40}}>
           <View>
             {this._renderContacts()}
           </View>

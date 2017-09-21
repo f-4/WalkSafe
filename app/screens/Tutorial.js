@@ -49,7 +49,7 @@ import SliderEntry from '../components/carousel/SliderEntry';
 import styles, { colors } from '../assets/styles/index.style';
 import { ENTRIES1, ENTRIES2 } from '../assets/static/entries';
 
-const SLIDER_1_FIRST_ITEM = 1;
+const SLIDER_1_FIRST_ITEM = 0;
 
 export default class Tutorial extends Component {
 
@@ -86,16 +86,12 @@ export default class Tutorial extends Component {
 
         return (
             <View style={styles.exampleContainer}>
-                <Text style={styles.title}>Example 1</Text>
-                <Text style={styles.subtitle}>
-                    No momentum | Parallax | Scale | Opacity | Pagination with tappable dots
-                </Text>
                 <Carousel
                   ref={(c) => { if (!this.state.slider1Ref) { this.setState({ slider1Ref: c }); } }}
                   data={ENTRIES1}
                   renderItem={this._renderItemWithParallax}
                   sliderWidth={sliderWidth}
-                  itemWidth={itemWidth}
+                  itemWidth={100}
                   hasParallaxImages={true}
                   firstItem={SLIDER_1_FIRST_ITEM}
                   inactiveSlideScale={0.94}
@@ -175,9 +171,12 @@ export default class Tutorial extends Component {
                   directionalLockEnabled={true}
                 >
                     { this.example1 }
-                    { this.example2 }
                 </ScrollView>
             </View>
         );
     }
 };
+// <Text style={styles.title}>Example 1</Text>
+// <Text style={styles.subtitle}>
+//     No momentum | Parallax | Scale | Opacity | Pagination with tappable dots
+// </Text>
