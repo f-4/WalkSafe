@@ -42,7 +42,7 @@ export default class DrawerMenu extends Component {
   componentWillMount() {
     axios.get('http://127.0.0.1:3000/api/user/user')
       .then(res => {
-        console.log('USER ENDPOINT: ', res.data[0].username);
+        console.log('USER ENDPOINT: ', res.data[0]);
         this.setState({
           name: res.data[0].username,
           avatar: res.data[0].avatar,
@@ -83,7 +83,7 @@ export default class DrawerMenu extends Component {
           <StatusBar backgroundColor="rgba(0, 0, 0, 0.2)" translucent />
           <Toolbar
             leftElement="arrow-back"
-            onLeftElementPress={() => this.props.navigation.navigate('DrawerClose')}
+            onLeftElementPress={() => this.props.navigation.navigate('Home')}
             centerElement="Menu"
           />
           <View style={styles.container}>
