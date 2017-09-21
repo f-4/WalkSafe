@@ -63,12 +63,18 @@ export default class BaseMap extends Component {
   };
 
   componentWillMount() {
-
-    AsyncStorage.getItem('userToken')
-      .then((token) => {
+    AsyncStorage.multiGet(['userToken', 'userId'])
+      .then((userData) => {
+        console.log('What is the base-map userData', userData);
+        let token = userData[0][1];
+        let userId = userData[1][1];
+        
         // Set all axios headers in this component to have default header
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
+        // Set the initial userId state
+        this.setState({
+          userId: userId
+        });
         // Retrieve contacts
         axios.get(`${HOST}:${PORT}/api/user/contacts`)
           .then(res => {

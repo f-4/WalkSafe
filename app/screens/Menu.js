@@ -56,6 +56,7 @@ export default class DrawerMenu extends Component {
         console.log('What is the Menu userData', userData);
         let token = userData[0][1];
         let userId = userData[1][1];
+
         // Set all axios headers in this component to have default header
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         // Set the initial userId state
