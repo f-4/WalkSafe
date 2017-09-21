@@ -122,21 +122,30 @@ class Landing extends Component {
   }
 
   handleOpenURL({ url }) {
-    // extract stringified user string out of the URL
-    console.log('What is the url', url);
-    // Scrub url data from token data
+    // Scrub google/facebook data from url
+    const [, user_string] = url.match(/user=([^#]+)/);
+    // Decode the user string and parse it into JSON
+    const userObject = JSON.parse(decodeURI(user_string));
+
+    // Set up Google or Facebook Id and save into userId
+    const facebookId = userObject.facebook_id;
+    const googleId = userObject.google_id;
+    const userId = facebookId || googleId;
+
+    console.log('What is the facebook_id', facebookId);
+    console.log('What is the google_id', googleId);
+    console.log('What is the userId', userId);
+
+    // Scrub token data from url and remove first three characters
     const userTokenUrlFirst = url.match(/token=([^#]+)(?=&user)/)[1].substring(3);
+    // Remove last three characters
     const userTokenUrl = userTokenUrlFirst.substring(0, userTokenUrlFirst.length - 3);
-    // console.log('what is the userToken to enter into the Storage', userTokenUrl);
 
     // insert token into the AsycStorage
-    AsyncStorage.setItem('userToken', userTokenUrl)
+    AsyncStorage.multiSet([['userToken', userTokenUrl], ['userId', userId]])
       .then(() => {
-        // Find the user string
-        const [, user_string] = url.match(/user=([^#]+)/);
         this.setState({
-          // decode the user string and parse it into JSON
-          user: JSON.parse(decodeURI(user_string))
+          user: userObject
         });
       })
       .catch((err) => {
