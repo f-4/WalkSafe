@@ -7,39 +7,44 @@ export default StyleSheet.create({
       height: null,
       resizeMode: 'cover'
     },
+    textContainer: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      paddingVertical: 40,
+      paddingHorizontal: 25
+    },
+    headline: {
+      marginTop: 50,
+      marginBottom: 30,
+      textAlign: 'center',
+      color: 'white',
+      backgroundColor: 'rgba(0,0,0,0)',
+      fontSize: 36,
+      fontWeight: 'bold'
+    },
     text: {
       textAlign: 'center',
       color: 'white',
       backgroundColor: 'rgba(0,0,0,0)',
-      fontSize: 32
+      fontSize: 26
     },
-    buttonBackgroundLight: {
-      marginTop: 'auto',
-      marginBottom: 20,
-      marginLeft: 'auto',
-      marginRight: 20,
-      backgroundColor: 'rgba(0,0,0,0)',
+    openAppContainer: {
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      height: 55,
-      width: 55,
-      borderRadius: 30,
-      borderWidth: 3,
-    },
-    buttonBackgroundDark: {
-      marginTop: 'auto',
-      marginBottom: 20,
-      marginLeft: 'auto',
-      marginRight: 20,
+      height: 50,
+      marginBottom: 40,
       backgroundColor: 'rgba(0,0,0,0)',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: 55,
-      width: 55,
-      borderRadius: 30,
-      borderWidth: 3,
-      borderColor: '#fff'
+      borderWidth: 5,
+      borderColor: '#fff',
+      borderRadius: 3
+    },
+    openApp: {
+      textAlign: 'center',
+      color: 'white',
+      backgroundColor: 'rgba(0,0,0,0)',
+      fontSize: 20,
+      fontWeight: 'bold'
     }
 });

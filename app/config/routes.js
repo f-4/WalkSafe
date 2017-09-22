@@ -8,32 +8,7 @@ import About from '../screens/About';
 import Tutorial from '../screens/Tutorial';
 import MyNineOneOne from '../screens/NineOneOne';
 import DrawerMenu from '../screens/Menu';
-
-import TutorialAbout from '../screens/tutorial/About';
-import Heatmap from '../screens/tutorial/Heatmap';
-import Legend from '../screens/tutorial/Legend';
-import CrimeIcons from '../screens/tutorial/CrimeIcons';
-import Techstack from '../screens/tutorial/Techstack';
-
-const tutorialNavigator = StackNavigator({
-  About: {
-    screen: TutorialAbout
-  },
-  Heatmap: {
-    screen: Heatmap
-  },
-  Legend: {
-    screen: Legend
-  },
-  CrimeIcons: {
-    screen: CrimeIcons
-  },
-  Techstack: {
-    screen: Techstack
-  },
-}, {
-  headerMode: 'none'
-});
+import Swiper from '../screens/Swiper';
 
 const stackNavigator = DrawerNavigator({
   Home: {
@@ -49,10 +24,7 @@ const stackNavigator = DrawerNavigator({
     screen: About
   },
   Tutorial: {
-    screen: tutorialNavigator,
-    navigationOptions: {
-      gesturesEnabled: false,
-    },
+    screen: Swiper,
   },
 }, {
   contentComponent: DrawerMenu,
