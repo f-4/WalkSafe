@@ -6,6 +6,7 @@ import Mapbox, { MapView } from 'react-native-mapbox-gl';
 import {
   AsyncStorage,
   Button,
+  Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -68,7 +69,7 @@ export default class BaseMap extends Component {
         console.log('What is the base-map userData', userData);
         let token = userData[0][1];
         let userId = userData[1][1];
-        
+
         // Set all axios headers in this component to have default header
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         // Set the initial userId state
@@ -357,19 +358,37 @@ export default class BaseMap extends Component {
     console.log('line 24', this.props)
     return (
       <View style={mapStyle.container}>
-        <View style={mapStyle.searchBar}>
-          <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ menuIcon }</Text>
-          <TextInput
-            style={mapStyle.searchInput}
-            placeholder={'Search'}
-            placeholderTextColor={'#919191'}
-            onChangeText={(searchText) => this.setState({searchText})}
-            value={this.state.searchText}
-          />
-          <Text onPress={ () => this.onPressSearchButton()} title="Search">
-            { searchIcon }
-          </Text>
-        </View>
+        { Platform.OS === 'ios'
+          ?
+            <View style={mapStyle.searchBar}>
+              <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ menuIcon }</Text>
+              <TextInput
+                style={mapStyle.searchInput}
+                placeholder={'Search'}
+                placeholderTextColor={'#919191'}
+                onChangeText={(searchText) => this.setState({searchText})}
+                value={this.state.searchText}
+              />
+              <Text onPress={ () => this.onPressSearchButton()} title="Search">
+                { searchIcon }
+              </Text>
+            </View>
+          :
+            <View style={mapStyle.searchBarAndroid}>
+              <Text onPress={ () => this.props.data.navigation.navigate('DrawerOpen')} >{ menuIcon }</Text>
+              <TextInput
+                style={mapStyle.searchInputAndroid}
+                placeholder={'Search'}
+                placeholderTextColor={'#919191'}
+                onChangeText={(searchText) => this.setState({searchText})}
+                value={this.state.searchText}
+              />
+              <Text onPress={ () => this.onPressSearchButton()} title="Search">
+                { searchIcon }
+              </Text>
+            </View>
+        }
+
         <MapView
           ref={map => { this._map = map; }}
           style={mapStyle.map}

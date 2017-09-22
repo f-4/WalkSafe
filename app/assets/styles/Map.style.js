@@ -46,6 +46,30 @@ export default StyleSheet.create({
     fontSize: 18,
     textAlign: 'center'
   },
+  searchBarAndroid: {
+    flexDirection: 'row',
+    marginBottom: -90,
+    marginHorizontal: 10,
+    zIndex: 1000,
+    paddingHorizontal: 10,
+    paddingTop: 8,
+    paddingBottom: 8,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    shadowOpacity: 0.75,
+    shadowRadius: 5,
+    shadowColor: '#616163',
+    shadowOffset: { height: 0, width: 0 },
+  },
+  searchInputAndroid: {
+    height: 45,
+    flex: 1,
+    marginHorizontal: 10,
+    paddingLeft: 2,
+    paddingRight: 2,
+    fontSize: 18,
+    textAlign: 'center'
+  },
   alert: {
     flexDirection: 'column',
     justifyContent: 'center',
