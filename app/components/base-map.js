@@ -215,9 +215,9 @@ export default class BaseMap extends Component {
             annotations: [...this.state.annotations, {
               coordinates: coordinates,
               type: 'polyline',
-              strokeColor: '#00FB00',
+              strokeColor: '#7027C3',
               strokeWidth: 4,
-              strokeAlpha: .5,
+              strokeAlpha: 1,
               id: 'directions'
             }],
             showDirections: !this.state.showDirections
@@ -409,7 +409,7 @@ export default class BaseMap extends Component {
           onUpdateUserLocation={this.onUpdateUserLocation}
           onLongPress={this.onLongPress}
           logoIsHidden={true}
-          contentInset={[70,0,0,0]}
+          contentInset={[95,5,0,0]}
           maximumZoomLevel={17}
           minimumZoomLevel={11}
         />
