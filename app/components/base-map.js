@@ -215,9 +215,9 @@ export default class BaseMap extends Component {
             annotations: [...this.state.annotations, {
               coordinates: coordinates,
               type: 'polyline',
-              strokeColor: '#00FB00',
+              strokeColor: '#7027C3',
               strokeWidth: 4,
-              strokeAlpha: .5,
+              strokeAlpha: 1,
               id: 'directions'
             }],
             showDirections: !this.state.showDirections
