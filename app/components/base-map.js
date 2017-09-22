@@ -409,7 +409,7 @@ export default class BaseMap extends Component {
           onUpdateUserLocation={this.onUpdateUserLocation}
           onLongPress={this.onLongPress}
           logoIsHidden={true}
-          contentInset={[70,0,0,0]}
+          contentInset={[95,5,0,0]}
           maximumZoomLevel={17}
           minimumZoomLevel={11}
         />
