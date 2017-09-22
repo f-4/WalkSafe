@@ -43,6 +43,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from '../components/buttons/Home';
 import styles from '../assets/styles/Landing.style';
 
+import Login from '../components/buttons/Login';
+
 class Landing extends Component {
   constructor(props, context) {
     super(props, context);
@@ -184,6 +186,7 @@ class Landing extends Component {
                 >
                   Login with Facebook
                 </Icon.Button>
+                <Login data={this.props} />
                 <Icon.Button
                   name="google"
                   backgroundColor="#DD4B39"

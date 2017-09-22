@@ -11,47 +11,32 @@ import Swiper from 'react-native-swiper';
 
 import styles from '../assets/styles/Tutorial.style';
 
-const swiper = React.createClass({
-  render: function() {
+class swiper extends Component {
+
+    _renderItem (url) {
+      return (
+        <Image
+          source={{uri: url}}
+          style={styles.backgroundImage}>
+        </Image>
+      );
+    }
+
+  render () {
     return (
       <Swiper
         showsButtons={true}
         loop={false}
         index={0}
-        showsPagination={false}
-        >
-        <Image
-          source={{uri: 'http://esse.ee/images/about.jpg'}}
-          style={styles.backgroundImage}>
-        </Image>
-        <Image
-          source={{uri: 'http://esse.ee/images/techstack.jpg'}}
-          style={styles.backgroundImage}>
-        </Image>
-        <Image
-          source={{uri: 'http://esse.ee/images/legend.jpg'}}
-          style={styles.backgroundImage}>
-        </Image>
-        <Image
-          source={{uri: 'http://esse.ee/images/crime-icons.jpg'}}
-          style={styles.backgroundImage}>
-        </Image>
-        <Image
-          source={{uri: 'http://esse.ee/images/directions.jpg'}}
-          style={styles.backgroundImage}>
-        </Image>
-        <Image
-          source={{uri: 'http://esse.ee/images/alert.jpg'}}
-          style={styles.backgroundImage}>
-        </Image>
-        <Image
-          source={{uri: 'http://esse.ee/images/message.jpg'}}
-          style={styles.backgroundImage}>
-        </Image>
-        <Image
-          source={{uri: 'http://esse.ee/images/pin.jpg'}}
-          style={styles.backgroundImage}>
-        </Image>
+        showsPagination={false}>
+        { this._renderItem('http://esse.ee/images/about.jpg') }
+        { this._renderItem('http://esse.ee/images/techstack.jpg') }
+        { this._renderItem('http://esse.ee/images/legend.jpg') }
+        { this._renderItem('http://esse.ee/images/crime-icons.jpg') }
+        { this._renderItem('http://esse.ee/images/directions.jpg') }
+        { this._renderItem('http://esse.ee/images/alert.jpg') }
+        { this._renderItem('http://esse.ee/images/message.jpg') }
+        { this._renderItem('http://esse.ee/images/pin.jpg') }
         <Image
           source={{uri: 'http://esse.ee/images/heatmap-dark.jpg'}}
           style={styles.backgroundImage}>
@@ -68,6 +53,6 @@ const swiper = React.createClass({
       </Swiper>
     )
   }
-});
+};
 
 export default swiper;
