@@ -38,8 +38,10 @@ import {
 } from 'react-native';
 import RNRestart from 'react-native-restart';
 import { FACEBOOK_URL, GOOGLE_URL } from 'react-native-dotenv';
+import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from '../components/buttons/Home';
+import styles from '../assets/styles/Landing.style';
 
 
 class Landing extends Component {
@@ -145,7 +147,12 @@ class Landing extends Component {
     const { user } = this.state;
     console.log('line 98', this.state);
     return (
-      <View style={styles.container}>
+      <LinearGradient
+        style={styles.container}
+        colors={[colors.background1, colors.background2]}
+        start={{ x: 1, y: 0 }}
+        end={{ x: 0, y: 1 }}
+      >
         { user
           ? // Show user info if already logged in
             <View style={styles.content}>
@@ -163,11 +170,11 @@ class Landing extends Component {
                 Welcome Stranger!
               </Text>
               <View style={styles.avatar}>
-                <Icon name="user-circle" size={100} color="rgba(0,0,0,.09)" />
+                <Image source={require('../assets/safetydance.png')} style={styles.avatarImage} />
               </View>
               <Text style={styles.text}>
                 Please log in to continue {'\n'}
-                to MapGruff
+                to WalkSafe
               </Text>
               <View style={styles.buttons}>
                 <Icon.Button
@@ -189,7 +196,7 @@ class Landing extends Component {
               </View>
             </View>
           }
-        </View>
+        </LinearGradient>
     );
   }
 }
@@ -199,40 +206,47 @@ const iconStyles = {
   iconStyle: { paddingVertical: 5 },
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFF',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: 20,
-  },
-  avatarImage: {
-    borderRadius: 50,
-    height: 100,
-    width: 100,
-  },
-  header: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  text: {
-    textAlign: 'center',
-    color: '#333',
-    marginBottom: 5,
-  },
-  buttons: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    margin: 20,
-    marginBottom: 30,
-  },
-});
+const colors = {
+  black: '#1a1917',
+  gray: '#888888',
+  background1: '#B721FF',
+  background2: '#21D4FD'
+};
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#FFF',
+//   },
+//   content: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   avatar: {
+//     margin: 20,
+//   },
+//   avatarImage: {
+//     borderRadius: 50,
+//     height: 100,
+//     width: 100,
+//   },
+//   header: {
+//     fontSize: 20,
+//     textAlign: 'center',
+//     margin: 10,
+//   },
+//   text: {
+//     textAlign: 'center',
+//     color: '#333',
+//     marginBottom: 5,
+//   },
+//   buttons: {
+//     justifyContent: 'space-between',
+//     flexDirection: 'row',
+//     margin: 20,
+//     marginBottom: 30,
+//   },
+// });
 
 export default Landing;
