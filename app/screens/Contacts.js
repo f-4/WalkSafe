@@ -14,19 +14,12 @@ import modalStyle from '../assets/styles/Modal.style';
 import style from '../assets/styles/Contacts.style';
 import axios from 'axios';
 import Modal from 'react-native-modal';
-import Swipeout from 'react-native-swipeout';
 
 import backArrow from '../components/icons/BackArrow';
 import Info from '../components/icons/Info';
 import Close from '../components/icons/Close';
 import Delete from '../components/icons/Delete';
 import Add from '../components/icons/Add';
-
-// const swipeoutBtns = [
-//   {
-//     text: 'Button'
-//   }
-// ];
 
 export default class ModalTester extends Component {
   state = {
@@ -41,7 +34,6 @@ export default class ModalTester extends Component {
   componentWillMount() {
     AsyncStorage.multiGet(['userToken', 'userId'])
       .then((userData) => {
-        console.log('What is the Contact userData', userData);
         let token = userData[0][1];
         let userId = userData[1][1];
 
@@ -83,7 +75,6 @@ export default class ModalTester extends Component {
       }
     })
       .then(res => {
-        console.log('CONTACTS ENDPOINT2: ', res.data);
         this.setState({
           contacts: res.data
         });
@@ -94,22 +85,13 @@ export default class ModalTester extends Component {
   }
 
   _deleteContact = (id) => {
-    console.log('ORIGINAL', this.state.contacts);
-    console.log('ID FROM DELETE', id);
     let contactIndex;
     let contactList = this.state.contacts;
     for (var i = 0; i < contactList.length; i++) {
       if (contactList[i].id === id) { contactIndex = i }
     }
-    console.log('HARDCODED', contactIndex);
-    // console.log('CONTACT ID', contactIndex);
     let removedContact = this.state.contacts.splice(contactIndex, 1);
     let newContactList = this.state.contacts;
-    // console.log('REMOVED', this.state.contacts.splice(contactIndex, 1));
-    // this.setState({
-    //   contacts: newContactList
-    // });
-    //console.log('NEW LIST', removedContact[0].contact_name);
     this.setState({
       contacts: newContactList
     });
@@ -140,7 +122,6 @@ export default class ModalTester extends Component {
 
   _handleContactSubmit = () => {
     let newContact = this.state.newContact;
-    console.log('What is the newContact object', this.state.newContact);
     axios.post(`${HOST}:${PORT}/api/user/contacts`, {
       contactName: this.state.newContact.contactName,
       contactNumber: this.state.newContact.contactNumber,

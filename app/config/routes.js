@@ -2,20 +2,14 @@ import { DrawerNavigator, StackNavigator } from 'react-navigation';
 
 import Landing from '../screens/Landing';
 import MyHomeScreen from '../screens/Home';
-import CallUber from '../screens/CallUber';
 import Contacts from '../screens/Contacts';
 import About from '../screens/About';
-import Tutorial from '../screens/Tutorial';
-import MyNineOneOne from '../screens/NineOneOne';
 import DrawerMenu from '../screens/Menu';
 import Swiper from '../screens/Swiper';
 
 const stackNavigator = DrawerNavigator({
   Home: {
     screen: MyHomeScreen
-  },
-  Uber: {
-    screen: CallUber
   },
   Contacts: {
     screen: Contacts

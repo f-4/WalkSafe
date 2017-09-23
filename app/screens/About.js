@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, Image, StyleSheet } from 'react-native';
 import style from '../assets/styles/Contacts.style';
+import imageStyle from '../assets/styles/Tutorial.style';
 import backArrow from '../components/icons/BackArrow';
 
 class About extends Component {
@@ -12,26 +13,13 @@ class About extends Component {
           <Text style={style.headerText}>Meet the team</Text>
           <Text></Text>
         </View>
-        <View>
-          <Image
-            style={styles.image}
-            source={{uri: 'http://esse.ee/images/about.jpg'}}
-          />
-        </View>
+        <Image
+          style={imageStyle.backgroundImage}
+          source={{uri: 'http://esse.ee/images/about.jpg'}}
+        />
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  image: {
-    height: '99%'
-    // flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // width: null,
-    // height: null
-  }
-})
 
 export default About;
