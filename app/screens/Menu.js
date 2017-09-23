@@ -17,10 +17,6 @@ import AvatarStyles from '../assets/styles/Icons.styles';
 import Communications from 'react-native-communications';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import uberIcon from '../components/icons/Uber';
-import emergencyIcon from '../components/icons/Call911';
-
-
 const uiTheme = {
   fontFamily: 'Roboto',
   palette: {
@@ -53,7 +49,6 @@ export default class DrawerMenu extends Component {
   componentWillMount() {
     AsyncStorage.multiGet(['userToken', 'userId'])
       .then((userData) => {
-        console.log('What is the Menu userData', userData);
         let token = userData[0][1];
         let userId = userData[1][1];
 
@@ -64,13 +59,12 @@ export default class DrawerMenu extends Component {
           userId: userId
         });
         // Retrieve user
-        axios.get(`${HOST}:${PORT}/api/user/user`, {
+        axios.get(`http://ec2-13-56-220-250.us-west-1.compute.amazonaws.com:3000/api/user/user`, {
           params: {
             userId: this.state.userId
           }
         })
           .then(res => {
-            console.log('USER ENDPOINT: ', res.data[0]);
             this.setState({
               name: res.data[0].username,
               avatar: res.data[0].avatar,
@@ -97,20 +91,7 @@ export default class DrawerMenu extends Component {
       .catch((err) => {
         console.error(err);
       })
-    // axios.get(`${HOST}:${PORT}/api/auth/logout`)
-    //   .then(res => {
-    //     console.log('LOGOUT ENDPOINT: ', res);
-    //   })
-    //   .catch(err => {
-    //     console.error(err);
-    //   });
-
   }
-
-  // _setInfoActive() {
-  //   this.setState({ active: 'info' });
-  // }
-
 
   openURLhandler() {
     Linking.openURL('uber://?action=setPickup');

@@ -77,8 +77,13 @@ export default class BaseMap extends Component {
           userId: userId
         });
         // Retrieve contacts
-        axios.get(`${HOST}:${PORT}/api/user/contacts`)
+        axios.get(`http://ec2-13-56-220-250.us-west-1.compute.amazonaws.com:3000/api/user/contacts`, {
+          query: {
+            userId: this.state.userId
+          }
+        })
           .then(res => {
+            console.log("RESPONSE", res.data);
             let contactNumberArr = [];
             res.data.forEach(contact => {
               contactNumberArr.push(contact.phone_number);
@@ -308,6 +313,43 @@ export default class BaseMap extends Component {
 
   sendLocationToContacts = () => {
 
+    AsyncStorage.multiGet(['userToken', 'userId'])
+      .then((userData) => {
+        console.log('What is the base-map userData', userData);
+        let token = userData[0][1];
+        let userId = userData[1][1];
+
+        // Set all axios headers in this component to have default header
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        // Set the initial userId state
+        this.setState({
+          userId: userId
+        });
+        // Retrieve contacts
+        axios.get(`http://ec2-13-56-220-250.us-west-1.compute.amazonaws.com:3000/api/user/contacts`, {
+          query: {
+            userId: this.state.userId
+          }
+        })
+          .then(res => {
+            let contactNumberArr = [];
+            res.data.forEach(contact => {
+              contactNumberArr.push(contact.phone_number);
+            });
+            this.setState({
+              contactNumbers: contactNumberArr
+            });
+          })
+          .catch(err => {
+            console.error(err);
+          });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+    console.log("WHERE ARE THE CONTACTS", this.state.contactNumbers);
+
     if (this.state.showDirections) {
       // Retrieve address of current location
       axios.get(`${HOST}:${PORT}/api/map/geocode/reverse`, {
@@ -344,7 +386,7 @@ export default class BaseMap extends Component {
           // Open up SMS with content prefilled
           SendSMS.send({
             body: `Hey, I'm currently at ${address.slice(0, 3).join(',').toUpperCase()}.`,
-            recipients: this.state.contactNumbers,
+            recipients: ['0123456789', '9876543210'],
             successTypes: ['sent', 'queued']
           }, (completed, cancelled, error) => {
             console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);

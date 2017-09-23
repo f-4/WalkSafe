@@ -6,9 +6,7 @@ import {
   View,
   Image
 } from 'react-native';
-
 import Swiper from 'react-native-swiper';
-
 import styles from '../assets/styles/Tutorial.style';
 
 class swiper extends Component {

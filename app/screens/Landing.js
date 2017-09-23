@@ -1,30 +1,3 @@
-// import React, { Component } from 'react';
-// import { Text, View } from 'react-native';
-
-// import Login from '../components/buttons/Login';
-// import Signup from '../components/buttons/Signup';
-
-// class Landing extends Component {
-//   constructor(props, context) {
-//     super(props, context);
-//     this.state = {
-//       user: undefined, // user has not logged in yet
-//     };
-//   }
-
-//   render() {
-//     console.log('Landing page props', this.props);
-//     return (
-//       <View>
-//         <Text>WalkSafe</Text>
-//         <Login data={this.props} />
-//         <Signup data={this.props} />
-//       </View>
-//     );
-//   }
-// }
-// export default Landing;
-
 import React, { Component } from 'react';
 import {
   AsyncStorage,
@@ -42,8 +15,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from '../components/buttons/Home';
 import styles from '../assets/styles/Landing.style';
-
-import Login from '../components/buttons/Login';
 
 class Landing extends Component {
   constructor(props, context) {
@@ -146,7 +117,6 @@ class Landing extends Component {
 
   render() {
     const { user } = this.state;
-    console.log('line 98', this.state);
     return (
       <LinearGradient
         style={styles.container}
@@ -186,7 +156,6 @@ class Landing extends Component {
                 >
                   Login with Facebook
                 </Icon.Button>
-                <Login data={this.props} />
                 <Icon.Button
                   name="google"
                   backgroundColor="#DD4B39"
@@ -216,3 +185,7 @@ const colors = {
 };
 
 export default Landing;
+
+// IF WE NEED TO BYPASS THE AUTH
+// <Login data={this.props} />
+// import Login from '../components/buttons/Login';
