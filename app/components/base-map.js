@@ -31,6 +31,7 @@ import viewCrimes from './icons/ViewCrimes';
 const accessToken = MAPBOX_ACCESS_TOKEN;
 Mapbox.setAccessToken(accessToken);
 
+
 export default class BaseMap extends Component {
   constructor(props) {
     super(props);
