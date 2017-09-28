@@ -34,7 +34,7 @@ View a video of the app in action [here](https://www.youtube.com/watch?v=R41ELsb
 
 > __Environment Variables__ WalkSafe requires a Mapbox Access Token to use the Mapbox API on the frontend. We have used the .env package, which allows environment variables to be set easily with the .env file in the root directory of the project. An example of the necessary variables for WalkSafe been provided here in this repo.
 
-> __Backend server and Local Host__ A fair warning when entering in the environmental variables for HOST, PORT, FACEBOOK_URL, and GOOGLE_URL.  These variables should connect to your backend server but emulated Android devices on Android Studio and iOS devices on Xcode run their own local host so setting these environmental variables to route to 127.0.0.1 will have requests that never reach their destination.  Use the appropriate IP address to connect to your backend server.
+> __Backend server and Local Host__ A fair warning when entering in the environmental variables for HOST, PORT, FACEBOOK_URL, and GOOGLE_URL.  These variables should connect to your backend server but emulated Android devices on Android Studio and iOS devices on Xcode run their own local host so setting these environmental variables to route to 127.0.0.1 will have requests that never reach their destination.  Use the appropriate IP address to connect to your WalkSafe Server.
 
 > __NOTE__ Download Xcode and/or Android Studio depending on what platform you want to develop on.
 
@@ -53,7 +53,7 @@ react-native link
 ```
 > __NOTE__ If this does not work go to the npm module website for each dependency and follow the iOS instructions for manually linking.
 
-- Start [WalkSafe-server](https://github.com/f-4/WalkSafe-server)
+- Start [WalkSafe Server](https://github.com/f-4/WalkSafe-server)
 - Start WalkSafe by running:
 ```sh
 react-native run-ios
@@ -83,7 +83,7 @@ react-native link
 ```
 > __NOTE__ If this does not work go to the npm module website for each dependency and follow the Android instructions for manually linking.
 
-- Start [WalkSafe-server](https://github.com/f-4/WalkSafe-server)
+- Start [WalkSafe Server](https://github.com/f-4/WalkSafe-server)
 - Start WalkSafe by running:
 ```sh
 react-native run-android
@@ -99,7 +99,7 @@ react-native run-android
 
 - Node 0.10.x
 - React Native 0.47.0
-- [WalkSafe-server](https://github.com/f-4/WalkSafe-server)
+- [WalkSafe Server](https://github.com/f-4/WalkSafe-server)
 - [Xcode](https://developer.apple.com/xcode/)
 - [Android Studio](https://developer.android.com/studio/install.html)
 
@@ -118,7 +118,7 @@ npm install
 ```sh
 react-native link
 ```
-> __NOTE__ If this does not work go to the npm module website for each dependency and follow the Android instructions for manually linking.
+> __NOTE__ If this does not work go to the npm module website for each dependency and follow the Android and/or iOS instructions for manually linking.
 
 ### Roadmap
 
