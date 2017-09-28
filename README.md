@@ -41,7 +41,7 @@ View the app in action [here](https://www.youtube.com/watch?v=R41ELsbPc04)
 ### iOS Setup
 
 - [Download](https://developer.apple.com/xcode/) and install Xcode
-- INSTRUCTIONS HERE
+- [INSTRUCTIONS FOR XCODE HERE]
 - Install dependencies from the root of the repo by running
 ```sh
 npm install
@@ -51,13 +51,18 @@ npm install
 ```sh
 react-native link
 ```
-> __NOTE__ If this does not work go to the npm module website for each dependency and follow the Android instructions for manually linking.
+> __NOTE__ If this does not work go to the npm module website for each dependency and follow the iOS instructions for manually linking.
 
 - Start backend server
 - Start app by running:
 ```sh
 react-native run-ios
 ```
+> __NOTE__ Building and compiling the React Native JavaScript code into Objective C will initially take a couple of minutes.
+
+> __NOTE__ It is important to not have the ios folder nor any of its contents open in your text editor as this may cause the build to fail.
+
+> __NOTE__ [CHANGE ME!!!!!] After making changes in JavaScript code in your text editor double tap R to reload WalkSafe and have it reflect your new changes!  Push Ctrl + M on the screen to open up the menu to enable remote debugging through Chrome. While debugging it is important to have that Chrome tab in the foreground as it will use up a lot of your computer's resources otherwise.
 
 ### Android Setup
 
@@ -107,7 +112,13 @@ From within the root directory:
 ```sh
 npm install
 ```
-[Download](https://neo4j.com/download/community-edition), install and run neo4j
+```sh
+react-native link
+```
+> __NOTE__ If this does not work go to the npm module website for each dependency and follow the Android instructions for manually linking.
+
+[Download](https://developer.apple.com/xcode/), install and run Xcode
+[Download](https://developer.android.com/studio/install.html), install and run Android Studio
 
 ### Roadmap
 
