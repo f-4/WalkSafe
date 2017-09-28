@@ -14,6 +14,7 @@
 1. [Development](#development)
     1. [Installing Devices](#installing-devices)
     1. [Installing Dependencies](#installing-dependencies)
+    1. [Roadmap](#roadmap)
 1. [WalkSafe Server](#walksafe-server)
 1. [Contributing](#contributing)
 
@@ -26,7 +27,7 @@
 
 ## Demo
 
-View a video of the app in action [here](https://www.youtube.com/watch?v=R41ELsbPc04)
+View a video of WalkSafe in action [here](https://www.youtube.com/watch?v=R41ELsbPc04)
 
 ## Initial Setup
 
