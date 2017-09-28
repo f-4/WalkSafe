@@ -12,8 +12,8 @@
     1. [Android Setup](#android-setup)
 1. [Requirements](#requirements)
 1. [Development](#development)
+    1. [Installing Devices](#installing-devices)
     1. [Installing Dependencies](#installing-dependencies)
-    1. [Tasks](#tasks)
 1. [WalkSafe Server](#walksafe-server)
 1. [Contributing](#contributing)
 
@@ -105,19 +105,20 @@ react-native run-android
 
 ## Development
 
-### Installing Dependencies
+### Installing Devices
 
 - Install Xcode and/or Android Studio to run WalkSafe
 - [Download](https://developer.apple.com/xcode/), install and run Xcode
 - [Download](https://developer.android.com/studio/install.html), install and run Android Studio
 
+### Installing Dependencies
+
 - From within the root directory:
 ```sh
 npm install
-```
-```sh
 react-native link
 ```
+
 > __NOTE__ If this does not work go to the npm module website for each dependency and follow the Android and/or iOS instructions for manually linking.
 
 ### Roadmap
