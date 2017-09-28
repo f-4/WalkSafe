@@ -1,20 +1,20 @@
 # WalkSafe
 
-> Mobile app on Android and iOS that provides the user crime density heatmap, real time crime updates using SpotCrime API, and many more safety features
+> Mobile app on Android and iOS that provides the user crime density heatmap, real time crime updates using SpotCrime API, and many more safety features.
 
 
 ## Table of Contents
 
 1. [Team](#team)
 1. [Demo](#demo)
-1. [Initial Setup](#Initial Setup)
-    1. [iOS Setup](#iOS Setup)
-    1. [Android Setup](#Android Setup)
+1. [Initial Setup](#initial-setup)
+    1. [iOS Setup](#ios-setup)
+    1. [Android Setup](#android-setup)
 1. [Requirements](#requirements)
 1. [Development](#development)
     1. [Installing Dependencies](#installing-dependencies)
     1. [Tasks](#tasks)
-1. [WalkSafe Server](https://github.com/f-4/WalkSafe-server)
+1. [WalkSafe Server](#walksafe-server)
 1. [Contributing](#contributing)
 
 
@@ -26,17 +26,17 @@
 
 ## Demo
 
-View the app in action [here](https://www.youtube.com/watch?v=R41ELsbPc04)
+View a video of the app in action [here](https://www.youtube.com/watch?v=R41ELsbPc04)
 
 ## Initial Setup
+
+- Fork and clone the repo
 
 > __Environment Variables__ WalkSafe requires a Mapbox Access Token to use the Mapbox API on the frontend. We have used the .env package, which allows environment variables to be set easily with the .env file in the root directory of the project. An example of the necessary variables for WalkSafe been provided here in this repo.
 
 > __Backend server and Local Host__ A fair warning when entering in the environmental variables for HOST, PORT, FACEBOOK_URL, and GOOGLE_URL.  These variables should connect to your backend server but emulated Android devices on Android Studio and iOS devices on Xcode run their own local host so setting these environmental variables to route to 127.0.0.1 will have requests that never reach their destination.  Use the appropriate IP address to connect to your backend server.
 
-- Fork and clone the repo
-
-> __NOTE__ Download Xcode and or Android Studio depending on what platform you want to develop on.
+> __NOTE__ Download Xcode and/or Android Studio depending on what platform you want to develop on.
 
 ### iOS Setup
 
@@ -53,8 +53,8 @@ react-native link
 ```
 > __NOTE__ If this does not work go to the npm module website for each dependency and follow the iOS instructions for manually linking.
 
-- Start backend server
-- Start app by running:
+- Start [WalkSafe-server](https://github.com/f-4/WalkSafe-server)
+- Start WalkSafe by running:
 ```sh
 react-native run-ios
 ```
@@ -83,8 +83,8 @@ react-native link
 ```
 > __NOTE__ If this does not work go to the npm module website for each dependency and follow the Android instructions for manually linking.
 
-- Start backend server
-- Start app by running:
+- Start [WalkSafe-server](https://github.com/f-4/WalkSafe-server)
+- Start WalkSafe by running:
 ```sh
 react-native run-android
 ```
@@ -107,8 +107,11 @@ react-native run-android
 
 ### Installing Dependencies
 
-From within the root directory:
+- Install Xcode and/or Android Studio to run WalkSafe
+- [Download](https://developer.apple.com/xcode/), install and run Xcode
+- [Download](https://developer.android.com/studio/install.html), install and run Android Studio
 
+- From within the root directory:
 ```sh
 npm install
 ```
@@ -116,9 +119,6 @@ npm install
 react-native link
 ```
 > __NOTE__ If this does not work go to the npm module website for each dependency and follow the Android instructions for manually linking.
-
-[Download](https://developer.apple.com/xcode/), install and run Xcode
-[Download](https://developer.android.com/studio/install.html), install and run Android Studio
 
 ### Roadmap
 
