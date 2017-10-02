@@ -7,6 +7,9 @@
 
 1. [Team](#team)
 1. [Demo](#demo)
+1. [Screenshots](#screenshots)
+    1. [iOS Screenshots](#ios-screenshots)
+    1. [Android Screenshots](#android-screenshots)
 1. [Initial Setup](#initial-setup)
     1. [iOS Setup](#ios-setup)
     1. [Android Setup](#android-setup)
@@ -14,6 +17,7 @@
 1. [Development](#development)
     1. [Installing Devices](#installing-devices)
     1. [Installing Dependencies](#installing-dependencies)
+    1. [Roadmap](#roadmap)
 1. [WalkSafe Server](#walksafe-server)
 1. [Contributing](#contributing)
 
@@ -26,11 +30,25 @@
 
 ## Demo
 
-View a video of the app in action [here](https://www.youtube.com/watch?v=R41ELsbPc04)
+View a video of WalkSafe in action [here](https://www.youtube.com/watch?v=R41ELsbPc04)
+
+## Screenshots
+
+### iOS Screenshots
+
+### Android Screenshots
+
+[Landing page](https://s3.amazonaws.com/poly-screenshots.angel.co/Project/0b/610185/85f4ff48731dc9cd3e2bc44c403dcdcc-original.png)
+
+[Heat Map](https://s3.amazonaws.com/poly-screenshots.angel.co/Project/0b/610185/ae2a55c33ed5fe10f4786c633c583a72-original.png)
+
+[Recent Crimes](https://s3.amazonaws.com/poly-screenshots.angel.co/Project/0b/610185/d677a360bdab0935da1c8d5288fd9a72-original.png)
+
+[App Drawer](https://s3.amazonaws.com/poly-screenshots.angel.co/Project/0b/610185/d8572595533d0624134dac4269724f3a-original.png)
 
 ## Initial Setup
 
-- Fork and clone the repo
+1. Fork and clone the repo
 
 > __Environment Variables__ WalkSafe requires a Mapbox Access Token to use the Mapbox API on the frontend. We have used the .env package, which allows environment variables to be set easily with the .env file in the root directory of the project. An example of the necessary variables for WalkSafe been provided here in this repo.
 
@@ -40,21 +58,21 @@ View a video of the app in action [here](https://www.youtube.com/watch?v=R41ELsb
 
 ### iOS Setup
 
-- [Download](https://developer.apple.com/xcode/) and install Xcode
-- [INSTRUCTIONS FOR XCODE HERE]
-- Install dependencies from the root of the repo by running
+2. [Download](https://developer.apple.com/xcode/) and install Xcode
+3. [INSTRUCTIONS FOR XCODE HERE]
+4. Install dependencies from the root of the repo by running
 ```sh
 npm install
 ```
 
-- Link dependencies to iOS code by running
+5. Link dependencies to iOS code by running
 ```sh
 react-native link
 ```
 > __NOTE__ If this does not work go to the npm module website for each dependency and follow the iOS instructions for manually linking.
 
-- Start [WalkSafe Server](https://github.com/f-4/WalkSafe-server)
-- Start WalkSafe by running:
+6. Start [WalkSafe Server](https://github.com/f-4/WalkSafe-server)
+7. Start WalkSafe by running:
 ```sh
 react-native run-ios
 ```
@@ -66,25 +84,25 @@ react-native run-ios
 
 ### Android Setup
 
-- [Download](https://developer.android.com/studio/install.html) and install Android Studio
-- Create a WalkSafe project in Android Studio
-- Click Tools on the toolbar
-- Click Android
-- Click AVD Manager
-- Create a virtual device
-- In Android Virtual Device Manager launch virtual device by double clicking on it
-- Install dependencies from the root of the repo by running
+2. [Download](https://developer.android.com/studio/install.html) and install Android Studio
+3. Create a WalkSafe project in Android Studio
+4. Click Tools on the toolbar
+5. Click Android
+6. Click AVD Manager
+7. Create a virtual device
+8. In Android Virtual Device Manager launch virtual device by double clicking on it
+9. Install dependencies from the root of the repo by running
 ```sh
 npm install
 ```
-- Link dependencies to Android code by running
+10. Link dependencies to Android code by running
 ```sh
 react-native link
 ```
 > __NOTE__ If this does not work go to the npm module website for each dependency and follow the Android instructions for manually linking.
 
-- Start [WalkSafe Server](https://github.com/f-4/WalkSafe-server)
-- Start WalkSafe by running:
+11. Start [WalkSafe Server](https://github.com/f-4/WalkSafe-server)
+12. Start WalkSafe by running:
 ```sh
 react-native run-android
 ```
@@ -113,7 +131,7 @@ react-native run-android
 
 ### Installing Dependencies
 
-- From within the root directory:
+From within the root directory:
 ```sh
 npm install
 react-native link
